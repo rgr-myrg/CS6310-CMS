@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<GridPane 
+	xmlns:fx="http://javafx.com/fxml" 
+	fx:controller="edu.gatech.cms.controller.WelcomeController" 
+	alignment="center" hgap="10" vgap="10">
+
+	<Text 
+		id="welcomeText" 
+		text="Hello Team Fantastic 4." 
+		GridPane.columnIndex="0" 
+		GridPane.rowIndex="0" 
+		GridPane.columnSpan="2" />
+
+	<HBox 
+		spacing="10" 
+		alignment="bottom_right" 
+		GridPane.columnIndex="1" 
+		GridPane.rowIndex="1">
+			<Button 
+				text="Click it!" 
+				onAction="#handleClickButtonAction" />
+	</HBox>
+
+	<Text 
+		fx:id="textMessageBox" 
+		GridPane.columnIndex="0" 
+		GridPane.columnSpan="2" 
+		GridPane.halignment="right" 
+		GridPane.rowIndex="2" />
+</GridPane>
