@@ -9,11 +9,11 @@ import java.sql.Statement;
 
 import edu.gatech.cms.logger.Log;
 import edu.gatech.cms.logger.Logger;
-import edu.gatech.cms.sql.CourseAssignmentsTable;
-import edu.gatech.cms.sql.CoursePrerequisitesTable;
-import edu.gatech.cms.sql.CourseRequestsTable;
+import edu.gatech.cms.sql.AssignmentsTable;
+import edu.gatech.cms.sql.PrerequisitesTable;
+import edu.gatech.cms.sql.RequestsTable;
 import edu.gatech.cms.sql.CoursesTable;
-import edu.gatech.cms.sql.StudentRecordsTable;
+import edu.gatech.cms.sql.RecordsTable;
 import edu.gatech.cms.sql.UniversityPersonTable;
 
 public class DbHelper {
@@ -67,16 +67,16 @@ public class DbHelper {
 			preparedStatement = conn.prepareStatement(UniversityPersonTable.CREATE_TABLE);
 			preparedStatement.execute();
 
-			preparedStatement = conn.prepareStatement(StudentRecordsTable.CREATE_TABLE);
+			preparedStatement = conn.prepareStatement(RecordsTable.CREATE_TABLE);
 			preparedStatement.execute();
 
-			preparedStatement = conn.prepareStatement(CourseAssignmentsTable.CREATE_TABLE);
+			preparedStatement = conn.prepareStatement(AssignmentsTable.CREATE_TABLE);
 			preparedStatement.execute();
 
-			preparedStatement = conn.prepareStatement(CoursePrerequisitesTable.CREATE_TABLE);
+			preparedStatement = conn.prepareStatement(PrerequisitesTable.CREATE_TABLE);
 			preparedStatement.execute();
 
-			preparedStatement = conn.prepareStatement(CourseRequestsTable.CREATE_TABLE);
+			preparedStatement = conn.prepareStatement(RequestsTable.CREATE_TABLE);
 			preparedStatement.execute();
 		} catch (SQLException e) {
 			logSqlException(e);
@@ -98,16 +98,16 @@ public class DbHelper {
 			preparedStatement = conn.prepareStatement(UniversityPersonTable.DROP_TABLE);
 			preparedStatement.execute();
 
-			preparedStatement = conn.prepareStatement(StudentRecordsTable.DROP_TABLE);
+			preparedStatement = conn.prepareStatement(RecordsTable.DROP_TABLE);
 			preparedStatement.execute();
 
-			preparedStatement = conn.prepareStatement(CourseAssignmentsTable.DROP_TABLE);
+			preparedStatement = conn.prepareStatement(AssignmentsTable.DROP_TABLE);
 			preparedStatement.execute();
 
-			preparedStatement = conn.prepareStatement(CoursePrerequisitesTable.DROP_TABLE);
+			preparedStatement = conn.prepareStatement(PrerequisitesTable.DROP_TABLE);
 			preparedStatement.execute();
 
-			preparedStatement = conn.prepareStatement(CourseRequestsTable.DROP_TABLE);
+			preparedStatement = conn.prepareStatement(RequestsTable.DROP_TABLE);
 			preparedStatement.execute();
 		} catch (SQLException e) {
 			logSqlException(e);

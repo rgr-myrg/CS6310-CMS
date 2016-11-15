@@ -2,13 +2,14 @@ package edu.gatech.cms;
 
 import java.io.IOException;
 
-import edu.gatech.cms.data.AcademicRecordsData;
-import edu.gatech.cms.data.CoursePrerequisitesData;
+import edu.gatech.cms.data.RecordsData;
+import edu.gatech.cms.data.RequestsData;
+import edu.gatech.cms.data.PrerequisitesData;
 import edu.gatech.cms.data.CoursesData;
 import edu.gatech.cms.data.InstructorsData;
 import edu.gatech.cms.data.StudentsData;
 import edu.gatech.cms.logger.Log;
-import edu.gatech.cms.logger.Logger;
+import edu.gatech.cms.util.DbHelper;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -39,7 +40,6 @@ public class Main extends Application {
 		if (args != null && args.length > 0 && args[0] != null) {
 			final String option = args[0];
 			Log.setDebug(option.equalsIgnoreCase("debug"));
-			Logger.debug("MAIN", "Debug Mode ON");
 		}
 
 		loadFromCSV();
@@ -47,10 +47,18 @@ public class Main extends Application {
 	}
 
 	public static final void loadFromCSV() {
+		DbHelper.dropTables();
+		DbHelper.createTables();
+
 		CoursesData.load();
 		InstructorsData.load();
-		AcademicRecordsData.load();
+		RecordsData.load();
 		StudentsData.load();
-		CoursePrerequisitesData.load();
+		PrerequisitesData.load();
+
+		// Load requests and assignments for each semester using the cycle number
+		// Ex: 
+		// RequestsData.load(1);
+		// AssignmentsData.load(1);
 	}
 }
