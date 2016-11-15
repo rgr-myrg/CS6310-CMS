@@ -1,7 +1,7 @@
 package edu.gatech.cms.logger;
 
 public final class Log {
-	public static boolean debug = false;
+	private static boolean debug = false;
 
 	public static final boolean isDebug() {
 		return debug;
