@@ -19,6 +19,8 @@ import edu.gatech.cms.sql.UniversityPersonTable;
 public class DbHelper {
 	public static final String SQLITE_JDBC_DRIVER = "org.sqlite.JDBC";
 	public static final String DB_CONNECTION_URL  = "jdbc:sqlite:cs6310.db";
+	public static final String DB_USER_NAME = "nobody";
+	public static final String DB_PASSWORD = "";
 
 	public static Connection connection = null;
 

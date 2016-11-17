@@ -2,12 +2,12 @@ package edu.gatech.cms;
 
 import java.io.IOException;
 
-import edu.gatech.cms.data.RecordsData;
-import edu.gatech.cms.data.RequestsData;
-import edu.gatech.cms.data.PrerequisitesData;
 import edu.gatech.cms.data.CoursesData;
 import edu.gatech.cms.data.InstructorsData;
+import edu.gatech.cms.data.PrerequisitesData;
+import edu.gatech.cms.data.RecordsData;
 import edu.gatech.cms.data.StudentsData;
+import edu.gatech.cms.data.WekaDataSource;
 import edu.gatech.cms.logger.Log;
 import edu.gatech.cms.util.DbHelper;
 import javafx.application.Application;
@@ -47,14 +47,28 @@ public class Main extends Application {
 	}
 
 	public static final void loadFromCSV() {
-		DbHelper.dropTables();
-		DbHelper.createTables();
+		new Thread(
+				new Runnable() {
+					@Override
+					public void run() {
+						DbHelper.dropTables();
+						DbHelper.createTables();
 
-		CoursesData.load();
-		InstructorsData.load();
-		RecordsData.load();
-		StudentsData.load();
-		PrerequisitesData.load();
+						CoursesData.load();
+						InstructorsData.load();
+						RecordsData.load();
+						StudentsData.load();
+						PrerequisitesData.load();
+
+						try {
+							final WekaDataSource wekaDataSource = new WekaDataSource();
+							System.out.println(wekaDataSource.getAprioriAssociations());
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}
+		).start();
 
 		// Load requests and assignments for each semester using the cycle number
 		// Ex: 

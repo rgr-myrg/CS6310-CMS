@@ -3,7 +3,6 @@ package edu.gatech.cms.data;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import edu.gatech.cms.course.LetterGrade;
 import edu.gatech.cms.sql.RecordsTable;
 import edu.gatech.cms.util.CsvDataLoader;
 import edu.gatech.cms.util.DbHelper;
@@ -35,7 +34,7 @@ public class RecordsData extends CsvDataLoader {
 					preparedStatement.setInt(2, Integer.valueOf(parts[1]));
 					preparedStatement.setInt(3, Integer.valueOf(parts[2]));
 					preparedStatement.setString(4, parts[3]);
-					preparedStatement.setInt(5, LetterGrade.valueOf(parts[4]).ordinal());
+					preparedStatement.setString(5, parts[4]);
 
 					preparedStatement.execute();
 				} catch (SQLException e) {
