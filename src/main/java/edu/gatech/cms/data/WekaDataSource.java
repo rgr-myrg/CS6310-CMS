@@ -3,6 +3,7 @@ package edu.gatech.cms.data;
 import java.io.IOException;
 
 import edu.gatech.cms.sql.RecordsTable;
+import edu.gatech.cms.sql.RequestsTable;
 import edu.gatech.cms.util.DbHelper;
 import edu.gatech.cms.util.FileUtil;
 import weka.associations.Apriori;
@@ -36,7 +37,7 @@ public class WekaDataSource {
 		}
 	}
 
-	public Apriori getAprioriAssociations() {
+	public Apriori getAprioriAssociationsWithSql(final String sql) {
 		final Apriori apriori = new Apriori();
 
 		try {
@@ -44,7 +45,7 @@ public class WekaDataSource {
 
 			query.setUsername(DbHelper.DB_USER_NAME);
 			query.setPassword(DbHelper.DB_PASSWORD);
-			query.setQuery(RecordsTable.SELECT_WEKA);
+			query.setQuery(sql);
 
 			Instances dataSet = query.retrieveInstances();
 			dataSet.setClassIndex(dataSet.numAttributes() - 1);
@@ -61,5 +62,13 @@ public class WekaDataSource {
 		}
 
 		return apriori;
+	}
+
+	public Apriori analyzeStudentRequests() {
+		return getAprioriAssociationsWithSql(RequestsTable.SELECT_REQUESTS);
+	}
+
+	public Apriori analyzeStudentRecords() {
+		return getAprioriAssociationsWithSql(RecordsTable.SELECT_RECORDS);
 	}
 }

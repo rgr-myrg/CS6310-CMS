@@ -36,7 +36,7 @@ public class RecordsTable {
 
 	public static final String SELECT_SQL = String.format("SELECT * FROM %s", TABLE_NAME);
 
-	public static final String SELECT_WEKA = String.format("SELECT %s, %s, %s, %s, %s FROM %s", 
+	public static final String SELECT_RECORDS = String.format("SELECT %s, %s, %s, %s, %s FROM %s", 
 			STUDENT_ID_COLUMN, COURSE_ID_COLUMN, INSTRUCTOR_ID_COLUMN, COMMENTS_COLUMN, LETTER_GRADE_COLUMN,
 			TABLE_NAME);
 

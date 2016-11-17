@@ -42,6 +42,11 @@ public class RequestsTable {
 			ID_COLUMN, TABLE_NAME
 	);
 
+	public static final String SELECT_REQUESTS = String.format(
+			"SELECT %s, %s FROM %s",
+			STUDENT_ID_COLUMN, COURSE_ID_COLUMN, TABLE_NAME
+			);
+
 	public static final String SELECT_OPEN_REQUESTS = String.format(
 			"SELECT * FROM %s WHERE %s = %d",
 			TABLE_NAME, REQUEST_STATUS_COLUMN, OPEN_REQUEST_DEFAULT_VALUE
