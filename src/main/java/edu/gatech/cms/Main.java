@@ -49,6 +49,7 @@ public class Main extends Application {
 	}
 
 	public static final void loadFromCSV() {
+		System.out.println("LOADING!!!");
 		new Thread(
 				new Runnable() {
 					@Override
