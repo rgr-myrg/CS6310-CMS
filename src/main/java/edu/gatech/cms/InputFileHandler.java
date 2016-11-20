@@ -41,10 +41,6 @@ public class InputFileHandler {
 	private int currentSemester = 1;
 
 	public static InputFileHandler getInstance() {
-//		if (instance == null) {
-//			instance = new InputFileHandler();
-//		}
-
 		return instance;
 	}
 
@@ -61,36 +57,6 @@ public class InputFileHandler {
 		RecordsData.load();
 		StudentsData.load();
 		PrerequisitesData.load();
-
-//		System.out.println("Spawns new thread");
-//		new Thread(
-//				new Runnable() {
-//					@Override
-//					public void run() {
-//						DbHelper.dropTables();
-//						DbHelper.createTables();
-//
-//						CoursesData.load();
-//						InstructorsData.load();
-//						RecordsData.load();
-//						StudentsData.load();
-//						PrerequisitesData.load();
-//
-//						// Load requests and assignments for each semester using the cycle number
-//						// Ex: 
-//						RequestsData.load(currentSemester);
-//						AssignmentsData.load(currentSemester);
-//
-////						try {
-////							final WekaDataSource wekaDataSource = new WekaDataSource();
-////							System.out.println(wekaDataSource.analyzeStudentRecords());
-////							System.out.println(wekaDataSource.analyzeStudentRequests());
-////						} catch (Exception e) {
-////							e.printStackTrace();
-////						}
-//					}
-//				}
-//		).start();
 	}
 
 	public void designateSemester() {
