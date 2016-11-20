@@ -2,6 +2,8 @@ package edu.gatech.cms.data;
 
 import java.io.IOException;
 
+import edu.gatech.cms.logger.Log;
+import edu.gatech.cms.logger.Logger;
 import edu.gatech.cms.sql.RecordsTable;
 import edu.gatech.cms.sql.RequestsTable;
 import edu.gatech.cms.util.DbHelper;
@@ -13,6 +15,7 @@ import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.NumericToNominal;
 
 public class WekaDataSource {
+	public static final String TAG = WekaDataSource.class.getSimpleName();
 	public static final String FILE_NAME = "DatabaseUtils.props";
 
 	// Settings from https://weka.wikispaces.com/weka_experiment_DatabaseUtils.props
@@ -64,11 +67,19 @@ public class WekaDataSource {
 		return apriori;
 	}
 
-	public Apriori analyzeStudentRequests() {
+	public Apriori analyzeCourseRequests() {
+		if (Log.isDebug()) {
+			Logger.debug(TAG, "Analyzing Requests Data");
+		}
+
 		return getAprioriAssociationsWithSql(RequestsTable.SELECT_REQUESTS);
 	}
 
 	public Apriori analyzeStudentRecords() {
+		if (Log.isDebug()) {
+			Logger.debug(TAG, "Analyzing Records Data");
+		}
+
 		return getAprioriAssociationsWithSql(RecordsTable.SELECT_RECORDS);
 	}
 }

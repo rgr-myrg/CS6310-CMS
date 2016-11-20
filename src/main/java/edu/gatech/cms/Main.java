@@ -2,16 +2,7 @@ package edu.gatech.cms;
 
 import java.io.IOException;
 
-import edu.gatech.cms.data.AssignmentsData;
-import edu.gatech.cms.data.CoursesData;
-import edu.gatech.cms.data.InstructorsData;
-import edu.gatech.cms.data.PrerequisitesData;
-import edu.gatech.cms.data.RecordsData;
-import edu.gatech.cms.data.RequestsData;
-import edu.gatech.cms.data.StudentsData;
-import edu.gatech.cms.data.WekaDataSource;
 import edu.gatech.cms.logger.Log;
-import edu.gatech.cms.util.DbHelper;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -35,6 +26,23 @@ public class Main extends Application {
 //		stage.setMinHeight(500.0);
 //		stage.setMinWidth(850.0);
 
+		// TODO: Mock for now. We probably want to use CompletableFuture 
+		// and chain operations that depend on each other. TBD.
+		// Mocking, mocking, mocking.
+
+		new Thread(
+				new Runnable() {
+					
+					@Override
+					public void run() {
+						InputFileHandler.getInstance().loadFromCSV();
+						InputFileHandler.getInstance().designateSemester();
+						InputFileHandler.getInstance().prepareDataForDataMining();
+						InputFileHandler.getInstance().analyzeHistoryAndRoster();
+					}
+				}).start();
+
+		// Invoking show() renders the Stage on the window.
 		stage.show();
 	}
 
@@ -44,39 +52,6 @@ public class Main extends Application {
 			Log.setDebug(option.equalsIgnoreCase("debug"));
 		}
 
-		loadFromCSV();
 		launch(args);
-	}
-
-	public static final void loadFromCSV() {
-		System.out.println("LOADING!!!");
-		new Thread(
-				new Runnable() {
-					@Override
-					public void run() {
-						DbHelper.dropTables();
-						DbHelper.createTables();
-
-						CoursesData.load();
-						InstructorsData.load();
-						RecordsData.load();
-						StudentsData.load();
-						PrerequisitesData.load();
-
-						// Load requests and assignments for each semester using the cycle number
-						// Ex: 
-						RequestsData.load(1);
-						AssignmentsData.load(1);
-
-						try {
-							final WekaDataSource wekaDataSource = new WekaDataSource();
-							System.out.println(wekaDataSource.analyzeStudentRecords());
-							System.out.println(wekaDataSource.analyzeStudentRequests());
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				}
-		).start();
 	}
 }
