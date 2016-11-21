@@ -51,4 +51,9 @@ public class Instructor extends UniversityPerson {
 	public void removeCurrentSectionTaught(Section section) {
 		currentSectionsTaught.remove(section);
 	}
+	
+	public String toString() {
+	    return "Instructor id: " + UUID + ", name: " + fullName 
+	            + ", address: " + primaryAddress + ", phone: " + primaryPhone;
+	}
 }

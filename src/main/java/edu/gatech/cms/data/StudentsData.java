@@ -3,7 +3,9 @@ package edu.gatech.cms.data;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import edu.gatech.cms.InputFileHandler;
 import edu.gatech.cms.sql.UniversityPersonTable;
+import edu.gatech.cms.university.Student;
 import edu.gatech.cms.university.UniversityPersonRole;
 import edu.gatech.cms.util.CsvDataLoader;
 import edu.gatech.cms.util.DbHelper;
@@ -30,14 +32,28 @@ public class StudentsData extends CsvDataLoader {
 			String[] parts = line.split(",");
 			if (parts.length > 0) {
 				try {
+				    
+				    // interpret the line
+				    Integer id = Integer.valueOf(parts[0]);
+				    String name = parts[1];
+				    String address = parts[2];
+				    String phone = parts[3];
+				    
+                    // insert in db
 					preparedStatement = DbHelper.getConnection().prepareStatement(UniversityPersonTable.INSERT_SQL);
-					preparedStatement.setInt(1, Integer.valueOf(parts[0]));
-					preparedStatement.setString(2, parts[1]);
-					preparedStatement.setString(3, parts[2]);
-					preparedStatement.setString(4, parts[3]);
+					preparedStatement.setInt(1, id);
+					preparedStatement.setString(2, name);
+					preparedStatement.setString(3, address);
+					preparedStatement.setString(4, phone);
 					preparedStatement.setInt(5, UniversityPersonRole.Student.ordinal());
-
+					// run it
 					preparedStatement.execute();
+					
+					// keep in memory
+					Student student = new Student(id, name, address, phone);
+					InputFileHandler.getStudents().put(id, student);
+					System.out.println("Loaded - " + student);
+					
 				} catch (SQLException e) {
 					DbHelper.logSqlException(e);
 				}

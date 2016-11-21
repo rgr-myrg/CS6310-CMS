@@ -45,4 +45,9 @@ public class Record {
 	public void setSemesterTakenID(int semesterTakenID) {this.semesterTakenID = semesterTakenID;}
 	//END GETTERS AND SETTERS SECTION
 	
+	public String toString() {
+	    return "Record studentID: " + student.getUUID() + ", courseID: " + course.getID() + 
+	            ", instructorID: " + instructor.getUUID() + ", grade: " + gradeEarned;
+	}
+	
 }

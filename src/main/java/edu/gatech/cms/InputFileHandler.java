@@ -2,6 +2,8 @@ package edu.gatech.cms;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import edu.gatech.cms.course.Course;
 import edu.gatech.cms.course.Record;
@@ -22,25 +24,28 @@ import edu.gatech.cms.university.Student;
 import edu.gatech.cms.university.University;
 import edu.gatech.cms.util.DbHelper;
 
+/**
+ * The class takes care of most of data loading. 
+ */
 public class InputFileHandler {
 	public static final String TAG = InputFileHandler.class.getSimpleName();
 
 	private static final InputFileHandler instance = new InputFileHandler();
 
-	private University university;
-	private Department department;
+	private static University university;
+	private static Department department;
 
-	private List<Course> courses = new ArrayList<Course>();
-	private List<Student> students = new ArrayList<Student>();
-	private List<Instructor> instructors = new ArrayList<Instructor>();
-	private List<Record> records = new ArrayList<Record>();
-	private List<Request> requests;
+	private static Map<Integer, Course> courses = new TreeMap<>();
+	private static Map<Integer, Student> students = new TreeMap<>();
+	private static Map<Integer, Instructor> instructors = new TreeMap<>();
+	private static List<Record> records = new ArrayList<Record>();
+	private static List<Request> requests;
+	private static int currentSemester = 1;
 
-	private WekaDataSource wekaDataSource = null;
+    private WekaDataSource wekaDataSource = null;
 
-	private int currentSemester = 1;
 
-	public static InputFileHandler getInstance() {
+    public static InputFileHandler getInstance() {
 		return instance;
 	}
 
@@ -52,11 +57,11 @@ public class InputFileHandler {
 		DbHelper.dropTables();
 		DbHelper.createTables();
 
+        StudentsData.load();
 		CoursesData.load();
+        PrerequisitesData.load();
 		InstructorsData.load();
 		RecordsData.load();
-		StudentsData.load();
-		PrerequisitesData.load();
 	}
 
 	public void designateSemester() {
@@ -82,8 +87,8 @@ public class InputFileHandler {
 
 		// Test output only. 
 		// TODO: Should be displayed in the UI
-		//System.out.println(wekaDataSource.analyzeStudentRecords());
-		System.out.println(wekaDataSource.analyzeCourseRequests());
+		System.out.println(wekaDataSource.analyzeStudentRecords());
+		// System.out.println(wekaDataSource.analyzeCourseRequests());
 	}
 
 	public void calculateCapacityForCourser() {
@@ -97,4 +102,51 @@ public class InputFileHandler {
 	public void validateStudentRequests() {
 		
 	}
+
+	
+	// SIMPLE SETTERS, GETTERS for model objects
+	
+    public static University getUniversity() {
+        return university;
+    }
+
+    public static void setUniversity(University uni) {
+        university = uni;
+    }
+
+    public static Department getDepartment() {
+        return department;
+    }
+
+    public static void setDepartment(Department dept) {
+        department = dept;
+    }
+
+    public static Map<Integer, Course> getCourses() {
+        return courses;
+    }
+
+    public static Map<Integer, Student> getStudents() {
+        return students;
+    }
+
+    public static Map<Integer, Instructor> getInstructors() {
+        return instructors;
+    }
+
+    public static List<Record> getRecords() {
+        return records;
+    }
+
+    public static List<Request> getRequests() {
+        return requests;
+    }
+
+    public static int getCurrentSemester() {
+        return currentSemester;
+    }
+
+    public static void setCurrentSemester(int sem) {
+        currentSemester = sem;
+    }
 }
