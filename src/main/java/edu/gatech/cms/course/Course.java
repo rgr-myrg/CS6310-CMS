@@ -85,4 +85,8 @@ public class Course {
 		waitlist.remove(student);
 	}
 	
+	public String toString() {
+	    return "Course id: " + courseID + ", title: " + title;
+	}
+	
 }

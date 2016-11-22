@@ -1,11 +1,28 @@
 package edu.gatech.cms.data;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.nio.file.attribute.FileAttribute;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
+import edu.gatech.cms.InputFileHandler;
+import edu.gatech.cms.course.Course;
+import edu.gatech.cms.course.Record;
 import edu.gatech.cms.logger.Log;
 import edu.gatech.cms.logger.Logger;
 import edu.gatech.cms.sql.RecordsTable;
 import edu.gatech.cms.sql.RequestsTable;
+import edu.gatech.cms.university.Student;
 import edu.gatech.cms.util.DbHelper;
 import edu.gatech.cms.util.FileUtil;
 import weka.associations.Apriori;
@@ -80,6 +97,115 @@ public class WekaDataSource {
 			Logger.debug(TAG, "Analyzing Records Data");
 		}
 
-		return getAprioriAssociationsWithSql(RecordsTable.SELECT_RECORDS);
+//		return getAprioriAssociationsWithSql(RecordsTable.SELECT_RECORDS);
+		
+		// Process records, create the right matrix for associations analysis.
+		// The matrix has only courses on each line, for each student. If we 
+		// consider each student's list of courses as "basket", we can find the 
+		// associations between courses. Based on the associations, we can pick
+		// instructors such that the courses with the stronger "rules" are being
+		// covered. (or something like that)
+
+		// 1. pick a file name
+		String arffName = System.currentTimeMillis() + ".arff";
+		Path path = Paths.get(arffName);
+		System.out.println(path.getFileName());
+		
+		// 2. open file for writing
+		try (BufferedWriter bw = Files.newBufferedWriter(path, StandardOpenOption.CREATE)) {
+		    
+		    // ARFF files have 3 sections: 
+		    
+		    // @relation
+		    bw.write("@relation records\n\n");
+		    
+		    // @attributes
+		    // for the attributes we pick ONLY the courses which are mentioned in records,
+		    // otherwise we pollute the rules (too many "none")
+		    HashMap<Integer,Course> recordCourses = new HashMap<>();
+		    for (Record record: InputFileHandler.getRecords()) {
+		        recordCourses.put(record.getCourse().getID(), record.getCourse());
+		    }
+		    for (Course course: recordCourses.values()) {
+		        //bw.write("@attribute course" + course.getID() + " { T}\n");
+                bw.write("@attribute course" + course.getID() + " {taken,none}\n");
+		    }
+		    bw.write("\n");
+		    
+		    // @data
+            bw.write("@data\n");
+		    for (Student student: InputFileHandler.getStudents().values()) {
+		        // if no records, skip
+		        if (student.getRecordHistory().isEmpty()) continue;
+		        
+		        // index in courses
+		        int i = 0;
+		        int numCourses = recordCourses.size();
+		        
+                // take the list of records and figure out which course it was
+		        for (Course course: recordCourses.values()) {
+		            
+		            boolean found = false;
+		            
+		            for (Record record: student.getRecordHistory()) {
+		                String grade = record.getGradeEarned();
+		                if (record.getCourse().getID() == course.getID() && 
+		                   ("A".equals(grade) || "B".equals(grade) || "C".equals(grade) || "D".equals(grade))) { 
+		                    found = true;
+		                    break;
+		                }
+		            }
+		            
+		            // actually write in the file
+		            if (found) {
+                        //bw.write("T");
+                        bw.write("taken");
+                        if (i == numCourses - 1) bw.write("\n");
+                        else bw.write(",");
+		            }
+		            else {
+                        //bw.write("?");
+                        bw.write("none");
+                        if (i == numCourses - 1) bw.write("\n");
+                        else bw.write(",");
+		            }
+	                
+	                i++;
+	            }
+		    }
+		    
+		} catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+		
+		// 3. run analysis, if we're here we have a file
+
+        try(BufferedReader reader = new BufferedReader(new FileReader(arffName))) {
+            Instances data = new Instances(reader);
+            data.setClassIndex(data.numAttributes() - 1);
+            
+            Apriori apriori = new Apriori();
+//            apriori.setDelta(0.05);
+//            apriori.setLowerBoundMinSupport(0.1);
+//            apriori.setNumRules(120);
+//            apriori.setUpperBoundMinSupport(1.0);
+//            apriori.setMinMetric(0.5);
+            
+            apriori.buildAssociations(data);
+            return apriori;
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        return null;
 	}
 }
