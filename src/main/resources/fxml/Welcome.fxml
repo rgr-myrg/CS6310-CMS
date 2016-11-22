@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -11,8 +13,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
 
-<BorderPane id="mainBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #FFFFFF;" stylesheets="@../css/Main.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.gatech.cms.controller.WelcomeController">
+<BorderPane fx:id="mainBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #FFFFFF;" stylesheets="@../css/Main.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.gatech.cms.controller.WelcomeController">
    <bottom>
       <HBox BorderPane.alignment="BOTTOM_CENTER">
          <children>
@@ -47,14 +50,20 @@
    <center>
       <VBox id="welcomeMainVBox" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="75.0" BorderPane.alignment="CENTER">
          <children>
-            <ImageView id="welcomeSpinnerGif" fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/progress_bar.gif" />
-               </image>
+            <Group fx:id="progressGroup">
+               <children>
+                  <ImageView fx:id="progressGif" fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/progress_bar.gif" />
+                     </image>
+                  </ImageView>
+               </children>
                <VBox.margin>
-                  <Insets top="120.0" />
+                  <Insets top="125.0" />
                </VBox.margin>
-            </ImageView>
+            </Group>
+            <Label text="Label" />
+            <Text fx:id="textMessageBox" strokeType="OUTSIDE" strokeWidth="0.0"/>
          </children>
       </VBox>
    </center>
