@@ -11,6 +11,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.FileAttribute;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import edu.gatech.cms.InputFileHandler;
@@ -118,9 +120,15 @@ public class WekaDataSource {
 		    bw.write("@relation records\n\n");
 		    
 		    // @attributes
-		    for (Course course: InputFileHandler.getCourses().values()) {
-		        bw.write("@attribute course" + course.getID() + " { T}\n");
-                // bw.write("@attribute course" + course.getID() + " {taken,none}\n");
+		    // for the attributes we pick ONLY the courses which are mentioned in records,
+		    // otherwise we pollute the rules (too many "none")
+		    HashMap<Integer,Course> recordCourses = new HashMap<>();
+		    for (Record record: InputFileHandler.getRecords()) {
+		        recordCourses.put(record.getCourse().getID(), record.getCourse());
+		    }
+		    for (Course course: recordCourses.values()) {
+		        //bw.write("@attribute course" + course.getID() + " { T}\n");
+                bw.write("@attribute course" + course.getID() + " {taken,none}\n");
 		    }
 		    bw.write("\n");
 		    
@@ -132,10 +140,10 @@ public class WekaDataSource {
 		        
 		        // index in courses
 		        int i = 0;
-		        int numCourses = InputFileHandler.getCourses().size();
+		        int numCourses = recordCourses.size();
 		        
                 // take the list of records and figure out which course it was
-		        for (Course course: InputFileHandler.getCourses().values()) {
+		        for (Course course: recordCourses.values()) {
 		            
 		            boolean found = false;
 		            
@@ -150,14 +158,14 @@ public class WekaDataSource {
 		            
 		            // actually write in the file
 		            if (found) {
-                        bw.write("T");
-                        //bw.write("taken");
+                        //bw.write("T");
+                        bw.write("taken");
                         if (i == numCourses - 1) bw.write("\n");
                         else bw.write(",");
 		            }
 		            else {
-                        bw.write("?");
-                        //bw.write("none");
+                        //bw.write("?");
+                        bw.write("none");
                         if (i == numCourses - 1) bw.write("\n");
                         else bw.write(",");
 		            }
