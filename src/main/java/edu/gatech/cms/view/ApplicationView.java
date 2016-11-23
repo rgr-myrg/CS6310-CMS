@@ -15,7 +15,7 @@ public class ApplicationView {
 	public static final int SCENE_WIDTH  = 600;
 	public static final int SCENE_HEIGHT = 400;
 
-	public Runnable onHideProgressBarEvent = null;
+	public Runnable onSemesterDataLoaded = null;
 
 	private static ApplicationView instance = new ApplicationView();
 	private Stage stage = null;
@@ -40,8 +40,8 @@ public class ApplicationView {
 				Platform.runLater(() -> {
 					stage.setTitle("CMS :: Welcome");
 
-					if (onHideProgressBarEvent != null) {
-						onHideProgressBarEvent.run();
+					if (onSemesterDataLoaded != null) {
+						onSemesterDataLoaded.run();
 					}
 
 					welcomeScene.setCursor(Cursor.DEFAULT);
