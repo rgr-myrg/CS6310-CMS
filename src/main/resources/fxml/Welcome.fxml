@@ -38,7 +38,7 @@
         <menus>
           <Menu mnemonicParsing="false" text="Help">
             <items>
-              <MenuItem mnemonicParsing="false" text="About" />
+              <MenuItem mnemonicParsing="false" text="About" onAction="#onAboutMenuSelected"/>
             </items>
           </Menu>
         </menus>
@@ -104,8 +104,6 @@
                         </Label>
                         <RadioButton id="startOption" layoutX="10.0" layoutY="16.0" mnemonicParsing="false" toggleGroup="$radioToggleGroup" GridPane.rowIndex="1" />
                         <Label layoutX="310.0" layoutY="17.0" text="Start" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <RadioButton id="exitOption" layoutX="10.0" layoutY="46.0" mnemonicParsing="false" toggleGroup="$radioToggleGroup" GridPane.rowIndex="2" />
-                        <Label layoutX="310.0" layoutY="47.0" text="Exit" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                      </children>
                      <padding>
                         <Insets top="15.0" />

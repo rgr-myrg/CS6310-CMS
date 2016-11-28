@@ -7,6 +7,8 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
@@ -58,9 +60,15 @@ public class WelcomeController {
 		textMessageBox.setText("Controller says: clicked! " + selectedRadioButton.getId());
 	}
 
-//	@FXML protected void onResumeButtonClick(ActionEvent event) {
-//		
-//	}
+	@FXML protected void onAboutMenuSelected(ActionEvent event) {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("CMS :: About");
+		alert.setHeaderText(UiMessages.APP_TITLE);
+		alert.setContentText(UiMessages.APP_INFO);
+		alert.setResizable(false);
+
+		alert.showAndWait();
+	}
 //
 //	@FXML protected void onExitButtonClick(ActionEvent event) {
 //		Platform.exit();
