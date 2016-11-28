@@ -8,6 +8,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
 public class ApplicationView {
@@ -18,6 +20,7 @@ public class ApplicationView {
 	public Runnable onSemesterDataLoaded = null;
 
 	private static ApplicationView instance = new ApplicationView();
+	private Alert alertInfo = new Alert(AlertType.INFORMATION);
 	private Stage stage = null;
 
 	public void onAppStart(Stage stage) {
@@ -60,5 +63,15 @@ public class ApplicationView {
 
 	public static final ApplicationView getInstance() {
 		return instance;
+	}
+
+	public void displayAppInfoAlertDialog() {
+		//Alert alert = new Alert(AlertType.INFORMATION);
+		alertInfo.setTitle("CMS :: About");
+		alertInfo.setHeaderText(UiMessages.APP_TITLE);
+		alertInfo.setContentText(UiMessages.APP_INFO);
+		alertInfo.setResizable(false);
+
+		alertInfo.showAndWait();
 	}
 }

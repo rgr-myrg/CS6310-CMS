@@ -61,13 +61,7 @@ public class WelcomeController {
 	}
 
 	@FXML protected void onAboutMenuSelected(ActionEvent event) {
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle("CMS :: About");
-		alert.setHeaderText(UiMessages.APP_TITLE);
-		alert.setContentText(UiMessages.APP_INFO);
-		alert.setResizable(false);
-
-		alert.showAndWait();
+		ApplicationView.getInstance().displayAppInfoAlertDialog();
 	}
 //
 //	@FXML protected void onExitButtonClick(ActionEvent event) {
