@@ -8,10 +8,6 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-	public static final String WELCOME_SCREEN = "/fxml/Welcome.fxml";
-	public static final int SCENE_WIDTH  = 600;
-	public static final int SCENE_HEIGHT = 400;
-
 	@Override
 	public void start(Stage stage) throws IOException {
 		ApplicationView.getInstance().onAppStart(stage);

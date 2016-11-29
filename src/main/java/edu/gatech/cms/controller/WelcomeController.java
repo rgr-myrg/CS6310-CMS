@@ -2,19 +2,18 @@ package edu.gatech.cms.controller;
 
 import edu.gatech.cms.InputFileHandler;
 import edu.gatech.cms.view.ApplicationView;
+import edu.gatech.cms.view.ApplicationView.ScreenAction;
 import edu.gatech.cms.view.UiMessages;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
-public class WelcomeController {
+public class WelcomeController implements ScreenController {
 	public static final String TAG = WelcomeController.class.getSimpleName();
 
 	@FXML private Group progressGroup;
@@ -45,26 +44,19 @@ public class WelcomeController {
 	@FXML protected void onNextButtonClick(ActionEvent event) {
 		final RadioButton selectedRadioButton = (RadioButton) radioToggleGroup.getSelectedToggle();
 
-		switch (selectedRadioButton.getId()) {
-			case "resumeOption":
-				break;
-
-			case "startOption":
-				break;
-
-			case "exitOption":
-				Platform.exit();
-				break;
-		}
-
-		textMessageBox.setText("Controller says: clicked! " + selectedRadioButton.getId());
+		ApplicationView.getInstance().onWelcomeControllerNextAction(
+				selectedRadioButton.getId().equals("resumeOption") 
+					? ScreenAction.RESUME 
+						: ScreenAction.START
+				);
 	}
 
 	@FXML protected void onAboutMenuSelected(ActionEvent event) {
 		ApplicationView.getInstance().displayAppInfoAlertDialog();
 	}
-//
-//	@FXML protected void onExitButtonClick(ActionEvent event) {
-//		Platform.exit();
-//	}
+
+	@Override
+	public Stage getStage() {
+		return (Stage) progressGroup.getScene().getWindow();
+	}
 }

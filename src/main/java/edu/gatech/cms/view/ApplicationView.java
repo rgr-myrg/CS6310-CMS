@@ -3,6 +3,7 @@ package edu.gatech.cms.view;
 import java.io.IOException;
 
 import edu.gatech.cms.InputFileHandler;
+import edu.gatech.cms.controller.ScreenController;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
@@ -14,47 +15,39 @@ import javafx.stage.Stage;
 
 public class ApplicationView {
 	public static final String WELCOME_SCREEN = "/fxml/Welcome.fxml";
+	public static final String APRIORI_SCREEN = "/fxml/Apriori.fxml";
+
 	public static final int SCENE_WIDTH  = 600;
 	public static final int SCENE_HEIGHT = 400;
 
+	public static enum ScreenAction {
+			START,
+			RESUME
+	};
+
 	public Runnable onSemesterDataLoaded = null;
+	public Runnable onAprioriResultsLoaded = null;
 
 	private static ApplicationView instance = new ApplicationView();
-	private Alert alertInfo = new Alert(AlertType.INFORMATION);
+//	private ScreenAction currentScreenAction = ScreenAction.START;
+
 	private Stage stage = null;
 
 	public void onAppStart(Stage stage) {
 		this.stage = stage;
 
-		try {
-			final Parent welcomeScreen = FXMLLoader.load(getClass().getResource(WELCOME_SCREEN));
-			final Scene welcomeScene = new Scene(welcomeScreen, SCENE_WIDTH, SCENE_HEIGHT);
+		loadScreen(WELCOME_SCREEN, () -> {
+			InputFileHandler.getInstance().loadFromCSV();
+			InputFileHandler.getInstance().designateSemester();
 
-			welcomeScene.setCursor(Cursor.WAIT);
+			Platform.runLater(() -> {
+				stage.setTitle("CMS :: Welcome");
 
-			stage.setTitle("CMS :: Loading");
-			stage.setScene(welcomeScene);
-			stage.setResizable(false);
-
-			new Thread(() -> {
-				InputFileHandler.getInstance().loadFromCSV();
-				InputFileHandler.getInstance().designateSemester();
-
-				Platform.runLater(() -> {
-					stage.setTitle("CMS :: Welcome");
-
-					if (onSemesterDataLoaded != null) {
-						onSemesterDataLoaded.run();
-					}
-
-					welcomeScene.setCursor(Cursor.DEFAULT);
-				});
-			}).start();
-
-			stage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+				if (onSemesterDataLoaded != null) {
+					onSemesterDataLoaded.run();
+				}
+			});
+		});
 	}
 
 	public Stage getStage() {
@@ -65,13 +58,66 @@ public class ApplicationView {
 		return instance;
 	}
 
-	public void displayAppInfoAlertDialog() {
-		//Alert alert = new Alert(AlertType.INFORMATION);
-		alertInfo.setTitle("CMS :: About");
-		alertInfo.setHeaderText(UiMessages.APP_TITLE);
-		alertInfo.setContentText(UiMessages.APP_INFO);
-		alertInfo.setResizable(false);
+	public void loadScreen(final String fxmlPath, final Runnable target) {
+		if (stage != null) {
+			stage.close();
+		}
 
-		alertInfo.showAndWait();
+		try {
+			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
+			//final Parent screen = FXMLLoader.load(getClass().getResource(fxmlPath));
+			final Parent screen = fxmlLoader.load();
+			final Scene scene = new Scene(screen, SCENE_WIDTH, SCENE_HEIGHT);
+
+			scene.setCursor(Cursor.WAIT);
+
+			final ScreenController controller = (ScreenController) fxmlLoader.getController();
+
+			if (stage == null) {
+				stage = controller.getStage();
+			}
+
+			stage.setTitle("CMS :: Loading");
+			stage.setScene(scene);
+			stage.setResizable(false);
+
+			new Thread(target).start();
+
+			new Thread(() -> {
+				Platform.runLater(() -> {
+					scene.setCursor(Cursor.DEFAULT);
+				});
+			}).start();
+
+			stage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	public void displayAppInfoAlertDialog() {
+		Alert alert = new Alert(AlertType.INFORMATION);
+
+		alert.setTitle("CMS :: About");
+		alert.setHeaderText(UiMessages.APP_TITLE);
+		alert.setContentText(UiMessages.APP_INFO);
+		alert.setResizable(false);
+
+		alert.showAndWait();
+	}
+
+	public void onWelcomeControllerNextAction(ScreenAction screenAction) {
+		//this.currentScreenAction = screenAction;
+		loadScreen(APRIORI_SCREEN, () -> {
+			InputFileHandler.getInstance().prepareDataForDataMining();
+			//final String results = InputFileHandler.getInstance().analyzeHistoryAndRoster();
+
+			Platform.runLater(() -> {
+				stage.setTitle("CMS :: Apriori Analysis");
+
+				if (onAprioriResultsLoaded != null) {
+					onAprioriResultsLoaded.run();
+				}
+			});
+		});
 	}
 }
