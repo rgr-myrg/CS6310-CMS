@@ -59,9 +59,10 @@ public class InputFileHandler {
 	public static void loadFromCSV() {
 		// Select current semester from db. Should be in the model somewhere.
 		// TODO: Please move to the right place and replace with the method call.
-		final ResultSet resultSet = DbHelper.doSql(RequestsTable.SELECT_MAX_SEMESTER);
 
 		try {
+			final ResultSet resultSet = DbHelper.doSql(RequestsTable.SELECT_MAX_SEMESTER);
+
 			if (resultSet.next()) {
 				currentSemester = resultSet.getInt(RequestsTable.SEMESTER_COLUMN);
 			} else {
