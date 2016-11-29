@@ -49,11 +49,6 @@ public class WelcomeController implements ScreenController {
 					? UiMode.RESUME 
 						: UiMode.INITIAL
 				);
-//		ApplicationView.getInstance().onWelcomeControllerNextAction(
-//				selectedRadioButton.getId().equals("resumeOption") 
-//					? ScreenAction.RESUME 
-//						: ScreenAction.START
-//				);
 	}
 
 	@FXML protected void onAboutMenuSelected(ActionEvent event) {
