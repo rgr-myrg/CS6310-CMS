@@ -9,14 +9,15 @@ import edu.gatech.cms.course.Request;
 import edu.gatech.cms.course.Section;
 
 public class Student extends UniversityPerson {
-	private boolean isEnrolled;
+    public static final int MAX_COURSES_ELIGIBLE = 5;
+
+    private boolean isEnrolled;
 	private boolean hasTakenCourse;
 	private List<Section> sectionsCurrentlyEnrolled;
 	private int coursesInCurrentSemester;
 	private List<Course> approvedCourseList;
 	private List<Request> requestsMade;
 	private List<Record> recordHistory;
-	public static final int MAX_COURSES_ELIGIBLE = 5;
 	
 	public Student(int UUID, String name, String address, String phone) {
 		
@@ -91,8 +92,7 @@ public class Student extends UniversityPerson {
 		}
 		
 		addToCourseRequestHistory(course, "request is valid");
-		String addToApproved = getUUID() + ", " + getFullName() + ", " + 
-				course.getID() + ", " + course.getTitle();
+		//String addToApproved = getUUID() + ", " + getFullName() + ", " + course.getID() + ", " + course.getTitle();
 		//InputFileHandler.getInstance().getApprovedRequests().add(addToApproved);
 		return true;
 	}
@@ -203,5 +203,7 @@ public class Student extends UniversityPerson {
 		return isEligible;
 	}
 
-	
+	public String toString() {
+	    return "Student id: " + UUID + ", name: " + fullName + ", address: " + primaryAddress + ", phone: " + primaryPhone;
+	}
 }
