@@ -1,26 +1,20 @@
 package edu.gatech.cms.data;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.nio.file.attribute.FileAttribute;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import edu.gatech.cms.InputFileHandler;
 import edu.gatech.cms.course.Course;
 import edu.gatech.cms.course.Record;
 import edu.gatech.cms.logger.Log;
 import edu.gatech.cms.logger.Logger;
-import edu.gatech.cms.sql.RecordsTable;
 import edu.gatech.cms.sql.RequestsTable;
 import edu.gatech.cms.university.Student;
 import edu.gatech.cms.util.DbHelper;

@@ -29,7 +29,7 @@ public class WelcomeController implements ScreenController {
 		ApplicationView.getInstance().onSemesterDataLoaded = () -> {
 			progressGroup.getChildren().remove(progressGif);
 
-			final int semesterCount = InputFileHandler.getInstance().getCurrentSemester();
+			final int semesterCount = InputFileHandler.getCurrentSemester();
 			String welcomeMsg = UiMessages.START_SEMESTER;
 
 			if (semesterCount > 1) {

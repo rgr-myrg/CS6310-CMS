@@ -7,6 +7,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
@@ -69,7 +70,8 @@
                   <Insets top="45.0" />
                </VBox.margin>
             </Group>
-            <Group fx:id="resumeGroup" visible="false">
+            <TextArea fx:id="aprioriTextResults" />
+            <Group fx:id="resumeGroup" visible="true">
                <children>
                   <Text fx:id="textMessageBox" lineSpacing="5.0" strokeType="OUTSIDE" strokeWidth="0.0" text="" wrappingWidth="465.0">
                      <font>

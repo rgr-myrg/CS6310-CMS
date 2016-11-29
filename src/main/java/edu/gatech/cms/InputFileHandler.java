@@ -30,7 +30,7 @@ import edu.gatech.cms.util.DbHelper;
 public class InputFileHandler {
 	public static final String TAG = InputFileHandler.class.getSimpleName();
 
-	private static final InputFileHandler instance = new InputFileHandler();
+	//private static final InputFileHandler instance = new InputFileHandler();
 
 	private static University university;
 	private static Department department;
@@ -44,9 +44,9 @@ public class InputFileHandler {
 
     private static WekaDataSource wekaDataSource = null;
 
-    public static InputFileHandler getInstance() {
-		return instance;
-	}
+//    public static InputFileHandler getInstance() {
+//		return instance;
+//	}
 
 	public static void loadFromCSV() {
 		if (Log.isDebug()) {
@@ -84,13 +84,10 @@ public class InputFileHandler {
 			return null;
 		}
 
-		// Test output only. 
-		// TODO: Should be displayed in the UI
+//		Apriori apriori = wekaDataSource.analyzeStudentRecords();
+//		FastVector[] rules = apriori.getAllTheRules();
 
-		System.out.println("-------------------");
-		System.out.println(wekaDataSource.analyzeStudentRecords());
-		System.out.println("-------------------");
-		return "TEST OUTPUT";
+		return String.valueOf(wekaDataSource.analyzeStudentRecords());
 	}
 
 	public static void calculateCapacityForCourser() {

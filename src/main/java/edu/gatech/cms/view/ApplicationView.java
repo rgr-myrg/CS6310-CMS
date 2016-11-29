@@ -32,13 +32,18 @@ public class ApplicationView {
 //	private ScreenAction currentScreenAction = ScreenAction.START;
 
 	private Stage stage = null;
+	private String aprioriResults = null;
+
+	public static final ApplicationView getInstance() {
+		return instance;
+	}
 
 	public void onAppStart(Stage stage) {
 		this.stage = stage;
 
 		loadScreen(WELCOME_SCREEN, () -> {
-			InputFileHandler.getInstance().loadFromCSV();
-			InputFileHandler.getInstance().designateSemester();
+			InputFileHandler.loadFromCSV();
+			InputFileHandler.designateSemester();
 
 			Platform.runLater(() -> {
 				stage.setTitle("CMS :: Welcome");
@@ -54,8 +59,8 @@ public class ApplicationView {
 		return stage;
 	}
 
-	public static final ApplicationView getInstance() {
-		return instance;
+	public String getAprioriResults() {
+		return aprioriResults;
 	}
 
 	public void loadScreen(final String fxmlPath, final Runnable target) {
@@ -79,7 +84,8 @@ public class ApplicationView {
 
 			stage.setTitle("CMS :: Loading");
 			stage.setScene(scene);
-			stage.setResizable(false);
+			stage.setResizable(true);
+			//stage.setFullScreen(true);
 
 			new Thread(target).start();
 
@@ -94,6 +100,7 @@ public class ApplicationView {
 			e.printStackTrace();
 		}
 	}
+
 	public void displayAppInfoAlertDialog() {
 		Alert alert = new Alert(AlertType.INFORMATION);
 
@@ -108,8 +115,8 @@ public class ApplicationView {
 	public void onWelcomeControllerNextAction(ScreenAction screenAction) {
 		//this.currentScreenAction = screenAction;
 		loadScreen(APRIORI_SCREEN, () -> {
-			InputFileHandler.getInstance().prepareDataForDataMining();
-			//final String results = InputFileHandler.getInstance().analyzeHistoryAndRoster();
+			InputFileHandler.prepareDataForDataMining();
+			aprioriResults = InputFileHandler.analyzeHistoryAndRoster();
 
 			Platform.runLater(() -> {
 				stage.setTitle("CMS :: Apriori Analysis");
