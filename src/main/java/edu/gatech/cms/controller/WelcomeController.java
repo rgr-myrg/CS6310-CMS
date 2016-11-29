@@ -1,8 +1,8 @@
 package edu.gatech.cms.controller;
 
 import edu.gatech.cms.InputFileHandler;
+import edu.gatech.cms.InputFileHandler.UiMode;
 import edu.gatech.cms.view.ApplicationView;
-import edu.gatech.cms.view.ApplicationView.ScreenAction;
 import edu.gatech.cms.view.UiMessages;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -46,9 +46,14 @@ public class WelcomeController implements ScreenController {
 
 		ApplicationView.getInstance().onWelcomeControllerNextAction(
 				selectedRadioButton.getId().equals("resumeOption") 
-					? ScreenAction.RESUME 
-						: ScreenAction.START
+					? UiMode.RESUME 
+						: UiMode.INITIAL
 				);
+//		ApplicationView.getInstance().onWelcomeControllerNextAction(
+//				selectedRadioButton.getId().equals("resumeOption") 
+//					? ScreenAction.RESUME 
+//						: ScreenAction.START
+//				);
 	}
 
 	@FXML protected void onAboutMenuSelected(ActionEvent event) {

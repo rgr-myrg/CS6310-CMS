@@ -3,10 +3,10 @@ package edu.gatech.cms.view;
 import java.io.IOException;
 
 import edu.gatech.cms.InputFileHandler;
+import edu.gatech.cms.InputFileHandler.UiMode;
 import edu.gatech.cms.controller.ScreenController;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -18,21 +18,17 @@ public class ApplicationView {
 	public static final String APRIORI_SCREEN = "/fxml/Apriori.fxml";
 
 	public static final int SCENE_WIDTH  = 600;
-	public static final int SCENE_HEIGHT = 400;
-
-	public static enum ScreenAction {
-			START,
-			RESUME
-	};
+	public static final int SCENE_HEIGHT = 600;
 
 	public Runnable onSemesterDataLoaded = null;
 	public Runnable onAprioriResultsLoaded = null;
 
 	private static ApplicationView instance = new ApplicationView();
-//	private ScreenAction currentScreenAction = ScreenAction.START;
 
+	private UiMode uiMode = UiMode.INITIAL;
 	private Stage stage = null;
 	private String aprioriResults = null;
+	private boolean isAppLaunch = false;
 
 	public static final ApplicationView getInstance() {
 		return instance;
@@ -40,13 +36,13 @@ public class ApplicationView {
 
 	public void onAppStart(Stage stage) {
 		this.stage = stage;
+		this.isAppLaunch = true;
 
 		loadScreen(WELCOME_SCREEN, () -> {
 			InputFileHandler.loadFromCSV();
-			InputFileHandler.designateSemester();
 
 			Platform.runLater(() -> {
-				stage.setTitle("CMS :: Welcome");
+				stage.setTitle(UiMessages.WELCOME_WINDOW_TITLE);
 
 				if (onSemesterDataLoaded != null) {
 					onSemesterDataLoaded.run();
@@ -63,39 +59,33 @@ public class ApplicationView {
 		return aprioriResults;
 	}
 
+	public UiMode getUiMode() {
+		return uiMode;
+	}
+
 	public void loadScreen(final String fxmlPath, final Runnable target) {
 		if (stage != null) {
 			stage.close();
 		}
 
 		try {
-			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
-			//final Parent screen = FXMLLoader.load(getClass().getResource(fxmlPath));
+			final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
 			final Parent screen = fxmlLoader.load();
 			final Scene scene = new Scene(screen, SCENE_WIDTH, SCENE_HEIGHT);
-
-			scene.setCursor(Cursor.WAIT);
-
 			final ScreenController controller = (ScreenController) fxmlLoader.getController();
 
-			if (stage == null) {
+			if (!isAppLaunch) {
 				stage = controller.getStage();
 			}
 
-			stage.setTitle("CMS :: Loading");
+			stage.setTitle(UiMessages.LOADING_WINDOW_TITLE);
 			stage.setScene(scene);
 			stage.setResizable(true);
-			//stage.setFullScreen(true);
+
+			stage.show();
 
 			new Thread(target).start();
 
-			new Thread(() -> {
-				Platform.runLater(() -> {
-					scene.setCursor(Cursor.DEFAULT);
-				});
-			}).start();
-
-			stage.show();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -104,27 +94,33 @@ public class ApplicationView {
 	public void displayAppInfoAlertDialog() {
 		Alert alert = new Alert(AlertType.INFORMATION);
 
-		alert.setTitle("CMS :: About");
+		alert.setTitle(UiMessages.ABOUT_WINDOW_TITLE);
 		alert.setHeaderText(UiMessages.APP_TITLE);
 		alert.setContentText(UiMessages.APP_INFO);
 		alert.setResizable(false);
 
-		alert.showAndWait();
+		alert.show();
 	}
 
-	public void onWelcomeControllerNextAction(ScreenAction screenAction) {
-		//this.currentScreenAction = screenAction;
+	public void onWelcomeControllerNextAction(UiMode uiMode) {
+		this.uiMode = uiMode;
+
 		loadScreen(APRIORI_SCREEN, () -> {
+			InputFileHandler.designateSemester();
 			InputFileHandler.prepareDataForDataMining();
 			aprioriResults = InputFileHandler.analyzeHistoryAndRoster();
 
 			Platform.runLater(() -> {
-				stage.setTitle("CMS :: Apriori Analysis");
+				stage.setTitle(UiMessages.APRIORI_WINDOW_TITLE);
 
 				if (onAprioriResultsLoaded != null) {
 					onAprioriResultsLoaded.run();
 				}
 			});
 		});
+	}
+
+	public void onAprioriControllerNextAction() {
+		
 	}
 }

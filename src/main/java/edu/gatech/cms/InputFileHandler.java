@@ -23,14 +23,15 @@ import edu.gatech.cms.university.Instructor;
 import edu.gatech.cms.university.Student;
 import edu.gatech.cms.university.University;
 import edu.gatech.cms.util.DbHelper;
+import edu.gatech.cms.view.ApplicationView;
 
 /**
- * The class takes care of most of data loading. 
+ * The class takes care of most of data loading.
  */
 public class InputFileHandler {
 	public static final String TAG = InputFileHandler.class.getSimpleName();
 
-	//private static final InputFileHandler instance = new InputFileHandler();
+	// private static final InputFileHandler instance = new InputFileHandler();
 
 	private static University university;
 	private static Department department;
@@ -40,33 +41,61 @@ public class InputFileHandler {
 	private static Map<Integer, Instructor> instructors = new TreeMap<>();
 	private static List<Record> records = new ArrayList<Record>();
 	private static List<Request> requests;
-	private static int currentSemester = 1;
+	private static int currentSemester = 0;
 
-    private static WekaDataSource wekaDataSource = null;
+	private static WekaDataSource wekaDataSource = null;
 
-//    public static InputFileHandler getInstance() {
-//		return instance;
-//	}
+	public static enum UiMode {
+		INITIAL, 
+		RESUME
+	};
 
+	/**
+	 * This method is invoked by the ui when the app starts.
+	 */
 	public static void loadFromCSV() {
+		// TODO: Get current semester from db
+
 		if (Log.isDebug()) {
-			Logger.debug(TAG, "loadFromCSV starts up");
+			Logger.debug(TAG, "loadFromCSV currentSemester: " + currentSemester);
 		}
 
-		DbHelper.dropTables();
-		DbHelper.createTables();
+		// It's inferred a currentSemester of 0 indicates
+		// the 'initial' state of the app.
 
-        StudentsData.load();
-		CoursesData.load();
-        PrerequisitesData.load();
-		InstructorsData.load();
-		RecordsData.load();
+		if (currentSemester == 0) {
+			DbHelper.dropTables();
+			DbHelper.createTables();
+
+			StudentsData.load();
+			CoursesData.load();
+			PrerequisitesData.load();
+			InstructorsData.load();
+			RecordsData.load();
+		}
 	}
 
+	/**
+	 * This method is invoked after the user selects 
+	 * 'initial' or 'resume' on the Welcome screen
+	 * and has clicked the 'next' button.
+	 */
 	public static void designateSemester() {
-		// Load requests and assignments for each semester using the currentSemester
+		// Reset current semester for 'initial' mode
+		if (ApplicationView.getInstance().getUiMode() == UiMode.INITIAL) {
+			currentSemester = 0;
+		}
+
+		// Increment to process the next batch of files
+		currentSemester++;
+
+		// Load requests and assignments for each semester
 		RequestsData.load(currentSemester);
 		AssignmentsData.load(currentSemester);
+
+		if (Log.isDebug()) {
+			Logger.debug(TAG, "designateSemester currentSemester: " + currentSemester);
+		}
 	}
 
 	public static void prepareDataForDataMining() {
@@ -84,67 +113,64 @@ public class InputFileHandler {
 			return null;
 		}
 
-//		Apriori apriori = wekaDataSource.analyzeStudentRecords();
-//		FastVector[] rules = apriori.getAllTheRules();
-
 		return String.valueOf(wekaDataSource.analyzeStudentRecords());
 	}
 
 	public static void calculateCapacityForCourser() {
-		
+
 	}
 
 	public static void loackAssignmentsForSemester() {
-		
+
 	}
 
 	public static void validateStudentRequests() {
-		
+
 	}
 
 	// SIMPLE SETTERS, GETTERS for model objects
-	
-    public static University getUniversity() {
-        return university;
-    }
 
-    public static void setUniversity(University uni) {
-        university = uni;
-    }
+	public static University getUniversity() {
+		return university;
+	}
 
-    public static Department getDepartment() {
-        return department;
-    }
+	public static void setUniversity(University uni) {
+		university = uni;
+	}
 
-    public static void setDepartment(Department dept) {
-        department = dept;
-    }
+	public static Department getDepartment() {
+		return department;
+	}
 
-    public static Map<Integer, Course> getCourses() {
-        return courses;
-    }
+	public static void setDepartment(Department dept) {
+		department = dept;
+	}
 
-    public static Map<Integer, Student> getStudents() {
-        return students;
-    }
+	public static Map<Integer, Course> getCourses() {
+		return courses;
+	}
 
-    public static Map<Integer, Instructor> getInstructors() {
-        return instructors;
-    }
+	public static Map<Integer, Student> getStudents() {
+		return students;
+	}
 
-    public static List<Record> getRecords() {
-        return records;
-    }
+	public static Map<Integer, Instructor> getInstructors() {
+		return instructors;
+	}
 
-    public static List<Request> getRequests() {
-        return requests;
-    }
+	public static List<Record> getRecords() {
+		return records;
+	}
 
-    public static int getCurrentSemester() {
-        return currentSemester;
-    }
+	public static List<Request> getRequests() {
+		return requests;
+	}
 
-    public static void setCurrentSemester(int sem) {
-        currentSemester = sem;
-    }
+	public static int getCurrentSemester() {
+		return currentSemester;
+	}
+
+	public static void setCurrentSemester(int sem) {
+		currentSemester = sem;
+	}
 }

@@ -15,7 +15,6 @@ public class AprioriController implements ScreenController {
 	@FXML private Group progressGroup;
 	@FXML private ImageView progressGif;
 	@FXML private Text welcomeText;
-	@FXML private Text textMessageBox;
 	@FXML private TextArea aprioriTextResults;
 
 	public AprioriController() {
@@ -35,7 +34,7 @@ public class AprioriController implements ScreenController {
 	}
 
 	@FXML protected void onNextButtonClick(ActionEvent event) {
-		
+		ApplicationView.getInstance().onAprioriControllerNextAction();
 	}
 
 	@Override
