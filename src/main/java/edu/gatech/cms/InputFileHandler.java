@@ -42,13 +42,13 @@ public class InputFileHandler {
 	private static List<Request> requests;
 	private static int currentSemester = 1;
 
-    private WekaDataSource wekaDataSource = null;
+    private static WekaDataSource wekaDataSource = null;
 
     public static InputFileHandler getInstance() {
 		return instance;
 	}
 
-	public void loadFromCSV() {
+	public static void loadFromCSV() {
 		if (Log.isDebug()) {
 			Logger.debug(TAG, "loadFromCSV starts up");
 		}
@@ -63,19 +63,19 @@ public class InputFileHandler {
 		RecordsData.load();
 	}
 
-	public void designateSemester() {
+	public static void designateSemester() {
 		// Load requests and assignments for each semester using the currentSemester
 		RequestsData.load(currentSemester);
 		AssignmentsData.load(currentSemester);
 	}
 
-	public void prepareDataForDataMining() {
+	public static void prepareDataForDataMining() {
 		if (wekaDataSource == null) {
 			wekaDataSource = new WekaDataSource();
 		}
 	}
 
-	public String analyzeHistoryAndRoster() {
+	public static String analyzeHistoryAndRoster() {
 		if (wekaDataSource == null) {
 			if (Log.isDebug()) {
 				Logger.debug(TAG, "Error: wekaDataSource is NULL!");
@@ -87,19 +87,21 @@ public class InputFileHandler {
 		// Test output only. 
 		// TODO: Should be displayed in the UI
 
-		//System.out.println(wekaDataSource.analyzeStudentRecords());
+		System.out.println("-------------------");
+		System.out.println(wekaDataSource.analyzeStudentRecords());
+		System.out.println("-------------------");
 		return "TEST OUTPUT";
 	}
 
-	public void calculateCapacityForCourser() {
+	public static void calculateCapacityForCourser() {
 		
 	}
 
-	public void loackAssignmentsForSemester() {
+	public static void loackAssignmentsForSemester() {
 		
 	}
 
-	public void validateStudentRequests() {
+	public static void validateStudentRequests() {
 		
 	}
 
