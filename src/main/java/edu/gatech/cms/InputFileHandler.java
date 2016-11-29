@@ -1,5 +1,7 @@
 package edu.gatech.cms;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +20,7 @@ import edu.gatech.cms.data.StudentsData;
 import edu.gatech.cms.data.WekaDataSource;
 import edu.gatech.cms.logger.Log;
 import edu.gatech.cms.logger.Logger;
+import edu.gatech.cms.sql.RequestsTable;
 import edu.gatech.cms.university.Department;
 import edu.gatech.cms.university.Instructor;
 import edu.gatech.cms.university.Student;
@@ -54,7 +57,22 @@ public class InputFileHandler {
 	 * This method is invoked by the ui when the app starts.
 	 */
 	public static void loadFromCSV() {
-		// TODO: Get current semester from db
+		// Select current semester from db. Should be in the model somewhere.
+		// TODO: Please move to the right place and replace with the method call.
+		final ResultSet resultSet = DbHelper.doSql(RequestsTable.SELECT_MAX_SEMESTER);
+
+		try {
+			if (resultSet.next()) {
+				currentSemester = resultSet.getInt(RequestsTable.SEMESTER_COLUMN);
+			} else {
+				currentSemester = 0;
+			}
+
+			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		// End select current semester from db
 
 		if (Log.isDebug()) {
 			Logger.debug(TAG, "loadFromCSV currentSemester: " + currentSemester);

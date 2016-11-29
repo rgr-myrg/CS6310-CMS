@@ -10,6 +10,7 @@ public class RequestsTable {
 	public static final String COURSE_ID_COLUMN = "courseId";
 	public static final String REQUEST_STATUS_COLUMN = "requestStatus";
 	public static final String STATUS_REASON_COLUMN = "statusReason";
+	public static final String SEMESTER_COLUMN = "semesterIndex";
 
 	public static final int OPEN_REQUEST_DEFAULT_VALUE = -1;
 
@@ -18,6 +19,7 @@ public class RequestsTable {
 					+ "%s INTEGER PRIMARY KEY AUTOINCREMENT,"
 					+ "%s INTEGER NOT NULL,"
 					+ "%s INTEGER NOT NULL,"
+					+ "%s INTEGER NOT NULL DEFAULT 0,"
 					+ "%s INTEGER NOT NULL DEFAULT %d,"
 					+ "%s TEXT,"
 					+ "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL"
@@ -26,6 +28,7 @@ public class RequestsTable {
 			ID_COLUMN, 
 			STUDENT_ID_COLUMN, 
 			COURSE_ID_COLUMN, 
+			SEMESTER_COLUMN,
 			REQUEST_STATUS_COLUMN, OPEN_REQUEST_DEFAULT_VALUE, 
 			STATUS_REASON_COLUMN
 	);
@@ -36,6 +39,10 @@ public class RequestsTable {
 			"INSERT INTO %s (%s, %s, %s) VALUES (?, ?, ?)", 
 			TABLE_NAME, STUDENT_ID_COLUMN, COURSE_ID_COLUMN, REQUEST_STATUS_COLUMN
 	);
+
+	public static final String SELECT_MAX_SEMESTER = String.format(
+			"SELECT MAX(%s) AS %s FROM %s", 
+			SEMESTER_COLUMN, SEMESTER_COLUMN ,TABLE_NAME);
 
 	public static final String SELECT_COUNT = String.format(
 			"SELECT COUNT(%s) AS total FROM %s", 
