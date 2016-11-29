@@ -66,6 +66,16 @@ public class InputFileHandler {
 
 	public void designateSemester() {
 		// Load requests and assignments for each semester using the currentSemester
+		
+		//extract the number out of the filename
+		String fileName = "placeholder_1.csv";
+		String semesterExtract = fileName.substring(fileName.indexOf("_")+1);
+		System.out.println(semesterExtract);
+		semesterExtract = semesterExtract.substring(0,semesterExtract.indexOf("."));
+		System.out.println(semesterExtract);
+		
+		currentSemester = Integer.parseInt(semesterExtract);
+		
 		RequestsData.load(currentSemester);
 		AssignmentsData.load(currentSemester);
 	}
@@ -91,11 +101,11 @@ public class InputFileHandler {
 		// System.out.println(wekaDataSource.analyzeCourseRequests());
 	}
 
-	public void calculateCapacityForCourser() {
+	public void calculateCapacityForCourse() {
 		
 	}
 
-	public void loackAssignmentsForSemester() {
+	public void lockAssignmentsForSemester() {
 		
 	}
 
