@@ -38,7 +38,7 @@ public class InputFileHandler {
 
 	private WekaDataSource wekaDataSource = null;
 
-	private int currentSemester = 1;
+	private int currentSemester = 0;
 
 	public static InputFileHandler getInstance() {
 		return instance;
@@ -71,19 +71,19 @@ public class InputFileHandler {
 		}
 	}
 
-	public void analyzeHistoryAndRoster() {
+	public String analyzeHistoryAndRoster() {
 		if (wekaDataSource == null) {
 			if (Log.isDebug()) {
 				Logger.debug(TAG, "Error: wekaDataSource is NULL!");
 			}
 
-			return;
+			return null;
 		}
 
 		// Test output only. 
 		// TODO: Should be displayed in the UI
 		//System.out.println(wekaDataSource.analyzeStudentRecords());
-		System.out.println(wekaDataSource.analyzeCourseRequests());
+		return "TEST OUTPUT";
 	}
 
 	public void calculateCapacityForCourser() {
@@ -96,5 +96,9 @@ public class InputFileHandler {
 
 	public void validateStudentRequests() {
 		
+	}
+
+	public int getCurrentSemester() {
+		return currentSemester;
 	}
 }
