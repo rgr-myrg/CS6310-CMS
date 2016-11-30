@@ -23,6 +23,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.application.Platform;
 
 public class InstructorController implements ScreenController{
 	@FXML private Group progressGroup;
@@ -50,15 +51,23 @@ public class InstructorController implements ScreenController{
 			availableListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 			    @Override
 			    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-			        addedListView.getSelectionModel().clearSelection();
-			        Logger.debug(TAG, "Clicked item: " + newValue);
+			        if(newValue != null) {
+			        	Platform.runLater(() -> {
+				        	addedListView.getSelectionModel().select(-1);
+			        	});
+			        	Logger.debug(TAG, "Clicked item: " + newValue);				        	
+			        }
 		    	}
 		    });
 			
 			addedListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 			    @Override
 			    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-			        availableListView.getSelectionModel().clearSelection();
+				    if(newValue != null) {
+				        Platform.runLater(() -> {
+							availableListView.getSelectionModel().select(-1);
+				        });    	
+				    }			        
 			        Logger.debug(TAG, "Clicked item: " + newValue);
 		    	}
 		    });		    
@@ -74,17 +83,15 @@ public class InstructorController implements ScreenController{
 	}	
 
 	@FXML protected void onAddButtonClick(ActionEvent event) {
-		ObservableList<String> availableItems = availableListView.getSelectionModel().getSelectedItems();
-		ObservableList<String> addedItems = addedListView.getItems();
-		for(String str : availableItems){
-			addedItems.add(str);
-		}
-		addedListView.setItems(addedItems);
-		Logger.debug(TAG, "selected: " + availableItems);
+		ObservableList<String> selectedItems = availableListView.getSelectionModel().getSelectedItems();
+		addedListView.getItems().addAll(selectedItems);
+		availableListView.getItems().removeAll(selectedItems);
 	}
 
 	@FXML protected void onRemoveButtonClick(ActionEvent event) {
-		
+		ObservableList<String> selectedItems = addedListView.getSelectionModel().getSelectedItems();
+		availableListView.getItems().addAll(selectedItems);
+		addedListView.getItems().removeAll(selectedItems);
 	}
 
 	@FXML protected void onClearButtonClick(ActionEvent event) {
