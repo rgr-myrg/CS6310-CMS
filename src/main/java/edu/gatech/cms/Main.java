@@ -3,19 +3,14 @@ package edu.gatech.cms;
 import java.io.IOException;
 
 import edu.gatech.cms.logger.Log;
+import edu.gatech.cms.view.ApplicationView;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-	public static final String WELCOME_SCREEN = "/fxml/Welcome.fxml";
-	public static final int SCENE_WIDTH  = 500;
-	public static final int SCENE_HEIGHT = 300;
-
 	@Override
 	public void start(Stage stage) throws IOException {
+<<<<<<< HEAD
 		final Parent parent = FXMLLoader.load(getClass().getResource(WELCOME_SCREEN));
 		final Scene scene = new Scene(parent, SCENE_WIDTH, SCENE_HEIGHT);
 
@@ -44,6 +39,9 @@ public class Main extends Application {
 
 		// Invoking show() renders the Stage on the window.
 		stage.show();
+=======
+		ApplicationView.getInstance().onAppStart(stage);
+>>>>>>> refs/remotes/origin/dev
 	}
 
 	public static void main(String[] args) {
