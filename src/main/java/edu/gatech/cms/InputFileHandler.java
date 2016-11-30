@@ -63,7 +63,7 @@ public class InputFileHandler {
 		try {
 			final ResultSet resultSet = DbHelper.doSql(RequestsTable.SELECT_MAX_SEMESTER);
 
-			if (resultSet.next()) {
+			if (resultSet != null && resultSet.next()) {
 				currentSemester = resultSet.getInt(RequestsTable.SEMESTER_COLUMN);
 			} else {
 				currentSemester = 0;
