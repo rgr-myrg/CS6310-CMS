@@ -65,11 +65,10 @@ public class InputFileHandler {
 
 			if (resultSet != null && resultSet.next()) {
 				currentSemester = resultSet.getInt(RequestsTable.SEMESTER_COLUMN);
+				resultSet.close();
 			} else {
 				currentSemester = 0;
 			}
-
-			resultSet.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
