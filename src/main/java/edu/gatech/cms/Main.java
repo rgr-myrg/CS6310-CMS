@@ -30,7 +30,7 @@ public class Main extends Application {
 					
 					@Override
 					public void run() {
-						//InputFileHandler.getInstance().loadFromCSV();
+						InputFileHandler.getInstance().loadFromCSV();
 						InputFileHandler.getInstance().designateSemester();
 						InputFileHandler.getInstance().prepareDataForDataMining();
 						InputFileHandler.getInstance().analyzeHistoryAndRoster();
