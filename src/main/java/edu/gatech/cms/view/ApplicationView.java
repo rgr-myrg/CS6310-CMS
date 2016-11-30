@@ -17,6 +17,8 @@ public class ApplicationView {
 	public static final String WELCOME_SCREEN = "/fxml/Welcome.fxml";
 	public static final String APRIORI_SCREEN = "/fxml/Apriori.fxml";
 	public static final String INSTRUCTOR_SCREEN = "/fxml/Instructor.fxml";
+	public static final String PROCESSED_REQUESTS_SCREEN = "/fxml/ProcessedRequests.fxml";
+	public static final String CONFIRM_EXIT_SCREEN = "/fxml/ConfirmExit.fxml";	
 
 	public static final int SCENE_WIDTH  = 600;
 	public static final int SCENE_HEIGHT = 600;
@@ -24,6 +26,8 @@ public class ApplicationView {
 	public Runnable onSemesterDataLoaded = null;
 	public Runnable onAprioriResultsLoaded = null;
 	public Runnable onInstructorResultsLoaded = null;
+	public Runnable onProcessedRequestsResultsLoaded = null;
+	public Runnable onConfirmExitResultsLoaded = null;
 
 	private static ApplicationView instance = new ApplicationView();
 
@@ -139,6 +143,66 @@ public class ApplicationView {
 	}
 
 	public void onInstructorControllerNextAction(){
+		loadScreen(PROCESSED_REQUESTS_SCREEN, () -> {
+			InputFileHandler.designateSemester();
 
+			Platform.runLater(() -> {
+				stage.setTitle(UiMessages.PROCESSED_REQUESTS_WINDOW_TITLE);
+				
+				if (onProcessedRequestsResultsLoaded != null) {
+					onProcessedRequestsResultsLoaded.run();
+				}
+			});
+		});		
+	}
+
+	public void onProcessedRequestsControllerExitAction(){
+		loadScreen(CONFIRM_EXIT_SCREEN, () -> {
+			InputFileHandler.designateSemester();
+
+			Platform.runLater(() -> {
+				stage.setTitle(UiMessages.CONFIRM_EXIT_WINDOW_TITLE);
+				
+				if (onConfirmExitResultsLoaded != null) {
+					onConfirmExitResultsLoaded.run();
+				}
+			});
+		});	
+	}	
+
+	public void onProcessedRequestsControllerNextSemesterAction(){
+		loadScreen(APRIORI_SCREEN, () -> {
+			InputFileHandler.designateSemester();
+			InputFileHandler.loadAssignments();
+			InputFileHandler.loadRequests();
+			InputFileHandler.prepareDataForDataMining();
+			aprioriResults = InputFileHandler.analyzeHistoryAndRoster();
+
+			Platform.runLater(() -> {
+				stage.setTitle(UiMessages.APRIORI_WINDOW_TITLE);
+
+				if (onAprioriResultsLoaded != null) {
+					onAprioriResultsLoaded.run();
+				}
+			});
+		});
+	}
+
+	public void onConfirmExitControllerExitAction(){
+
+	}
+
+	public void onConfirmExitControllerBackAction(){
+		loadScreen(PROCESSED_REQUESTS_SCREEN, () -> {
+			InputFileHandler.designateSemester();
+
+			Platform.runLater(() -> {
+				stage.setTitle(UiMessages.PROCESSED_REQUESTS_WINDOW_TITLE);
+				
+				if (onProcessedRequestsResultsLoaded != null) {
+					onProcessedRequestsResultsLoaded.run();
+				}
+			});
+		});
 	}	
 }
