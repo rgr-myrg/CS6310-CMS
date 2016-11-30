@@ -16,6 +16,8 @@ public final class UiMessages {
 
 	public static final String APRIORI_WINDOW_TITLE = "CMS :: Apriori Analysis";
 
+	public static final String INSTRUCTOR_WINDOW_TITLE = "CMS :: Instructor Assignment";
+
 	public static final String ABOUT_WINDOW_TITLE = "CMS :: About";
 
 	public static final String START_SEMESTER = "Please click 'Next' to begin Roster selections for the upcoming Semester.";
