@@ -5,6 +5,8 @@ import java.sql.SQLException;
 
 import edu.gatech.cms.InputFileHandler;
 import edu.gatech.cms.course.Record;
+import edu.gatech.cms.logger.Log;
+import edu.gatech.cms.logger.Logger;
 import edu.gatech.cms.sql.RecordsTable;
 import edu.gatech.cms.util.CsvDataLoader;
 import edu.gatech.cms.util.DbHelper;
@@ -60,7 +62,10 @@ public class RecordsData extends CsvDataLoader {
 					record.getStudent().addRecord(record);
 					// add the record to the "big list of records"
                     InputFileHandler.getRecords().add(record);
-					System.out.println("Loaded - " + record);
+
+					if (Log.isDebug()) {
+						Logger.debug(TAG, "Loaded - " + record);
+					}
 					
 				} catch (SQLException e) {
 					DbHelper.logSqlException(e);
