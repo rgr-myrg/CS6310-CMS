@@ -31,8 +31,6 @@ public class ApplicationView {
 	private String aprioriResults = null;
 	private boolean isAppLaunch = false;
 
-	private List<Instructor> instructors = new ArrayList<Instructor>();
-
 	public static final ApplicationView getInstance() {
 		return instance;
 	}
@@ -124,19 +122,16 @@ public class ApplicationView {
 	}
 
 	public void onAprioriControllerNextAction() {
-		this.uiMode = uiMode;
-
 		loadScreen(INSTRUCTOR_SCREEN, () -> {
 			InputFileHandler.designateSemester();
-			aprioriResults = InputFileHandler.analyzeHistoryAndRoster();
 
 			Platform.runLater(() -> {
-				stage.setTitle(UiMessages.);
+				stage.setTitle(UiMessages.INSTRUCTOR_WINDOW_TITLE);
 			});
 		});		
 	}
 
-	public void onInstructorControllerNextAction(UiMode uiMode){
+	public void onInstructorControllerNextAction(){
 
 	}	
 }
