@@ -48,7 +48,7 @@
                <VBox.margin>
                   <Insets top="15.0" />
                </VBox.margin></Label>
-            <Text fx:id="welcomeText" lineSpacing="5.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="500.0">
+            <Text fx:id="welcomeText" lineSpacing="5.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="500.0">
                <VBox.margin>
                   <Insets left="55.0" right="30.0" top="15.0" />
                </VBox.margin>
@@ -63,7 +63,7 @@
             </Group>
             <HBox prefHeight="345.0" prefWidth="600.0">
                <children>
-                  <ListView prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" fx:id="availableListView">
+                  <ListView fx:id="availableListView" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                      <HBox.margin>
                         <Insets left="20.0" />
                      </HBox.margin>
@@ -76,9 +76,9 @@
                               <HBox prefHeight="29.0" prefWidth="200.0">
                                  <children>
                                     <HBox prefHeight="28.0" prefWidth="58.0" HBox.hgrow="ALWAYS" />
-                                    <Button mnemonicParsing="false" text="&lt;" />
-                                    <Button mnemonicParsing="false" text="Clear" />
-                                    <Button mnemonicParsing="false" text="&gt;" />
+                                    <Button fx:id="removeButtonClick" mnemonicParsing="false" onAction="#onRemoveButtonClick" text="&lt;" />
+                                    <Button fx:id="clearButtonClick" mnemonicParsing="false" onAction="#onClearButtonClick" text="Clear" />
+                                    <Button fx:id="addButtonClick" mnemonicParsing="false" onAction="#onAddButtonClick" text="&gt;" />
                                     <HBox prefHeight="28.0" prefWidth="58.0" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
@@ -86,7 +86,7 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <ListView prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" fx:id="selectedListView">
+                  <ListView fx:id="selectedListView" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                      <HBox.margin>
                         <Insets right="20.0" />
                      </HBox.margin>
