@@ -35,29 +35,32 @@ public class AssignmentsData extends CsvDataLoader {
 			if (parts.length > 0) {
 				try {
 					
+					Integer semester = InputFileHandler.getCurrentSemester();
 					Integer instructorID = Integer.valueOf(parts[0]);
 					Integer courseID = Integer.valueOf(parts[1]);
 					Integer capacity = Integer.valueOf(parts[2]);
 				
 					preparedStatement = DbHelper.getConnection().prepareStatement(AssignmentsTable.INSERT_SQL);
-					preparedStatement.setInt(1, instructorID);
-					preparedStatement.setInt(2, courseID);
-					preparedStatement.setInt(3, capacity);
+					preparedStatement.setInt(1, semester);
+					preparedStatement.setInt(2, instructorID);
+					preparedStatement.setInt(3, courseID);
+					preparedStatement.setInt(4, capacity);
 
 					preparedStatement.execute();
 					
 					// save in current semester
 					Assignment assignment = new Assignment(
+							semester,
 							InputFileHandler.getInstructors().get(instructorID),
 							InputFileHandler.getCourses().get(courseID), 
 							capacity);
 					
 					// get list of assignments for current semester
-					List<Assignment> assign = InputFileHandler.getAssignments().get(InputFileHandler.getCurrentSemester());
+					List<Assignment> assign = InputFileHandler.getAssignments().get(semester);
 					assign.add(assignment);
 					
 					if (Log.isDebug()) {
-						Logger.debug(TAG, "Semester " + InputFileHandler.getCurrentSemester() + ", loaded - " + assignment);
+						Logger.debug(TAG, "Semester " + semester + ", loaded - " + assignment);
 					}
 					
 				} catch (SQLException e) {
