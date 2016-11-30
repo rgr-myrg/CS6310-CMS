@@ -7,6 +7,8 @@ import java.util.regex.Pattern;
 
 import edu.gatech.cms.InputFileHandler;
 import edu.gatech.cms.course.Course;
+import edu.gatech.cms.logger.Log;
+import edu.gatech.cms.logger.Logger;
 import edu.gatech.cms.sql.CoursesTable;
 import edu.gatech.cms.util.CsvDataLoader;
 import edu.gatech.cms.util.DbHelper;
@@ -54,7 +56,10 @@ public class CoursesData extends CsvDataLoader {
 					// TODO - ignore semesters for now
 					
 					InputFileHandler.getCourses().put(id, course);
-					System.out.println("Loaded - " + course);
+
+					if (Log.isDebug()) {
+						Logger.debug(TAG, "Loaded - " + course);
+					}
 					
 				} catch (SQLException e) {
 					DbHelper.logSqlException(e);

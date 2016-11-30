@@ -4,6 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import edu.gatech.cms.InputFileHandler;
+import edu.gatech.cms.logger.Log;
+import edu.gatech.cms.logger.Logger;
 import edu.gatech.cms.sql.UniversityPersonTable;
 import edu.gatech.cms.university.Instructor;
 import edu.gatech.cms.university.UniversityPersonRole;
@@ -51,7 +53,10 @@ public class InstructorsData extends CsvDataLoader {
 					// keep in memory
 					Instructor instructor = new Instructor(id, name, address, phone);
 					InputFileHandler.getInstructors().put(id, instructor);
-					System.out.println("Loaded - " + instructor);
+
+					if (Log.isDebug()) {
+						Logger.debug(TAG, "Loaded - " + instructor);
+					}
 					
 				} catch (SQLException e) {
 					DbHelper.logSqlException(e);

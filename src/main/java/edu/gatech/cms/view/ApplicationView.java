@@ -109,6 +109,8 @@ public class ApplicationView {
 
 		loadScreen(APRIORI_SCREEN, () -> {
 			InputFileHandler.designateSemester();
+			InputFileHandler.loadAssignments();
+			InputFileHandler.loadRequests();
 			InputFileHandler.prepareDataForDataMining();
 			aprioriResults = InputFileHandler.analyzeHistoryAndRoster();
 
