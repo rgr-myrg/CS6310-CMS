@@ -15,7 +15,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane fx:id="rootBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: #FFFFFF;" stylesheets="@../css/Main.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.gatech.cms.controller.AprioriController">
+<BorderPane fx:id="rootBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: #FFFFFF;" stylesheets="@../css/Main.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.gatech.cms.controller.InstructorController">
    <bottom>
       <HBox BorderPane.alignment="BOTTOM_CENTER">
          <children>
@@ -63,10 +63,11 @@
             </Group>
             <HBox prefHeight="345.0" prefWidth="600.0">
                <children>
-                  <ListView prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                  <ListView prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" fx:id="availableListView">
                      <HBox.margin>
                         <Insets left="20.0" />
-                     </HBox.margin></ListView>
+                     </HBox.margin>
+                  </ListView>
                   <HBox prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                      <children>
                         <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
@@ -85,7 +86,7 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <ListView prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                  <ListView prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" fx:id="selectedListView">
                      <HBox.margin>
                         <Insets right="20.0" />
                      </HBox.margin>

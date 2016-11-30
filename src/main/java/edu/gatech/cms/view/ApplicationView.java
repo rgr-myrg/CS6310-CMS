@@ -23,6 +23,7 @@ public class ApplicationView {
 
 	public Runnable onSemesterDataLoaded = null;
 	public Runnable onAprioriResultsLoaded = null;
+	public Runnable onInstructorResultsLoaded = null;
 
 	private static ApplicationView instance = new ApplicationView();
 
@@ -127,6 +128,10 @@ public class ApplicationView {
 
 			Platform.runLater(() -> {
 				stage.setTitle(UiMessages.INSTRUCTOR_WINDOW_TITLE);
+				
+				if (onInstructorResultsLoaded != null) {
+					onInstructorResultsLoaded.run();
+				}
 			});
 		});		
 	}

@@ -26,4 +26,6 @@ public final class UiMessages {
 			+ "Please click 'Resume' to continue Roster selections for the upcoming Semester or 'Start' to start over.";
 
 	public static final String APRIORI_HEADING = "Apriori Analysis for Semester %d";
+
+	public static final String INSTRUCTOR_HEADING = "Instructor Assignment";
 }
