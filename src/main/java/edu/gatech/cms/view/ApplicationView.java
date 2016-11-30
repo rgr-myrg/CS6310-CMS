@@ -130,8 +130,6 @@ public class ApplicationView {
 
 	public void onAprioriControllerNextAction() {
 		loadScreen(INSTRUCTOR_SCREEN, () -> {
-			InputFileHandler.designateSemester();
-
 			Platform.runLater(() -> {
 				stage.setTitle(UiMessages.INSTRUCTOR_WINDOW_TITLE);
 				
@@ -144,8 +142,6 @@ public class ApplicationView {
 
 	public void onInstructorControllerNextAction(){
 		loadScreen(PROCESSED_REQUESTS_SCREEN, () -> {
-			InputFileHandler.designateSemester();
-
 			Platform.runLater(() -> {
 				stage.setTitle(UiMessages.PROCESSED_REQUESTS_WINDOW_TITLE);
 				
@@ -158,8 +154,6 @@ public class ApplicationView {
 
 	public void onProcessedRequestsControllerExitAction(){
 		loadScreen(CONFIRM_EXIT_SCREEN, () -> {
-			InputFileHandler.designateSemester();
-
 			Platform.runLater(() -> {
 				stage.setTitle(UiMessages.CONFIRM_EXIT_WINDOW_TITLE);
 				
@@ -189,13 +183,12 @@ public class ApplicationView {
 	}
 
 	public void onConfirmExitControllerExitAction(){
-
+	    Stage stage = getStage();	    
+	    stage.close();
 	}
 
 	public void onConfirmExitControllerBackAction(){
 		loadScreen(PROCESSED_REQUESTS_SCREEN, () -> {
-			InputFileHandler.designateSemester();
-
 			Platform.runLater(() -> {
 				stage.setTitle(UiMessages.PROCESSED_REQUESTS_WINDOW_TITLE);
 				

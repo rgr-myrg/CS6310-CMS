@@ -7,6 +7,7 @@ import java.util.List;
 import edu.gatech.cms.InputFileHandler;
 import edu.gatech.cms.view.ApplicationView;
 import edu.gatech.cms.view.UiMessages;
+import edu.gatech.cms.course.Assignment;
 import edu.gatech.cms.logger.Log;
 import edu.gatech.cms.logger.Logger;
 
@@ -38,6 +39,9 @@ public class InstructorController implements ScreenController{
 	public InstructorController(){
 		ApplicationView.getInstance().onInstructorResultsLoaded = () -> {
 			progressGroup.getChildren().remove(progressGif);
+
+			final List<Assignment> assignments = InputFileHandler.getAssignments(InputFileHandler.getCurrentSemester());
+			Logger.debug(TAG, "Assignments: " + assignments);
 
 			availableListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 			addedListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
