@@ -16,12 +16,14 @@ import javafx.stage.Stage;
 public class ApplicationView {
 	public static final String WELCOME_SCREEN = "/fxml/Welcome.fxml";
 	public static final String APRIORI_SCREEN = "/fxml/Apriori.fxml";
+	public static final String INSTRUCTOR_SCREEN = "/fxml/Instructor.fxml";
 
 	public static final int SCENE_WIDTH  = 600;
 	public static final int SCENE_HEIGHT = 600;
 
 	public Runnable onSemesterDataLoaded = null;
 	public Runnable onAprioriResultsLoaded = null;
+	public Runnable onInstructorResultsLoaded = null;
 
 	private static ApplicationView instance = new ApplicationView();
 
@@ -123,6 +125,20 @@ public class ApplicationView {
 	}
 
 	public void onAprioriControllerNextAction() {
-		
+		loadScreen(INSTRUCTOR_SCREEN, () -> {
+			InputFileHandler.designateSemester();
+
+			Platform.runLater(() -> {
+				stage.setTitle(UiMessages.INSTRUCTOR_WINDOW_TITLE);
+				
+				if (onInstructorResultsLoaded != null) {
+					onInstructorResultsLoaded.run();
+				}
+			});
+		});		
 	}
+
+	public void onInstructorControllerNextAction(){
+
+	}	
 }
