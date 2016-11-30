@@ -23,7 +23,7 @@ public class ProcessedRequestsController implements ScreenController{
 	public static final String TAG = InputFileHandler.class.getSimpleName();
 
 	public ProcessedRequestsController(){
-		ApplicationView.getInstance().onInstructorResultsLoaded = () -> {
+		ApplicationView.getInstance().onProcessedRequestsResultsLoaded = () -> {
 			progressGroup.getChildren().remove(progressGif);
 
 			final String screenMsg = String.format(UiMessages.PROCESSED_REQUESTS_HEADING);

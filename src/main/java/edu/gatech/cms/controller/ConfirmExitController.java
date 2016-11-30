@@ -23,10 +23,10 @@ public class ConfirmExitController implements ScreenController{
 	public static final String TAG = InputFileHandler.class.getSimpleName();
 
 	public ConfirmExitController(){
-		ApplicationView.getInstance().onInstructorResultsLoaded = () -> {
+		ApplicationView.getInstance().onConfirmExitResultsLoaded = () -> {
 			progressGroup.getChildren().remove(progressGif);
 
-			final String screenMsg = String.format(UiMessages.PROCESSED_REQUESTS_HEADING);
+			final String screenMsg = String.format(UiMessages.CONFIRM_EXIT_HEADING);
 	        welcomeText.setText(screenMsg);
 		};
 	}
