@@ -61,7 +61,7 @@ public class RecordsData extends CsvDataLoader {
 					// add the record to the student's list
 					record.getStudent().addRecord(record);
 					// add the record to the "big list of records"
-                    InputFileHandler.getRecords().add(record);
+					InputFileHandler.getRecords().add(record);
 
 					if (Log.isDebug()) {
 						Logger.debug(TAG, "Loaded - " + record);
