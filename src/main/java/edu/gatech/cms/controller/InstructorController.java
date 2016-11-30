@@ -25,6 +25,8 @@ import javafx.stage.Stage;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 public class InstructorController implements ScreenController{
 	@FXML private Group progressGroup;
@@ -34,20 +36,17 @@ public class InstructorController implements ScreenController{
 	@FXML private Text welcomeText;
 
 	public static final String TAG = InputFileHandler.class.getSimpleName();
-	private List<String> selectedIndices = new ArrayList<String>();
 
 	public InstructorController(){
 		ApplicationView.getInstance().onInstructorResultsLoaded = () -> {
 			progressGroup.getChildren().remove(progressGif);
-
-			final List<Assignment> assignments = InputFileHandler.getAssignments(InputFileHandler.getCurrentSemester());
-			Logger.debug(TAG, "Assignments: " + assignments);
-
 			availableListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 			addedListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 	        
-	        List<String> items = Arrays.asList("One", "Two", "Three");        
-	        availableListView.setItems(FXCollections.observableArrayList(items));
+	        //List<String> items = Arrays.asList("One", "Two", "Three");        
+	        //availableListView.setItems(FXCollections.observableArrayList(items));
+
+			availableListView.setItems(FXCollections.observableArrayList(InputFileHandler.getAssignmentsStrings(InputFileHandler.getCurrentSemester())));
 
 			final String screenMsg = String.format(UiMessages.INSTRUCTOR_HEADING);
 	        welcomeText.setText(screenMsg);
@@ -83,7 +82,12 @@ public class InstructorController implements ScreenController{
 	}
 
 	@FXML protected void onNextButtonClick(ActionEvent event) {
-		ApplicationView.getInstance().onInstructorControllerNextAction();
+		if(addedListView.getItems().size() == 0){
+			showSelectionEmptyError();
+		}
+		else{
+			ApplicationView.getInstance().onInstructorControllerNextAction();
+		}
 	}	
 
 	@FXML protected void onAddButtonClick(ActionEvent event) {
@@ -101,9 +105,17 @@ public class InstructorController implements ScreenController{
 	@FXML protected void onClearButtonClick(ActionEvent event) {
 		availableListView.getItems().clear();
 		addedListView.getItems().clear();
-		// Call method to reaquire data here
-		List<String> items = Arrays.asList("One", "Two", "Three");        
-	    availableListView.setItems(FXCollections.observableArrayList(items));		
+	    availableListView.setItems(FXCollections.observableArrayList(InputFileHandler.getAssignmentsStrings(InputFileHandler.getCurrentSemester())));
+	}
+
+	protected void showSelectionEmptyError(){
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle(UiMessages.EMPTY_SELECTION_ERROR_TITLE);
+		alert.setHeaderText(UiMessages.EMPTY_SELECTION_ERROR_HEADER);
+		alert.setResizable(true);
+		alert.getDialogPane().setPrefSize(325, 200);		
+		alert.setContentText(UiMessages.EMPTY_SELECTION_ERROR_BODY);
+		alert.showAndWait();
 	}
 
 	@Override
