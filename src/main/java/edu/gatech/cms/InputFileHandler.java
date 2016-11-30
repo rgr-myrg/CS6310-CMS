@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import edu.gatech.cms.course.Assignment;
 import edu.gatech.cms.course.Course;
 import edu.gatech.cms.course.Record;
 import edu.gatech.cms.course.Request;
@@ -34,16 +35,16 @@ import edu.gatech.cms.view.ApplicationView;
 public class InputFileHandler {
 	public static final String TAG = InputFileHandler.class.getSimpleName();
 
-	// private static final InputFileHandler instance = new InputFileHandler();
-
 	private static University university;
 	private static Department department;
 
-	private static Map<Integer, Course> courses = new TreeMap<>();
-	private static Map<Integer, Student> students = new TreeMap<>();
-	private static Map<Integer, Instructor> instructors = new TreeMap<>();
+	private static Map<Integer, Course> courses = new TreeMap<>();					// key is Course ID
+	private static Map<Integer, Student> students = new TreeMap<>();				// key is Student ID
+	private static Map<Integer, Instructor> instructors = new TreeMap<>();			// key is Instructor ID
 	private static List<Record> records = new ArrayList<Record>();
-	private static List<Request> requests;
+	
+	private static Map<Integer,List<Request>> requests = new TreeMap<>();			// key is semester
+	private static Map<Integer,List<Assignment>> assignments = new TreeMap<>();		// key is semester
 	private static int currentSemester = 0;
 
 	private static WekaDataSource wekaDataSource = null;
@@ -107,13 +108,23 @@ public class InputFileHandler {
 		// Increment to process the next batch of files
 		currentSemester++;
 
-		// Load requests and assignments for each semester
-		RequestsData.load(currentSemester);
-		AssignmentsData.load(currentSemester);
-
 		if (Log.isDebug()) {
 			Logger.debug(TAG, "designateSemester currentSemester: " + currentSemester);
 		}
+	}
+	
+	public static void loadAssignments() {
+		// Load assignments for current semester
+		List<Assignment> semAssignments = new ArrayList<>();
+		assignments.put(currentSemester, semAssignments);
+		AssignmentsData.load(currentSemester);
+	}
+
+	public static void loadRequests() {
+		// Load requests for current semester
+		List<Request> semRequests = new ArrayList<>();
+		requests.put(currentSemester, semRequests);
+		RequestsData.load(currentSemester);
 	}
 
 	public static void prepareDataForDataMining() {
@@ -127,7 +138,6 @@ public class InputFileHandler {
 			if (Log.isDebug()) {
 				Logger.debug(TAG, "Error: wekaDataSource is NULL!");
 			}
-
 			return null;
 		}
 
@@ -180,8 +190,30 @@ public class InputFileHandler {
 		return records;
 	}
 
-	public static List<Request> getRequests() {
+	public static Map<Integer,List<Request>> getRequests() {
 		return requests;
+	}
+
+	public static List<Request> getRequests(Integer semester) {
+		return requests.get(semester);
+	}
+	
+	public static Map<Integer,List<Assignment>> getAssignments() {
+		return assignments;
+	}
+
+	public static List<Assignment> getAssignments(Integer semester) {
+		return assignments.get(semester);
+	}
+
+	public static List<String> getAssignmentsStrings(Integer semester) {
+		List<String> strings = new ArrayList<>();
+		for(Assignment assign: assignments.get(semester)) {
+			strings.add("Instructor " + assign.getInstructor().getFullName() 
+					+ ", course " + assign.getCourse().getTitle() 
+					+ ", capacity " + assign.getCapacity());
+		}
+		return strings;
 	}
 
 	public static int getCurrentSemester() {

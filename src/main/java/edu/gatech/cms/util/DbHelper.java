@@ -15,6 +15,7 @@ import edu.gatech.cms.sql.RequestsTable;
 import edu.gatech.cms.sql.CoursesTable;
 import edu.gatech.cms.sql.RecordsTable;
 import edu.gatech.cms.sql.UniversityPersonTable;
+import edu.gatech.cms.sql.WaitingTable;
 
 public class DbHelper {
 	public static final String SQLITE_JDBC_DRIVER = "org.sqlite.JDBC";
@@ -80,6 +81,9 @@ public class DbHelper {
 
 			preparedStatement = conn.prepareStatement(RequestsTable.CREATE_TABLE);
 			preparedStatement.execute();
+			
+			preparedStatement = conn.prepareStatement(WaitingTable.CREATE_TABLE);
+			preparedStatement.execute();
 		} catch (SQLException e) {
 			logSqlException(e);
 		}
@@ -111,6 +115,10 @@ public class DbHelper {
 
 			preparedStatement = conn.prepareStatement(RequestsTable.DROP_TABLE);
 			preparedStatement.execute();
+			
+			preparedStatement = conn.prepareStatement(WaitingTable.DROP_TABLE);
+			preparedStatement.execute();
+
 		} catch (SQLException e) {
 			logSqlException(e);
 		}
