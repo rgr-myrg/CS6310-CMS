@@ -60,15 +60,17 @@ public class RequestsTable {
 	);
 
 	public static final String UPDATE_REQUESTS_TO_ACCEPTED = String.format(
-			"UPDATE %s SET %s = %d, %s = ?, timestamp = CURRENT_TIMESTAMP " 
+			"UPDATE %s SET %s = %d, %s = ?, %s = ?, timestamp = CURRENT_TIMESTAMP " 
 				+ "WHERE %s = ? AND %s = ?",
-			TABLE_NAME, REQUEST_STATUS_COLUMN, RequestStatus.Accepted.ordinal(), 
-			STATUS_REASON_COLUMN, STUDENT_ID_COLUMN, COURSE_ID_COLUMN
+			TABLE_NAME, REQUEST_STATUS_COLUMN, RequestStatus.Accepted.ordinal(),
+			SEMESTER_COLUMN,
+			STATUS_REASON_COLUMN, 
+			STUDENT_ID_COLUMN, COURSE_ID_COLUMN
 	);
 
 	public static final String SELECT_APPROVED_REQUESTS = String.format(
-			"SELECT * FROM %s WHERE %s = %d ORDER BY COURSE_REQUESTS._id",
-			TABLE_NAME, REQUEST_STATUS_COLUMN, RequestStatus.Accepted.ordinal()
+			"SELECT * FROM %s WHERE %s = %d AND %s = ? ORDER BY COURSE_REQUESTS._id",
+			TABLE_NAME, REQUEST_STATUS_COLUMN, RequestStatus.Accepted.ordinal(), SEMESTER_COLUMN
 	);
 
 	public static final String SELECT_APPROVED_REQUESTS_INFO = String.format(
@@ -77,8 +79,8 @@ public class RequestsTable {
 				+ "FROM REQUESTS "
 				+ "LEFT JOIN UNIVERSITY_PERSON ON REQUESTS.studentUuid = USERS.userUuid "
 				+ "LEFT JOIN COURSES ON REQUESTS.courseId = COURSES.courseId "
-				+ "WHERE %s = %d ORDER BY REQUESTS.timestamp",
-			REQUEST_STATUS_COLUMN, RequestStatus.Accepted.ordinal()
+				+ "WHERE %s = %d AND %s = ? ORDER BY REQUESTS.timestamp",
+			REQUEST_STATUS_COLUMN, RequestStatus.Accepted.ordinal(), SEMESTER_COLUMN
 	);
 
 	public static final String SELECT_REQUEST_BY_STUDENT_ID_AND_COURSE_ID = String.format(
