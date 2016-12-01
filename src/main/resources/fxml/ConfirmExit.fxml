@@ -73,7 +73,7 @@
             </Group>
             <HBox prefHeight="369.0" prefWidth="600.0">
                <children>
-                  <TextArea fx:id="confirmOutputMessage" editable="false" prefHeight="346.0" prefWidth="604.0" wrapText="true" />
+                  <TextArea fx:id="confirmOutputMessage" editable="false" prefHeight="325.0" prefWidth="604.0" wrapText="true" />
                </children>
             </HBox>
          </children>

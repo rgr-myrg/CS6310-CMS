@@ -19,7 +19,7 @@ public class ConfirmExitController implements ScreenController{
 	@FXML private Group progressGroup;
 	@FXML private ImageView progressGif;
 	@FXML private Text welcomeText;
-	@FXML private TextArea outputMessage;
+	@FXML private TextArea confirmOutputMessage;
 
 	public static final String TAG = InputFileHandler.class.getSimpleName();
 
@@ -29,7 +29,7 @@ public class ConfirmExitController implements ScreenController{
 
 			final String screenMsg = String.format(UiMessages.CONFIRM_EXIT_HEADING);
 	        welcomeText.setText(screenMsg);
-	        //outputMessage assignment here
+	        confirmOutputMessage.setText(UiMessages.CONFIRM_EXIT_BODY);
 		};
 	}
 

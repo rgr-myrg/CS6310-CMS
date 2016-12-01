@@ -37,6 +37,8 @@ public final class UiMessages {
 
 	public static final String CONFIRM_EXIT_HEADING = "Confirm Exit";
 
+	public static final String CONFIRM_EXIT_BODY = "Please click Exit to continue exiting. Otherwise, click Back to return to the previous screen.";
+
 	public static final String EMPTY_SELECTION_ERROR_BODY = "No assignments have been selected. Please select at least one assignment before continuing.";
 
 	public static final String EMPTY_SELECTION_ERROR_HEADER = "Please Select an Assignment";
