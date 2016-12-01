@@ -45,6 +45,14 @@ public class InputFileHandler {
 	private static List<Record> records = new ArrayList<Record>();
 	private static List<Request> requests;
 	private static int currentSemester = 0;
+	
+	//Note: semester stats must be reset each cycle, total stats will not be reset
+	private static Map<String, Integer> semesterStatistics = new TreeMap<>();
+	private static Map<String, Integer> totalStatistics = new TreeMap<>();
+	private static String examinedText = "Examined";
+	private static String grantedText = "Granted";
+	private static String failedText = "Failed";
+	private static String waitlistText = "Wait Listed";
 
 	private static WekaDataSource wekaDataSource = null;
 
@@ -57,9 +65,79 @@ public class InputFileHandler {
 	 * This method is invoked by the ui when the app starts.
 	 */
 	public static void loadFromCSV() {
-		// Select current semester from db. Should be in the model somewhere.
-		// TODO: Please move to the right place and replace with the method call.
+		
+		extractSemester();
+		instantiateStatsTreeMaps();
 
+		if (Log.isDebug()) {
+			Logger.debug(TAG, "loadFromCSV currentSemester: " + currentSemester);
+		}
+
+		// currentSemester of 0 indicates 'initial' mode
+		if (currentSemester == 0) {
+			DbHelper.dropTables();
+			DbHelper.createTables();
+
+			StudentsData.load();
+			CoursesData.load();
+			PrerequisitesData.load();
+			InstructorsData.load();
+			RecordsData.load();
+			
+			currentSemester = 1;
+		}
+		// currentSemester > 0 indicates 'resume' mode
+		else {
+			//clear out 'semesterStatistics' counts
+			for(Map.Entry<String,Integer> statCategory : semesterStatistics.entrySet()) {
+				  statCategory.setValue(0);
+			}
+			
+			//increment previous semester
+			currentSemester++;
+		}
+		
+		//TODO: update new semester back into DB
+		
+		//Load remaining files now that we know the semester
+		AssignmentsData.load(currentSemester);
+		RequestsData.load(currentSemester);
+	}
+	
+	//This method will process all requests and assumes requests List already loaded
+	private static void processRequests() {
+		for(Request r : requests) {
+			r.getStudent().enrollInCourse(r.getCourse());
+			
+			//log the status for each student request in debug mode
+			if (Log.isDebug()) {
+				Logger.debug(TAG, "Request from: " + r.getStudent().getFullName() + " is " + r.getStatus().name());
+			}
+		}
+		
+		//TODO: spruce up this output text if we would like it to differ from the assignment spec
+		System.out.println("Processed Requests");
+		for(Request r : requests) {
+			System.out.println("request (" + r.getStudent().getUUID() + ", " + r.getCourse().getID() + "): " + r.getReason());
+		}
+	}
+	
+	private static void getSemesterStats() {
+		System.out.println("Semester Statistics");
+		System.out.print(examinedText + ": " + semesterStatistics.get(examinedText) + " ");
+		System.out.print(grantedText + ": " + semesterStatistics.get(grantedText) + " ");
+		System.out.print(failedText + ": " + semesterStatistics.get(grantedText) + " ");
+		System.out.println(waitlistText + ": " + semesterStatistics.get(grantedText));
+		
+		System.out.println("Total Statistics");
+		System.out.print(examinedText + ": " + totalStatistics.get(examinedText) + " ");
+		System.out.print(grantedText + ": " + totalStatistics.get(grantedText) + " ");
+		System.out.print(failedText + ": " + totalStatistics.get(grantedText) + " ");
+		System.out.println(waitlistText + ": " + totalStatistics.get(grantedText));
+	}
+
+	private static void extractSemester() {
+		// Select current semester from db. 
 		try {
 			final ResultSet resultSet = DbHelper.doSql(RequestsTable.SELECT_MAX_SEMESTER);
 
@@ -71,25 +149,6 @@ public class InputFileHandler {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
-		// End select current semester from db
-
-		if (Log.isDebug()) {
-			Logger.debug(TAG, "loadFromCSV currentSemester: " + currentSemester);
-		}
-
-		// It's inferred a currentSemester of 0 indicates
-		// the 'initial' state of the app.
-
-		if (currentSemester == 0) {
-			DbHelper.dropTables();
-			DbHelper.createTables();
-
-			StudentsData.load();
-			CoursesData.load();
-			PrerequisitesData.load();
-			InstructorsData.load();
-			RecordsData.load();
 		}
 	}
 
@@ -107,22 +166,8 @@ public class InputFileHandler {
 		// Increment to process the next batch of files
 		currentSemester++;
 
-<<<<<<< HEAD
-	public void designateSemester() {
-		// Load requests and assignments for each semester using the currentSemester
-		
-		//extract the number out of the filename
-		String fileName = "placeholder_1.csv";
-		String semesterExtract = fileName.substring(fileName.indexOf("_")+1);
-		System.out.println(semesterExtract);
-		semesterExtract = semesterExtract.substring(0,semesterExtract.indexOf("."));
-		System.out.println(semesterExtract);
-		
-		currentSemester = Integer.parseInt(semesterExtract);
-		
-=======
+
 		// Load requests and assignments for each semester
->>>>>>> refs/remotes/origin/dev
 		RequestsData.load(currentSemester);
 		AssignmentsData.load(currentSemester);
 
@@ -131,6 +176,17 @@ public class InputFileHandler {
 		}
 	}
 
+	private static void instantiateStatsTreeMaps(){
+		semesterStatistics.put(examinedText, 0);
+		semesterStatistics.put(grantedText, 0);
+		semesterStatistics.put(failedText, 0);
+		semesterStatistics.put(waitlistText, 0);
+		
+		totalStatistics.put(examinedText, 0);
+		totalStatistics.put(grantedText, 0);
+		totalStatistics.put(failedText, 0);
+		totalStatistics.put(waitlistText, 0);
+	}
 	public static void prepareDataForDataMining() {
 		if (wekaDataSource == null) {
 			wekaDataSource = new WekaDataSource();
@@ -149,21 +205,20 @@ public class InputFileHandler {
 		return String.valueOf(wekaDataSource.analyzeStudentRecords());
 	}
 
-<<<<<<< HEAD
 	public void calculateCapacityForCourse() {
 		
 	}
 
 	public void lockAssignmentsForSemester() {
-		
-=======
+	
+	}		
+
 	public static void calculateCapacityForCourser() {
 
 	}
 
 	public static void loackAssignmentsForSemester() {
 
->>>>>>> refs/remotes/origin/dev
 	}
 
 	public static void validateStudentRequests() {
@@ -172,6 +227,16 @@ public class InputFileHandler {
 
 	// SIMPLE SETTERS, GETTERS for model objects
 
+	public static void incrementSemesterStats(String keyString) {
+		Integer newInt = semesterStatistics.get(keyString) +  1;
+		semesterStatistics.put(keyString, newInt);
+	}
+	
+	public static void incrementTotalStats(String keyString) {
+		Integer newInt = totalStatistics.get(keyString) +  1;
+		totalStatistics.put(keyString, newInt);
+	}
+	
 	public static University getUniversity() {
 		return university;
 	}
@@ -207,6 +272,10 @@ public class InputFileHandler {
 	public static List<Request> getRequests() {
 		return requests;
 	}
+	
+	public static void addRequest(Request request) {
+		requests.add(request);
+	}
 
 	public static int getCurrentSemester() {
 		return currentSemester;
@@ -214,5 +283,37 @@ public class InputFileHandler {
 
 	public static void setCurrentSemester(int sem) {
 		currentSemester = sem;
+	}
+	
+	public static String getExaminedText() {
+		return examinedText;
+	}
+
+	public static void setExaminedText(String examinedText) {
+		InputFileHandler.examinedText = examinedText;
+	}
+
+	public static String getGrantedText() {
+		return grantedText;
+	}
+
+	public static void setGrantedText(String grantedText) {
+		InputFileHandler.grantedText = grantedText;
+	}
+
+	public static String getFailedText() {
+		return failedText;
+	}
+
+	public static void setFailedText(String failedText) {
+		InputFileHandler.failedText = failedText;
+	}
+
+	public static String getWaitlistText() {
+		return waitlistText;
+	}
+
+	public static void setWaitlistText(String waitlistText) {
+		InputFileHandler.waitlistText = waitlistText;
 	}
 }
