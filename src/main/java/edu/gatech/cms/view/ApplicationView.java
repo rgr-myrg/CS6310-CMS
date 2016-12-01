@@ -16,12 +16,18 @@ import javafx.stage.Stage;
 public class ApplicationView {
 	public static final String WELCOME_SCREEN = "/fxml/Welcome.fxml";
 	public static final String APRIORI_SCREEN = "/fxml/Apriori.fxml";
+	public static final String INSTRUCTOR_SCREEN = "/fxml/Instructor.fxml";
+	public static final String PROCESSED_REQUESTS_SCREEN = "/fxml/ProcessedRequests.fxml";
+	public static final String CONFIRM_EXIT_SCREEN = "/fxml/ConfirmExit.fxml";	
 
 	public static final int SCENE_WIDTH  = 600;
 	public static final int SCENE_HEIGHT = 600;
 
 	public Runnable onSemesterDataLoaded = null;
 	public Runnable onAprioriResultsLoaded = null;
+	public Runnable onInstructorResultsLoaded = null;
+	public Runnable onProcessedRequestsResultsLoaded = null;
+	public Runnable onConfirmExitResultsLoaded = null;
 
 	private static ApplicationView instance = new ApplicationView();
 
@@ -107,6 +113,8 @@ public class ApplicationView {
 
 		loadScreen(APRIORI_SCREEN, () -> {
 			InputFileHandler.designateSemester();
+			InputFileHandler.loadAssignments();
+			InputFileHandler.loadRequests();
 			InputFileHandler.prepareDataForDataMining();
 			aprioriResults = InputFileHandler.analyzeHistoryAndRoster();
 
@@ -121,6 +129,50 @@ public class ApplicationView {
 	}
 
 	public void onAprioriControllerNextAction() {
-		
+		loadScreen(INSTRUCTOR_SCREEN, () -> {
+			Platform.runLater(() -> {
+				stage.setTitle(UiMessages.INSTRUCTOR_WINDOW_TITLE);
+				
+				if (onInstructorResultsLoaded != null) {
+					onInstructorResultsLoaded.run();
+				}
+			});
+		});		
 	}
+
+	public void onInstructorControllerNextAction(){
+		loadScreen(PROCESSED_REQUESTS_SCREEN, () -> {
+			Platform.runLater(() -> {
+				stage.setTitle(UiMessages.PROCESSED_REQUESTS_WINDOW_TITLE);
+				
+				if (onProcessedRequestsResultsLoaded != null) {
+					onProcessedRequestsResultsLoaded.run();
+				}
+			});
+		});		
+	}
+
+	public void onProcessedRequestsControllerNextSemesterAction(){
+		loadScreen(APRIORI_SCREEN, () -> {
+			InputFileHandler.designateSemester();
+			InputFileHandler.loadAssignments();
+			InputFileHandler.loadRequests();
+			InputFileHandler.prepareDataForDataMining();
+			aprioriResults = InputFileHandler.analyzeHistoryAndRoster();
+
+			Platform.runLater(() -> {
+				stage.setTitle(UiMessages.APRIORI_WINDOW_TITLE);
+
+				if (onAprioriResultsLoaded != null) {
+					onAprioriResultsLoaded.run();
+				}
+			});
+		});
+	}
+
+	public void exitAction(){
+	    Stage stage = getStage();	    
+	    stage.close();
+	}
+
 }

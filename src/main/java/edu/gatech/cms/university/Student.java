@@ -75,7 +75,7 @@ public class Student extends UniversityPerson {
 				//check if course has capacity, 3rd highest 'priority'
 				if(course.getTotalCourseCapacity() <= course.getTotalNumEnrolled()){
 					addToCourseRequestHistory(course, rejectedFullCapacity);
-					Request r = new Request(this, course, RequestStatus.RejectedFullCapacity,rejectedFullCapacity);
+					Request r = new Request(InputFileHandler.getCurrentSemester(),this, course, RequestStatus.RejectedFullCapacity,rejectedFullCapacity);
 					InputFileHandler.addRequest(r);
 					InputFileHandler.incrementSemesterStats(InputFileHandler.getFailedText());
 					InputFileHandler.incrementTotalStats(InputFileHandler.getFailedText());
@@ -84,7 +84,7 @@ public class Student extends UniversityPerson {
 			}
 			else {
 				addToCourseRequestHistory(course, rejectedAlreadyTaken);
-				Request r = new Request(this, course, RequestStatus.RejectedAlreadyTaken,rejectedAlreadyTaken);
+				Request r = new Request(InputFileHandler.getCurrentSemester(), this, course, RequestStatus.RejectedAlreadyTaken,rejectedAlreadyTaken);
 				InputFileHandler.addRequest(r);
 				InputFileHandler.incrementSemesterStats(InputFileHandler.getFailedText());
 				InputFileHandler.incrementTotalStats(InputFileHandler.getFailedText());
@@ -93,7 +93,7 @@ public class Student extends UniversityPerson {
 		}
 		else {
 			addToCourseRequestHistory(course, rejectedPrerequisites);
-			Request r = new Request(this, course, RequestStatus.RejectedPrerequisites,rejectedPrerequisites);
+			Request r = new Request(InputFileHandler.getCurrentSemester(), this, course, RequestStatus.RejectedPrerequisites,rejectedPrerequisites);
 			InputFileHandler.addRequest(r);
 			InputFileHandler.incrementSemesterStats(InputFileHandler.getFailedText());
 			InputFileHandler.incrementTotalStats(InputFileHandler.getFailedText());
@@ -112,7 +112,7 @@ public class Student extends UniversityPerson {
 		}
 		
 		addToCourseRequestHistory(course, accepted);
-		Request r = new Request(this, course, RequestStatus.Accepted,accepted);
+		Request r = new Request(InputFileHandler.getCurrentSemester(),this, course, RequestStatus.Accepted,accepted);
 		InputFileHandler.addRequest(r);
 		InputFileHandler.incrementSemesterStats(InputFileHandler.getGrantedText());
 		InputFileHandler.incrementTotalStats(InputFileHandler.getGrantedText());

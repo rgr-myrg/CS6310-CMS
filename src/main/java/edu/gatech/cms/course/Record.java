@@ -46,8 +46,8 @@ public class Record {
 	//END GETTERS AND SETTERS SECTION
 	
 	public String toString() {
-	    return "Record studentID: " + student.getUUID() + ", courseID: " + course.getID() + 
-	            ", instructorID: " + instructor.getUUID() + ", grade: " + gradeEarned;
+	    return "Record student id: " + student.getUUID() + ", course id: " + course.getID() + 
+	            ", instructor id: " + instructor.getUUID() + ", grade: " + gradeEarned;
 	}
 	
 }
