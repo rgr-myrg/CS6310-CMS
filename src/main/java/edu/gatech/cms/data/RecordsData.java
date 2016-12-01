@@ -1,13 +1,17 @@
 package edu.gatech.cms.data;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import edu.gatech.cms.InputFileHandler;
+import edu.gatech.cms.course.Course;
 import edu.gatech.cms.course.Record;
 import edu.gatech.cms.logger.Log;
 import edu.gatech.cms.logger.Logger;
 import edu.gatech.cms.sql.RecordsTable;
+import edu.gatech.cms.university.Instructor;
+import edu.gatech.cms.university.Student;
 import edu.gatech.cms.util.CsvDataLoader;
 import edu.gatech.cms.util.DbHelper;
 
@@ -64,7 +68,7 @@ public class RecordsData extends CsvDataLoader {
 					InputFileHandler.getRecords().add(record);
 
 					if (Log.isDebug()) {
-						Logger.debug(TAG, "Loaded - " + record);
+						Logger.debug(TAG, "Loaded from CSV - " + record);
 					}
 					
 				} catch (SQLException e) {
@@ -74,7 +78,33 @@ public class RecordsData extends CsvDataLoader {
 		}
 	}
 
-	public static final void load() {
+	public static final void loadFromCSV() {
 		new RecordsData();
+	}
+	
+	public static final void loadFromDB() {
+		try {
+			PreparedStatement preparedStatement = DbHelper.getConnection().prepareStatement(RecordsTable.SELECT_SQL);
+			
+			ResultSet rs = preparedStatement.executeQuery();
+			while (rs.next()) {
+	
+				Student student = InputFileHandler.getStudents().get(rs.getInt(2));
+				Course course = InputFileHandler.getCourses().get(rs.getInt(3));
+				Instructor instructor = InputFileHandler.getInstructors().get(rs.getInt(4));
+				String comments = rs.getString(5);
+				String gradeLetter = rs.getString(6);
+				
+				Record record = new Record(student, course, instructor, comments, gradeLetter);
+				InputFileHandler.getRecords().add(record);
+				student.addRecord(record);
+
+				if (Log.isDebug()) {
+					Logger.debug(TAG, "Loaded from DB - " + record);
+				}
+			}
+		} catch (SQLException e) {
+			DbHelper.logSqlException(e);
+		}
 	}
 }
