@@ -1,5 +1,7 @@
 package edu.gatech.cms.controller;
 
+import java.util.Optional;
+
 import edu.gatech.cms.InputFileHandler;
 import edu.gatech.cms.view.ApplicationView;
 import edu.gatech.cms.view.UiMessages;
@@ -14,14 +16,14 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 
 public class ProcessedRequestsController implements ScreenController{
 	@FXML private Group progressGroup;
 	@FXML private ImageView progressGif;
 	@FXML private Text welcomeText;
-
-	//public static List<Request> requests = InputFileHandler.getRequests();
 
 	public static final String TAG = InputFileHandler.class.getSimpleName();
 
@@ -33,7 +35,7 @@ public class ProcessedRequestsController implements ScreenController{
 	        welcomeText.setText(screenMsg);
 		};
 	}
-	
+
 	@FXML protected void onAboutMenuSelected(ActionEvent event) {
 		ApplicationView.getInstance().displayAppInfoAlertDialog();
 	}
@@ -43,8 +45,17 @@ public class ProcessedRequestsController implements ScreenController{
 	}
 
 	@FXML protected void onExitButtonClick(ActionEvent event) {
-		ApplicationView.getInstance().onProcessedRequestsControllerExitAction();
-	}
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle(UiMessages.CONFIRM_EXIT_TITLE);
+		alert.setHeaderText(UiMessages.CONFIRM_EXIT_HEADING);
+		alert.setResizable(true);
+		alert.getDialogPane().setPrefSize(300, 200);
+		alert.setContentText(UiMessages.CONFIRM_EXIT_BODY);
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.get() == ButtonType.OK){
+			ApplicationView.getInstance().exitAction();
+		}
+	}		
 
 	@Override
 	public Stage getStage() {
