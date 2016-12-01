@@ -4,6 +4,7 @@ public class AssignmentsTable {
 	public static final String TABLE_NAME = "ASSIGNMENTS";
 
 	public static final String ID_COLUMN = "_id";
+	public static final String SEMESTER_COLUMN  = "semester";
 	public static final String INSTRUCTOR_ID_COLUMN  = "instructorUuid";
 	public static final String COURSE_ID_COLUMN = "courseId";
 	public static final String CAPACITY_COLUMN  = "capacity";
@@ -14,16 +15,17 @@ public class AssignmentsTable {
 				+ "%s INTEGER NOT NULL,"
 				+ "%s INTEGER NOT NULL,"
 				+ "%s INTEGER NOT NULL,"
+				+ "%s INTEGER NOT NULL,"
 				+ "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL"
 				+ ")",
-				TABLE_NAME, ID_COLUMN, INSTRUCTOR_ID_COLUMN, COURSE_ID_COLUMN, CAPACITY_COLUMN
+				TABLE_NAME, ID_COLUMN, SEMESTER_COLUMN, INSTRUCTOR_ID_COLUMN, COURSE_ID_COLUMN, CAPACITY_COLUMN
 	);
 
 	public static final String DROP_TABLE = String.format("DROP TABLE IF EXISTS %s", TABLE_NAME);
 
 	public static final String INSERT_SQL = String.format(
-			"INSERT INTO %s (%s, %s, %s) VALUES (?, ?, ?)", 
-			TABLE_NAME, INSTRUCTOR_ID_COLUMN, COURSE_ID_COLUMN, CAPACITY_COLUMN
+			"INSERT INTO %s (%s, %s, %s, %s) VALUES (?, ?, ?, ?)", 
+			TABLE_NAME, SEMESTER_COLUMN, INSTRUCTOR_ID_COLUMN, COURSE_ID_COLUMN, CAPACITY_COLUMN
 	);
 
 	public static final String SELECT_COUNT = String.format(
@@ -32,8 +34,8 @@ public class AssignmentsTable {
 	);
 
 	public static final String SELECT_CAPACITY_BY_COURSE_ID = String.format(
-			"SELECT * FROM %s WHERE %s = ?",
-			TABLE_NAME, COURSE_ID_COLUMN
+			"SELECT * FROM %s WHERE %s = ? AND %s = ?",
+			TABLE_NAME, COURSE_ID_COLUMN, SEMESTER_COLUMN
 	);
 
 	public static final String UPDATE_CAPACITY_BY_RECORD_ID = String.format(

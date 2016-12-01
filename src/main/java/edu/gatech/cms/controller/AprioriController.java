@@ -34,7 +34,7 @@ public class AprioriController implements ScreenController {
 	}
 
 	@FXML protected void onNextButtonClick(ActionEvent event) {
-		ApplicationView.getInstance().onAprioriControllerNextAction();
+		ApplicationView.getInstance().onAprioriControllerNextAction();		
 	}
 
 	@Override
