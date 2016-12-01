@@ -76,7 +76,7 @@ public class InputFileHandler {
 		// End select current semester from db
 
 		// Adding a count of 2 to mock the UI. PLEASE REMOVE.
-		currentSemester = 2;
+		// currentSemester = 2;
 
 		if (Log.isDebug()) {
 			Logger.debug(TAG, "loadFromCSV currentSemester: " + currentSemester);
@@ -89,11 +89,18 @@ public class InputFileHandler {
 			DbHelper.dropTables();
 			DbHelper.createTables();
 
-			StudentsData.load();
-			CoursesData.load();
-			PrerequisitesData.load();
-			InstructorsData.load();
-			RecordsData.load();
+			StudentsData.loadFromCSV();
+			InstructorsData.loadFromCSV();
+			CoursesData.loadFromCSV();
+			PrerequisitesData.loadFromCSV();
+			RecordsData.loadFromCSV();
+		}
+		else {
+			StudentsData.loadFromDB();
+			InstructorsData.loadFromDB();
+			CoursesData.loadFromDB();
+			PrerequisitesData.loadFromDB();
+			RecordsData.loadFromDB();
 		}
 	}
 
