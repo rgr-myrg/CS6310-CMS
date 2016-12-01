@@ -152,18 +152,6 @@ public class ApplicationView {
 		});		
 	}
 
-	public void onProcessedRequestsControllerExitAction(){
-		loadScreen(CONFIRM_EXIT_SCREEN, () -> {
-			Platform.runLater(() -> {
-				stage.setTitle(UiMessages.CONFIRM_EXIT_WINDOW_TITLE);
-				
-				if (onConfirmExitResultsLoaded != null) {
-					onConfirmExitResultsLoaded.run();
-				}
-			});
-		});	
-	}	
-
 	public void onProcessedRequestsControllerNextSemesterAction(){
 		loadScreen(APRIORI_SCREEN, () -> {
 			InputFileHandler.designateSemester();
@@ -182,20 +170,9 @@ public class ApplicationView {
 		});
 	}
 
-	public void onConfirmExitControllerExitAction(){
+	public void exitAction(){
 	    Stage stage = getStage();	    
 	    stage.close();
 	}
 
-	public void onConfirmExitControllerBackAction(){
-		loadScreen(PROCESSED_REQUESTS_SCREEN, () -> {
-			Platform.runLater(() -> {
-				stage.setTitle(UiMessages.PROCESSED_REQUESTS_WINDOW_TITLE);
-				
-				if (onProcessedRequestsResultsLoaded != null) {
-					onProcessedRequestsResultsLoaded.run();
-				}
-			});
-		});
-	}	
 }
