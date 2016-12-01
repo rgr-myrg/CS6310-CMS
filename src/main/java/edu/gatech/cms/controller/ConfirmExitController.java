@@ -19,7 +19,7 @@ public class ConfirmExitController implements ScreenController{
 	@FXML private Group progressGroup;
 	@FXML private ImageView progressGif;
 	@FXML private Text welcomeText;
-	@FXML private Text outputMessage;
+	@FXML private TextArea outputMessage;
 
 	public static final String TAG = InputFileHandler.class.getSimpleName();
 
