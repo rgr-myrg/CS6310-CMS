@@ -3,6 +3,7 @@ package edu.gatech.cms.controller;
 import edu.gatech.cms.InputFileHandler;
 import edu.gatech.cms.view.ApplicationView;
 import edu.gatech.cms.view.UiMessages;
+import edu.gatech.cms.course.Request;
 import edu.gatech.cms.logger.Log;
 import edu.gatech.cms.logger.Logger;
 
@@ -19,6 +20,8 @@ public class ProcessedRequestsController implements ScreenController{
 	@FXML private Group progressGroup;
 	@FXML private ImageView progressGif;
 	@FXML private Text welcomeText;
+
+	//public static List<Request> requests = InputFileHandler.getRequests();
 
 	public static final String TAG = InputFileHandler.class.getSimpleName();
 
