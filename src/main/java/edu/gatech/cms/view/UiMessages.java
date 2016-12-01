@@ -18,6 +18,10 @@ public final class UiMessages {
 
 	public static final String INSTRUCTOR_WINDOW_TITLE = "CMS :: Instructor Assignment";
 
+	public static final String PROCESSED_REQUESTS_WINDOW_TITLE = "CMS :: Processed Requsts";
+
+	public static final String CONFIRM_EXIT_WINDOW_TITLE = "CMS :: Confirm Exit";
+
 	public static final String ABOUT_WINDOW_TITLE = "CMS :: About";
 
 	public static final String START_SEMESTER = "Please click 'Next' to begin Roster selections for the upcoming Semester.";
@@ -28,4 +32,16 @@ public final class UiMessages {
 	public static final String APRIORI_HEADING = "Apriori Analysis for Semester %d";
 
 	public static final String INSTRUCTOR_HEADING = "Instructor Assignment";
+
+	public static final String PROCESSED_REQUESTS_HEADING = "Processed Requests";
+
+	public static final String CONFIRM_EXIT_HEADING = "Confirm Exit";
+
+	public static final String CONFIRM_EXIT_BODY = "Please click Exit to continue exiting. Otherwise, click Back to return to the previous screen.";
+
+	public static final String EMPTY_SELECTION_ERROR_BODY = "No assignments have been selected. Please select at least one assignment before continuing.";
+
+	public static final String EMPTY_SELECTION_ERROR_HEADER = "Please Select an Assignment";
+
+	public static final String EMPTY_SELECTION_ERROR_TITLE = "Selection Error";
 }
