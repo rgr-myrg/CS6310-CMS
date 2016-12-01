@@ -75,6 +75,9 @@ public class InputFileHandler {
 		}
 		// End select current semester from db
 
+		// Adding a count of 2 to mock the UI. PLEASE REMOVE.
+		currentSemester = 2;
+
 		if (Log.isDebug()) {
 			Logger.debug(TAG, "loadFromCSV currentSemester: " + currentSemester);
 		}
