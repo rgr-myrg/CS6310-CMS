@@ -20,8 +20,8 @@ public class ApplicationView {
 	public static final String PROCESSED_REQUESTS_SCREEN = "/fxml/ProcessedRequests.fxml";
 	public static final String CONFIRM_EXIT_SCREEN = "/fxml/ConfirmExit.fxml";	
 
-	public static final int SCENE_WIDTH  = 600;
-	public static final int SCENE_HEIGHT = 600;
+	public static final int SCENE_WIDTH  = 1000;
+	public static final int SCENE_HEIGHT = 700;
 
 	public Runnable onSemesterDataLoaded = null;
 	public Runnable onAprioriResultsLoaded = null;
