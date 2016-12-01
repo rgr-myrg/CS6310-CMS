@@ -34,7 +34,7 @@ public class RequestsData extends CsvDataLoader {
 					preparedStatement = DbHelper.getConnection().prepareStatement(RequestsTable.INSERT_SQL);
 					preparedStatement.setInt(1, Integer.valueOf(parts[0]));
 					preparedStatement.setInt(2, Integer.valueOf(parts[1]));
-					preparedStatement.setInt(3, RequestStatus.Accepted.ordinal());
+					preparedStatement.setInt(3, RequestStatus.Pending.ordinal());
 
 					preparedStatement.execute();
 				} catch (SQLException e) {
