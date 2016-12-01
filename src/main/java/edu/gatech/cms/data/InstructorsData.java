@@ -1,6 +1,7 @@
 package edu.gatech.cms.data;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import edu.gatech.cms.InputFileHandler;
@@ -55,7 +56,7 @@ public class InstructorsData extends CsvDataLoader {
 					InputFileHandler.getInstructors().put(id, instructor);
 
 					if (Log.isDebug()) {
-						Logger.debug(TAG, "Loaded - " + instructor);
+						Logger.debug(TAG, "Loaded from CSV - " + instructor);
 					}
 					
 				} catch (SQLException e) {
@@ -65,7 +66,30 @@ public class InstructorsData extends CsvDataLoader {
 		}
 	}
 
-	public static final void load() {
+	public static final void loadFromCSV() {
 		new InstructorsData();
+	}
+	
+	public static final void loadFromDB() {
+		try {
+			PreparedStatement preparedStatement = DbHelper.getConnection().prepareStatement(UniversityPersonTable.SELECT_INSTRUCTORS);
+			
+			ResultSet rs = preparedStatement.executeQuery();
+			while (rs.next()) {
+	
+				int id = rs.getInt(2);
+				String name = rs.getString(3);
+				String address = rs.getString(4);
+				String phone = rs.getString(5);
+				Instructor instructor = new Instructor(id, name, address, phone);
+				InputFileHandler.getInstructors().put(id, instructor);
+
+				if (Log.isDebug()) {
+					Logger.debug(TAG, "Loaded from DB - " + instructor);
+				}
+			}
+		} catch (SQLException e) {
+			DbHelper.logSqlException(e);
+		}
 	}
 }

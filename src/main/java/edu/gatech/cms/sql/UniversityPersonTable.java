@@ -62,6 +62,12 @@ public class UniversityPersonTable {
 
 	public static final String SELECT_SQL = "SELECT * FROM " + TABLE_NAME;
 
+	public static final String SELECT_STUDENTS = "SELECT * FROM " + TABLE_NAME 
+			+ " WHERE " + USER_ROLE_COLUMN + " = " + UniversityPersonRole.Student.ordinal();
+
+	public static final String SELECT_INSTRUCTORS = "SELECT * FROM " + TABLE_NAME
+			+ " WHERE " + USER_ROLE_COLUMN + " = " + UniversityPersonRole.Instructor.ordinal();
+
 	public static final String SELECT_STUDENT_BY_ID = String.format(""
 			+ "%s WHERE %s = ? AND %s = %d", 
 			SELECT_SQL,

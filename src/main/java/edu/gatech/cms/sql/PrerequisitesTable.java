@@ -29,9 +29,14 @@ public class PrerequisitesTable {
 			ID_COLUMN, TABLE_NAME
 	);
 
-	public static final String SELECT_PREREQUISITES = String.format(
+	public static final String SELECT_PREREQUISITES_FOR_COURSE = String.format(
 			"SELECT * FROM %s WHERE %s = ?", 
 			TABLE_NAME, COURSE_ID_COLUMN
+	);
+
+	public static final String SELECT_PREREQUISITES = String.format(
+			"SELECT * FROM %s", 
+			TABLE_NAME
 	);
 }
 

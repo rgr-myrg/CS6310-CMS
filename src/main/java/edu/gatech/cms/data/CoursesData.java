@@ -1,6 +1,7 @@
 package edu.gatech.cms.data;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -58,7 +59,7 @@ public class CoursesData extends CsvDataLoader {
 					InputFileHandler.getCourses().put(id, course);
 
 					if (Log.isDebug()) {
-						Logger.debug(TAG, "Loaded - " + course);
+						Logger.debug(TAG, "Loaded from CSV - " + course);
 					}
 					
 				} catch (SQLException e) {
@@ -68,7 +69,28 @@ public class CoursesData extends CsvDataLoader {
 		}
 	}
 
-	public static final void load() {
+	public static final void loadFromCSV() {
 		new CoursesData();
+	}
+	
+	public static final void loadFromDB() {
+		try {
+			PreparedStatement preparedStatement = DbHelper.getConnection().prepareStatement(CoursesTable.SELECT_SQL);
+			
+			ResultSet rs = preparedStatement.executeQuery();
+			while (rs.next()) {
+	
+				int id = rs.getInt(1);
+				String title = rs.getString(2);
+				Course course = new Course(id, title, "");
+				InputFileHandler.getCourses().put(id, course);
+
+				if (Log.isDebug()) {
+					Logger.debug(TAG, "Loaded from DB - " + course);
+				}
+			}
+		} catch (SQLException e) {
+			DbHelper.logSqlException(e);
+		}
 	}
 }
