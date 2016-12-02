@@ -59,7 +59,6 @@ public class InstructorController implements ScreenController{
 			        	Platform.runLater(() -> {
 				        	addedListView.getSelectionModel().select(-1);
 			        	});
-			        	Logger.debug(TAG, "Clicked item: " + newValue);				        	
 			        }
 		    	}
 		    });
@@ -71,8 +70,7 @@ public class InstructorController implements ScreenController{
 				        Platform.runLater(() -> {
 							availableListView.getSelectionModel().select(-1);
 				        });    	
-				    }			        
-			        Logger.debug(TAG, "Clicked item: " + newValue);
+				    }
 		    	}
 		    });		    
 		};
