@@ -99,7 +99,6 @@ public class InstructorController implements ScreenController{
 		}
 		else{
 			warningText.setVisible(true);
-			warningText.setStyle("warningText");
 		}
 		addedListView.getSelectionModel().select(-1);
 		availableListView.getSelectionModel().select(-1);								

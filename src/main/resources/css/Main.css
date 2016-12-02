@@ -95,6 +95,7 @@
 	-fx-text-fill: #FFFFFF;
 	-fx-background-color: #FF5050;
 	-fx-background-radius: 3,4,3,5;
+	-fx-padding: 0 2 0 2;
 }
 .list-cell:filled:selected:focused, .list-cell:filled:selected {
     -fx-background-color: linear-gradient(#20262b 0%, #191d22 25%, #38424b 75%, #1f2429 100%);
