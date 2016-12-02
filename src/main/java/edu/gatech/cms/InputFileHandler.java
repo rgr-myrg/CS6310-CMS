@@ -71,7 +71,7 @@ public class InputFileHandler {
 		instantiateStatsTreeMaps();
 
 		// Adding a count of 2 to mock the UI. PLEASE REMOVE.
-		currentSemester = 2;
+		// currentSemester = 2;
 
 		if (Log.isDebug()) {
 			Logger.debug(TAG, "loadFromCSV currentSemester: " + currentSemester);
@@ -155,6 +155,18 @@ public class InputFileHandler {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			StudentsData.loadFromCSV();
+			InstructorsData.loadFromCSV();
+			CoursesData.loadFromCSV();
+			PrerequisitesData.loadFromCSV();
+			RecordsData.loadFromCSV();
+		}
+		else {
+			StudentsData.loadFromDB();
+			InstructorsData.loadFromDB();
+			CoursesData.loadFromDB();
+			PrerequisitesData.loadFromDB();
+			RecordsData.loadFromDB();
 		}
 	}
 
