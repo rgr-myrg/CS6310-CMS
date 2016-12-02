@@ -3,10 +3,13 @@ package edu.gatech.cms.university;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.gatech.cms.InputFileHandler;
 import edu.gatech.cms.course.Course;
 import edu.gatech.cms.course.Record;
 import edu.gatech.cms.course.Request;
+import edu.gatech.cms.course.RequestStatus;
 import edu.gatech.cms.course.Section;
+import edu.gatech.cms.util.GradeDistributionUtil;
 
 public class Student extends UniversityPerson {
     public static final int MAX_COURSES_ELIGIBLE = 5;
@@ -57,26 +60,49 @@ public class Student extends UniversityPerson {
 	
 
 	public boolean enrollInCourse(Course course) {
+		//Status strings listed here for easy editing access
+		String rejectedFullCapacity = "no remaining seats at this time: (re-)added to waitlist";
+		String rejectedAlreadyTaken  = "student has already taken the course with a grade of C or higher";
+		String rejectedPrerequisites = "student is missing one or more prerequisites";
+		String accepted = "valid";
+		
+		InputFileHandler.incrementSemesterStats(InputFileHandler.getExaminedText());
+		InputFileHandler.incrementTotalStats(InputFileHandler.getExaminedText());
+		
 		//check prereqs, 1st highest 'priority'
 		if(hasPrerequisites(course)) {
 			//check if eligible, 2nd highest 'priority'
 			if(isEligibleToRetake(course)) {
 				//check if course has capacity, 3rd highest 'priority'
 				if(course.getTotalCourseCapacity() <= course.getTotalNumEnrolled()){
-					//InputFileHandler.getInstance().incrementNumDeniedDueToCapacity();
-					addToCourseRequestHistory(course, "no remaining seats available for the course at this time");
+					addToCourseRequestHistory(course, rejectedFullCapacity);
+					//add request to InputFileHandler and update statistics
+					Request r = new Request(InputFileHandler.getCurrentSemester(),this, course, RequestStatus.RejectedFullCapacity,rejectedFullCapacity);
+					InputFileHandler.addRequest(r);
+					InputFileHandler.incrementSemesterStats(InputFileHandler.getFailedText());
+					InputFileHandler.incrementTotalStats(InputFileHandler.getFailedText());
+					//add student to waitlist
+					course.addStudentToWaitlist(this);
 					return false;
 				}
 			}
 			else {
-				//InputFileHandler.getInstance().incrementNumDeniedDueToCoursesAlreadyTaken();
-				addToCourseRequestHistory(course, "student has already taken the course with a grade of C or higher");
+				addToCourseRequestHistory(course, rejectedAlreadyTaken);
+				//add request to InputFileHandler and update statistics
+				Request r = new Request(InputFileHandler.getCurrentSemester(), this, course, RequestStatus.RejectedAlreadyTaken,rejectedAlreadyTaken);
+				InputFileHandler.addRequest(r);
+				InputFileHandler.incrementSemesterStats(InputFileHandler.getFailedText());
+				InputFileHandler.incrementTotalStats(InputFileHandler.getFailedText());
 				return false;
 			}
 		}
 		else {
-			//InputFileHandler.getInstance().incrementNumDeniedDueToPrereqs();
-			addToCourseRequestHistory(course, "student is missing one or more prerequisites");
+			addToCourseRequestHistory(course, rejectedPrerequisites);
+			//add request to InputFileHandler and update statistics
+			Request r = new Request(InputFileHandler.getCurrentSemester(), this, course, RequestStatus.RejectedPrerequisites,rejectedPrerequisites);
+			InputFileHandler.addRequest(r);
+			InputFileHandler.incrementSemesterStats(InputFileHandler.getFailedText());
+			InputFileHandler.incrementTotalStats(InputFileHandler.getFailedText());
 			return false;
 		}
 					
@@ -91,9 +117,13 @@ public class Student extends UniversityPerson {
 			}
 		}
 		
-		addToCourseRequestHistory(course, "request is valid");
-		//String addToApproved = getUUID() + ", " + getFullName() + ", " + course.getID() + ", " + course.getTitle();
-		//InputFileHandler.getInstance().getApprovedRequests().add(addToApproved);
+		addToCourseRequestHistory(course, accepted);
+		//add request to InputFileHandler and update statistics
+		Request r = new Request(InputFileHandler.getCurrentSemester(),this, course, RequestStatus.Accepted,accepted);
+		InputFileHandler.addRequest(r);
+		InputFileHandler.incrementSemesterStats(InputFileHandler.getGrantedText());
+		InputFileHandler.incrementTotalStats(InputFileHandler.getGrantedText());
+
 		return true;
 	}
 
@@ -109,6 +139,8 @@ public class Student extends UniversityPerson {
 			section.addStudentToSection(this);
 			coursesInCurrentSemester++;
 			enrollmentSuccessful = true;
+			//Automatically add academic record for student
+			createAutoRecord(section.getTaughtBy(), section.getSectionOf());
 		}
 		else {
 			//record the failed attempt to enroll in single section, currently no action needed 
@@ -126,6 +158,13 @@ public class Student extends UniversityPerson {
 			}
 		}
 		return true;	
+	}
+	
+	private void createAutoRecord(Instructor instructor, Course course) {
+		String grade = GradeDistributionUtil.createRandomGrade();
+		Record r = new Record(this, course, instructor, "no comment", grade);
+		recordHistory.add(r);
+		InputFileHandler.getRecords().add(r);
 	}
 	
 	public void disenrollInSection(Section section) {
