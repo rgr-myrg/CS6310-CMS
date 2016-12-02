@@ -75,7 +75,7 @@
             </Group>
             <TextArea fx:id="aprioriTextResults" prefHeight="400.0">
                <VBox.margin>
-                  <Insets bottom="20.0" left="20.0" right="20.0" />
+                  <Insets bottom="20.0" left="30.0" right="30.0" />
                </VBox.margin></TextArea>
          </children>
       </VBox>

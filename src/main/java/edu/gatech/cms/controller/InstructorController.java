@@ -94,9 +94,11 @@ public class InstructorController implements ScreenController{
 		ObservableList<String> selectedItems = availableListView.getSelectionModel().getSelectedItems();
 		Boolean isValid = validateSelection(selectedItems, addedListView.getItems());
 		warningText.setText("");
-		if(isValid){
+		if(isValid){			
 			addedListView.getItems().addAll(selectedItems);
 			availableListView.getItems().removeAll(selectedItems);
+			addedListView.getSelectionModel().select(-1);
+			availableListView.getSelectionModel().select(-1);						
 		}
 		else{
 			warningText.setText(UiMessages.INSTRUCTOR_SELECTION_ERROR);

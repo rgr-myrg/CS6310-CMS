@@ -95,6 +95,10 @@
 }
 .list-cell:filled:selected:focused, .list-cell:filled:selected {
     -fx-background-color: linear-gradient(#20262b 0%, #191d22 25%, #38424b 75%, #1f2429 100%);
+    -fx-fill: #FFFFFF;
+}
+.list-cell:filled:hover{
+	-fx-fill: #FFFFFF;	
 }
 .list-view:focused{
 	-fx-focus-color: transparent;
