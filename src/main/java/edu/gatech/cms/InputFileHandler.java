@@ -82,11 +82,11 @@ public class InputFileHandler {
 			DbHelper.dropTables();
 			DbHelper.createTables();
 
-			StudentsData.load();
-			CoursesData.load();
-			PrerequisitesData.load();
-			InstructorsData.load();
-			RecordsData.load();
+			StudentsData.loadFromCSV();
+			CoursesData.loadFromCSV();
+			PrerequisitesData.loadFromCSV();
+			InstructorsData.loadFromCSV();
+			RecordsData.loadFromCSV();
 			
 			currentSemester = 1;
 		}
@@ -160,13 +160,6 @@ public class InputFileHandler {
 			CoursesData.loadFromCSV();
 			PrerequisitesData.loadFromCSV();
 			RecordsData.loadFromCSV();
-		}
-		else {
-			StudentsData.loadFromDB();
-			InstructorsData.loadFromDB();
-			CoursesData.loadFromDB();
-			PrerequisitesData.loadFromDB();
-			RecordsData.loadFromDB();
 		}
 	}
 
