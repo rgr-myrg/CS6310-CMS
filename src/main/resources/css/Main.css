@@ -93,3 +93,6 @@
 	-fx-fill: DARKRED;
 	-fx-font-family: "News Cycle";
 }
+.list-cell:filled:selected:focused, .list-cell:filled:selected {
+    -fx-background-color: linear-gradient(#20262b 0%, #191d22 25%, #38424b 75%, #1f2429 100%);
+}
