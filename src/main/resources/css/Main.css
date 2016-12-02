@@ -5,7 +5,8 @@
      src: url("../fonts/NewsCycle-Bold.ttf");
 }
 .root{
-    -fx-background-image:url("../images/lightgraybg.png");
+    /*-fx-background-image:url("../images/lightgraybg.png");*/
+    -fx-background-image:url("../images/gray-haze-background.jpg");
     -fx-background-size: cover;    
 }
 .next-button {
@@ -21,7 +22,7 @@
     -fx-font-family: "Arial";
     -fx-text-fill: linear-gradient(white, #d0d0d0);
     -fx-font-size: 12px;
-    -fx-padding: 10 20 10 20;
+    -fx-padding: 15 28 15 28;
 }
 .next-button:pressed {
     -fx-background-color: 
@@ -36,7 +37,7 @@
     -fx-font-family: "Arial";
     -fx-text-fill: linear-gradient(white, #d0d0d0);
     -fx-font-size: 12px;
-	-fx-padding: 10 20 10 20;    
+	-fx-padding: 15 28 15 28;
 }
 .next-button Text {
     -fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.9) , 1, 0.0 , 0 , 1 );
