@@ -6,8 +6,9 @@
 }
 .root{
     /*-fx-background-image:url("../images/lightgraybg.png");*/
-    -fx-background-image:url("../images/gray-haze-background.jpg");
+    /*-fx-background-image:url("../images/gray-haze-background.jpg");*/
     /*-fx-background-image:url("../images/silk-gray-background.jpeg");*/
+    -fx-background-image:url("../images/43-Chalkboard-Backgrounds.jpeg");
     -fx-background-size: cover;    
 }
 .next-button {
