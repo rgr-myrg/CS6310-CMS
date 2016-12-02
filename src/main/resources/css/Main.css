@@ -13,10 +13,10 @@
 }
 .next-button {
     -fx-background-color: 
-        #090a0c,
-        linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),
-        linear-gradient(#20262b, #191d22),
-        radial-gradient(center 50% 0%, radius 100%, rgba(114,131,148,0.9), rgba(255,255,255,0));
+        #4080bf,
+        linear-gradient(#3973ac 0%, #6699cc 20%, #3973ac 100%),
+        linear-gradient(#3973ac, #2d5986),
+        radial-gradient(center 50% 0%, radius 100%, rgba(140, 179, 217,0.9), rgba(255,255,255,0));
     -fx-background-radius: 5,4,3,5;
     -fx-background-insets: 0,1,2,0;
     -fx-text-fill: white;
@@ -28,10 +28,10 @@
 }
 .next-button:pressed {
     -fx-background-color: 
-        linear-gradient(#20262b, #191d22),        
-        linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),
-        #090a0c,
-        radial-gradient(center 50% 0%, radius 100%, rgba(114,131,148,0.9), rgba(255,255,255,0));
+        linear-gradient(#3973ac, #2d5986),       
+        linear-gradient(#3973ac 0%, #6699cc 20%, #3973ac 100%),
+        #4080bf,
+        radial-gradient(center 50% 0%, radius 100%, rgba(140, 179, 217,0.9), rgba(255,255,255,0));
     -fx-background-radius: 5,4,3,5;
     -fx-background-insets: 0,1,2,0;
     -fx-text-fill: white;
@@ -46,10 +46,10 @@
 }
 .list-button{
     -fx-background-color: 
-        #090a0c,
-        linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),
-        linear-gradient(#20262b, #191d22),
-        radial-gradient(center 50% 0%, radius 100%, rgba(114,131,148,0.9), rgba(255,255,255,0));
+        #4080bf,
+        linear-gradient(#3973ac 0%, #6699cc 20%, #3973ac 100%),
+        linear-gradient(#3973ac, #2d5986),
+        radial-gradient(center 50% 0%, radius 100%, rgba(140, 179, 217,0.9), rgba(255,255,255,0));
     -fx-background-radius: 5,4,3,5;
     -fx-background-insets: 0,1,2,0;
     -fx-text-fill: white;
@@ -64,10 +64,10 @@
 }
 .list-button:pressed{
     -fx-background-color: 
-        linear-gradient(#20262b, #191d22),        
-        linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),
-        #090a0c,
-        radial-gradient(center 50% 0%, radius 100%, rgba(114,131,148,0.9), rgba(255,255,255,0));
+        linear-gradient(#3973ac, #2d5986),       
+        linear-gradient(#3973ac 0%, #6699cc 20%, #3973ac 100%),
+        #4080bf,
+        radial-gradient(center 50% 0%, radius 100%, rgba(140, 179, 217,0.9), rgba(255,255,255,0));
     -fx-background-radius: 5,4,3,5;
     -fx-background-insets: 0,1,2,0;
     -fx-text-fill: white;
@@ -91,8 +91,11 @@
 	-fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.9) , 1, 0.0 , 0 , 1.5 );	
 }
 #warningText{
-	-fx-fill: DARKRED;
+	-fx-font-size: 15px;
+	-fx-fill: #FF5050;
+	-fx-font-weight: bold;
 	-fx-font-family: "News Cycle";
+	-fx-effect: dropshadow( one-pass-box , #000000, 1, 0.0 , 0 , 1.5 );
 }
 .list-cell:filled:selected:focused, .list-cell:filled:selected {
     -fx-background-color: linear-gradient(#20262b 0%, #191d22 25%, #38424b 75%, #1f2429 100%);

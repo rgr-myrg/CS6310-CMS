@@ -97,12 +97,12 @@ public class InstructorController implements ScreenController{
 		if(isValid){			
 			addedListView.getItems().addAll(selectedItems);
 			availableListView.getItems().removeAll(selectedItems);
-			addedListView.getSelectionModel().select(-1);
-			availableListView.getSelectionModel().select(-1);						
 		}
 		else{
 			warningText.setText(UiMessages.INSTRUCTOR_SELECTION_ERROR);
 		}
+		addedListView.getSelectionModel().select(-1);
+		availableListView.getSelectionModel().select(-1);								
 	}
 
 	@FXML protected void onRemoveButtonClick(ActionEvent event) {
