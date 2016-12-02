@@ -7,6 +7,7 @@
 .root{
     /*-fx-background-image:url("../images/lightgraybg.png");*/
     -fx-background-image:url("../images/gray-haze-background.jpg");
+    /*-fx-background-image:url("../images/silk-gray-background.jpeg");*/
     -fx-background-size: cover;    
 }
 .next-button {
@@ -80,13 +81,13 @@
 	-fx-font-family: "News Cycle";
 	-fx-font-weight: bold;
 	-fx-text-fill: #FFFFFF;
-	-fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.9) , 1, 0.0 , 0 , 1 );	
+	-fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.9) , 1, 0.0 , 0 , 1.5 );	
 }
 .welcomeText{
 	-fx-font-size: 22px;
 	-fx-font-family: "News Cycle";
 	-fx-fill: #FFFFFF;
-	-fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.9) , 1, 0.0 , 0 , 1 );	
+	-fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.9) , 1, 0.0 , 0 , 1.5 );	
 }
 #warningText{
 	-fx-fill: DARKRED;
