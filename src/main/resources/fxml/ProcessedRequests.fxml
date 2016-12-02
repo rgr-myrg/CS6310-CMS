@@ -19,11 +19,11 @@
       <HBox BorderPane.alignment="BOTTOM_CENTER">
          <children>
             <Region prefWidth="400.0" HBox.hgrow="ALWAYS" />
-            <Button id="nextButton" minWidth="-Infinity" mnemonicParsing="false" styleClass="dark-blue-button" onAction="#onNextSemesterButtonClick" text="Next Semester">
+            <Button id="nextButton" minWidth="-Infinity" mnemonicParsing="false" styleClass="next-button" onAction="#onNextSemesterButtonClick" text="Next Semester">
                <HBox.margin>
                   <Insets bottom="15.0" right="10.0" />
                </HBox.margin></Button>
-            <Button id="nextButton" minWidth="60.0" mnemonicParsing="false" styleClass="dark-blue-button" onAction="#onExitButtonClick" text="Exit">
+            <Button id="nextButton" minWidth="60.0" mnemonicParsing="false" styleClass="next-button" onAction="#onExitButtonClick" text="Exit">
                <HBox.margin>
                   <Insets bottom="15.0" right="30.0" />
                </HBox.margin>
@@ -55,7 +55,7 @@
                <VBox.margin>
                   <Insets top="15.0" />
                </VBox.margin></Label>
-            <Text fx:id="welcomeText" lineSpacing="5.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="500.0">
+            <Text fx:id="welcomeText" styleClass="welcomeText" lineSpacing="5.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="500.0">
                <VBox.margin>
                   <Insets left="55.0" right="30.0" top="15.0" />
                </VBox.margin>

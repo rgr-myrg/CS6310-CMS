@@ -110,6 +110,7 @@ public class InstructorController implements ScreenController{
 	}
 
 	@FXML protected void onClearButtonClick(ActionEvent event) {
+		warningText.setText("");
 		availableListView.getItems().clear();
 		addedListView.getItems().clear();
 	    availableListView.setItems(FXCollections.observableArrayList(InputFileHandler.getAssignmentsStrings(InputFileHandler.getCurrentSemester())));
