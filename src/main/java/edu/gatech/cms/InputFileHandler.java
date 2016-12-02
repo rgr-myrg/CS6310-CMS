@@ -70,26 +70,31 @@ public class InputFileHandler {
 		extractSemester();
 		instantiateStatsTreeMaps();
 
-		// Adding a count of 2 to mock the UI. PLEASE REMOVE.
-		// currentSemester = 2;
-
 		if (Log.isDebug()) {
 			Logger.debug(TAG, "loadFromCSV currentSemester: " + currentSemester);
 		}
 
-		// currentSemester of 0 indicates 'initial' mode
+		// INITIAL MODE
 		if (currentSemester == 0) {
 			DbHelper.dropTables();
 			DbHelper.createTables();
 
+			//load from CSV then load from db
 			StudentsData.loadFromCSV();
 			CoursesData.loadFromCSV();
 			PrerequisitesData.loadFromCSV();
 			InstructorsData.loadFromCSV();
 			RecordsData.loadFromCSV();
 			
+			StudentsData.loadFromDB();
+			CoursesData.loadFromDB();
+			PrerequisitesData.loadFromDB();
+			InstructorsData.loadFromDB();
+			RecordsData.loadFromDB();
+			
 			currentSemester = 1;
 		}
+		
 		// currentSemester > 0 indicates 'resume' mode
 		else {
 			//clear out 'semesterStatistics' counts
@@ -109,7 +114,7 @@ public class InputFileHandler {
 	}
 	
 	//This method will process all requests and assumes requests List already loaded
-	private static void processRequests() {
+	public static void processRequests() {
 		List<Request> requestsList = requests.get(currentSemester);
 		
 		for(Request r : requestsList) {
@@ -125,6 +130,18 @@ public class InputFileHandler {
 		System.out.println("Processed Requests");
 		for(Request r : requestsList) {
 			System.out.println("request (" + r.getStudent().getUUID() + ", " + r.getCourse().getID() + "): " + r.getReason());
+		}
+	}
+	
+	//This method will print all academic records
+	public static void printAcademicRecords(){
+		System.out.println("Academic Records");
+		for(Record r : records) {
+			System.out.print(r.getStudent().getUUID() + ", ");
+			System.out.print(r.getCourse().getID() + ", ");
+			System.out.print(r.getInstructor().getUUID() + ", ");
+			System.out.print(r.getInstructorComments() + ", ");
+			System.out.println(r.getGradeEarned());
 		}
 	}
 	
@@ -211,6 +228,7 @@ public class InputFileHandler {
 		totalStatistics.put(failedText, 0);
 		totalStatistics.put(waitlistText, 0);
 	}
+	
 	public static void prepareDataForDataMining() {
 		if (wekaDataSource == null) {
 			wekaDataSource = new WekaDataSource();
