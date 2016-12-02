@@ -22,7 +22,10 @@
       <HBox BorderPane.alignment="BOTTOM_CENTER">
          <children>
             <Region prefWidth="400.0" HBox.hgrow="ALWAYS" />
-            <Button id="nextButton" mnemonicParsing="false" onAction="#onNextButtonClick" text="Next &gt;&gt;" />
+            <Button id="nextButton" mnemonicParsing="false" onAction="#onNextButtonClick" text="Next &gt;&gt;" textAlignment="CENTER">
+               <HBox.margin>
+                  <Insets bottom="15.0" right="30.0" />
+               </HBox.margin></Button>
          </children>
          <padding>
             <Insets bottom="5.0" right="10.0" />
@@ -43,16 +46,16 @@
    <center>
       <VBox id="welcomeMainVBox" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <Label text="Course Management System v1.0">
+            <Label fx:id="screenHeader" prefHeight="45.0" prefWidth="331.0" text="Course Management System v1.0">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
                <VBox.margin>
                   <Insets top="15.0" />
                </VBox.margin></Label>
-            <Text fx:id="welcomeText" lineSpacing="5.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="500.0">
+            <Text fx:id="welcomeText" lineSpacing="5.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="540.0">
                <VBox.margin>
-                  <Insets left="55.0" right="30.0" top="15.0" />
+                  <Insets left="30.0" right="30.0" top="20.0" />
                </VBox.margin>
                <font>
                   <Font size="15.0" />
@@ -60,7 +63,7 @@
             </Text>
             <Group fx:id="progressGroup">
                <children>
-                  <ImageView fx:id="progressGif" fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="progressGif" fitHeight="75.0" fitWidth="75.0" layoutY="-4.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/progress_bar.gif" />
                      </image>
@@ -70,7 +73,10 @@
                   <Insets top="45.0" />
                </VBox.margin>
             </Group>
-            <TextArea fx:id="aprioriTextResults" prefHeight="400.0" />
+            <TextArea fx:id="aprioriTextResults" prefHeight="400.0">
+               <VBox.margin>
+                  <Insets bottom="20.0" />
+               </VBox.margin></TextArea>
          </children>
       </VBox>
    </center>

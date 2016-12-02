@@ -23,7 +23,10 @@
       <HBox BorderPane.alignment="BOTTOM_CENTER">
          <children>
             <Region prefWidth="400.0" HBox.hgrow="ALWAYS" />
-            <Button id="nextButton" mnemonicParsing="false" onAction="#onNextButtonClick" text="Next &gt;&gt;" />
+            <Button id="nextButton" mnemonicParsing="false" onAction="#onNextButtonClick" text="Next &gt;&gt;">
+               <HBox.margin>
+                  <Insets bottom="15.0" right="30.0" />
+               </HBox.margin></Button>
          </children>
          <padding>
             <Insets bottom="5.0" right="10.0" />
@@ -44,7 +47,7 @@
    <center>
       <VBox id="welcomeMainVBox" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <Label text="Course Management System v1.0">
+            <Label fx:id="screenHeader" text="Course Management System v1.0" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>

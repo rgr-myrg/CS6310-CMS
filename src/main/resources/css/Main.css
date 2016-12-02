@@ -1,3 +1,12 @@
+@font-face {
+     src: url("../fonts/NewsCycle-Regular.ttf");
+}
+@font-face {
+     src: url("../fonts/NewsCycle-Bold.ttf");
+}
+#mainBorderPane{
+	-fx-background-color: DARKRED;
+}
 #big-yellow {
 	-fx-background-color: 
 		#ecebe9,
@@ -17,6 +26,47 @@
 	-fx-effect: dropshadow( one-pass-box , rgba(255,255,255,1) , 0, 0.0 , 0 , 1);
 }
 
+.button {
+    -fx-background-color: 
+        #000000,
+        linear-gradient(#7ebcea, #2f4b8f),
+        linear-gradient(#426ab7, #263e75),
+        linear-gradient(#395cab, #223768);
+    -fx-background-insets: 0,1,2,3;
+    -fx-background-radius: 3,2,2,2;
+    -fx-padding: 5 9 5 9;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+}
+
+.button Text {
+    -fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.8) , 0, 0.0 , 0 , 1);
+}
+
+.button:pressed{
+    -fx-background-color: 
+        linear-gradient(#395cab, #223768),
+        linear-gradient(#426ab7, #263e75),
+        linear-gradient(#7ebcea, #2f4b8f);
+    -fx-background-insets: 0,1,2,3;
+    -fx-background-radius: 3,2,2,2;
+    -fx-padding: 5 9 5 9;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;	
+}
+
+#screenHeader{
+	-fx-font-size: 25px;
+	-fx-font-weight: bold;
+	-fx-font-family: "News Cycle";
+}
+
+#welcomeText{
+	-fx-font-size: 20px;
+	-fx-font-family: "News Cycle";
+}
+
 #warningText{
 	-fx-fill: DARKRED;
+	-fx-font-family: "News Cycle";
 }
