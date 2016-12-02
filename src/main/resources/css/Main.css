@@ -4,8 +4,8 @@
 @font-face {
      src: url("../fonts/NewsCycle-Bold.ttf");
 }
-#mainBorderPane{
-	-fx-background-color: DARKRED;
+.root{
+    -fx-background-color: #1d1d1d;
 }
 #big-yellow {
 	-fx-background-color: 
@@ -26,7 +26,7 @@
 	-fx-effect: dropshadow( one-pass-box , rgba(255,255,255,1) , 0, 0.0 , 0 , 1);
 }
 
-.button {
+.blue-button {
     -fx-background-color: 
         #000000,
         linear-gradient(#7ebcea, #2f4b8f),
@@ -39,11 +39,11 @@
     -fx-font-size: 12px;
 }
 
-.button Text {
+.blue-button Text {
     -fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.8) , 0, 0.0 , 0 , 1);
 }
 
-.button:pressed{
+.blue-button:pressed{
     -fx-background-color: 
         linear-gradient(#395cab, #223768),
         linear-gradient(#426ab7, #263e75),
@@ -53,6 +53,39 @@
     -fx-padding: 5 9 5 9;
     -fx-text-fill: white;
     -fx-font-size: 12px;	
+}
+.dark-blue-button {
+    -fx-background-color: 
+        #090a0c,
+        linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),
+        linear-gradient(#20262b, #191d22),
+        radial-gradient(center 50% 0%, radius 100%, rgba(114,131,148,0.9), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 0,1,2,0;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white, #d0d0d0);
+    -fx-font-size: 12px;
+    -fx-padding: 5 10 5 10;
+}
+.dark-blue-button:pressed {
+    -fx-background-color: 
+        linear-gradient(#20262b, #191d22),        
+        linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),
+        #090a0c,
+        radial-gradient(center 50% 0%, radius 100%, rgba(114,131,148,0.9), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 0,1,2,0;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white, #d0d0d0);
+    -fx-font-size: 12px;
+    -fx-padding: 5 10 5 10;
+}
+.dark-blue-button Text {
+    -fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.9) , 1, 0.0 , 0 , 1 );
 }
 
 #screenHeader{

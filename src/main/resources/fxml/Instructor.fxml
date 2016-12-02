@@ -23,7 +23,7 @@
       <HBox BorderPane.alignment="BOTTOM_CENTER">
          <children>
             <Region prefWidth="400.0" HBox.hgrow="ALWAYS" />
-            <Button id="nextButton" mnemonicParsing="false" onAction="#onNextButtonClick" text="Next &gt;&gt;">
+            <Button id="nextButton" mnemonicParsing="false" onAction="#onNextButtonClick" styleClass="dark-blue-button" text="Next &gt;&gt;">
                <HBox.margin>
                   <Insets bottom="15.0" right="30.0" />
                </HBox.margin></Button>
@@ -103,9 +103,9 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button fx:id="removeButtonClick" alignment="CENTER" contentDisplay="CENTER" maxWidth="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#onRemoveButtonClick" prefHeight="27.0" prefWidth="10.0" text="&lt;" textAlignment="CENTER" GridPane.columnIndex="4" GridPane.halignment="CENTER" />
-                  <Button fx:id="clearButtonClick" alignment="CENTER" contentDisplay="CENTER" maxWidth="100.0" mnemonicParsing="false" onAction="#onClearButtonClick" text="Clear" textAlignment="CENTER" GridPane.columnIndex="5" GridPane.halignment="CENTER" />
-                  <Button fx:id="addButtonClick" alignment="CENTER" contentDisplay="CENTER" minWidth="30.0" mnemonicParsing="false" onAction="#onAddButtonClick" prefHeight="27.0" prefWidth="30.0" text="&gt;" textAlignment="CENTER" GridPane.columnIndex="6" GridPane.halignment="CENTER" />
+                  <Button fx:id="removeButtonClick" styleClass="dark-blue-button" alignment="CENTER" contentDisplay="CENTER" maxWidth="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#onRemoveButtonClick" prefHeight="27.0" prefWidth="10.0" text="&lt;" textAlignment="CENTER" GridPane.columnIndex="4" GridPane.halignment="CENTER" />
+                  <Button fx:id="clearButtonClick" styleClass="dark-blue-button" alignment="CENTER" contentDisplay="CENTER" maxWidth="100.0" mnemonicParsing="false" onAction="#onClearButtonClick" text="Clear" textAlignment="CENTER" GridPane.columnIndex="5" GridPane.halignment="CENTER" />
+                  <Button fx:id="addButtonClick" styleClass="dark-blue-button" alignment="CENTER" contentDisplay="CENTER" minWidth="30.0" mnemonicParsing="false" onAction="#onAddButtonClick" prefHeight="27.0" prefWidth="30.0" text="&gt;" textAlignment="CENTER" GridPane.columnIndex="6" GridPane.halignment="CENTER" />
                </children>
             </GridPane>
          </children>

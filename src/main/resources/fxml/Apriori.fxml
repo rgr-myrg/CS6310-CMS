@@ -22,7 +22,7 @@
       <HBox BorderPane.alignment="BOTTOM_CENTER">
          <children>
             <Region prefWidth="400.0" HBox.hgrow="ALWAYS" />
-            <Button id="nextButton" mnemonicParsing="false" onAction="#onNextButtonClick" text="Next &gt;&gt;" textAlignment="CENTER">
+            <Button id="nextButton" mnemonicParsing="false" onAction="#onNextButtonClick" styleClass="dark-blue-button" text="Next &gt;&gt;" textAlignment="CENTER">
                <HBox.margin>
                   <Insets bottom="15.0" right="30.0" />
                </HBox.margin></Button>
