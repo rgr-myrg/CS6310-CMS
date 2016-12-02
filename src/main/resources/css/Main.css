@@ -90,12 +90,11 @@
 	-fx-fill: #FFFFFF;
 	-fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.9) , 1, 0.0 , 0 , 1.5 );	
 }
-#warningText{
-	-fx-font-size: 15px;
-	-fx-fill: #FF5050;
-	-fx-font-weight: bold;
-	-fx-font-family: "News Cycle";
-	-fx-effect: dropshadow( one-pass-box , #000000, 1, 0.0 , 0 , 1.5 );
+.warningText{
+	-fx-font-size: 14px;
+	-fx-text-fill: #FFFFFF;
+	-fx-background-color: #FF5050;
+	-fx-background-radius: 3,4,3,5;
 }
 .list-cell:filled:selected:focused, .list-cell:filled:selected {
     -fx-background-color: linear-gradient(#20262b 0%, #191d22 25%, #38424b 75%, #1f2429 100%);

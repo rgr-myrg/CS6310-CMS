@@ -23,6 +23,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -36,7 +37,7 @@ public class InstructorController implements ScreenController{
 	@FXML private ListView availableListView;
 	@FXML private ListView addedListView;
 	@FXML private Text welcomeText;
-	@FXML private Text warningText;
+	@FXML private Label warningText;
 
 	public static final String TAG = InputFileHandler.class.getSimpleName();
 
@@ -93,13 +94,14 @@ public class InstructorController implements ScreenController{
 	@FXML protected void onAddButtonClick(ActionEvent event) {
 		ObservableList<String> selectedItems = availableListView.getSelectionModel().getSelectedItems();
 		Boolean isValid = validateSelection(selectedItems, addedListView.getItems());
-		warningText.setText("");
+		warningText.setVisible(false);
 		if(isValid){			
 			addedListView.getItems().addAll(selectedItems);
 			availableListView.getItems().removeAll(selectedItems);
 		}
 		else{
-			warningText.setText(UiMessages.INSTRUCTOR_SELECTION_ERROR);
+			warningText.setVisible(true);
+			warningText.setStyle("warningText");
 		}
 		addedListView.getSelectionModel().select(-1);
 		availableListView.getSelectionModel().select(-1);								
@@ -112,7 +114,7 @@ public class InstructorController implements ScreenController{
 	}
 
 	@FXML protected void onClearButtonClick(ActionEvent event) {
-		warningText.setText("");
+		warningText.setVisible(false);
 		availableListView.getItems().clear();
 		addedListView.getItems().clear();
 	    availableListView.setItems(FXCollections.observableArrayList(InputFileHandler.getAssignmentsStrings(InputFileHandler.getCurrentSemester())));

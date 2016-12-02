@@ -54,7 +54,7 @@
                <VBox.margin>
                   <Insets top="15.0" />
                </VBox.margin></Label>
-            <Text fx:id="welcomeText" styleClass="welcomeText" lineSpacing="5.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="500.0">
+            <Text fx:id="welcomeText" lineSpacing="5.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="welcomeText" textAlignment="CENTER" wrappingWidth="500.0">
                <VBox.margin>
                   <Insets left="55.0" right="30.0" top="15.0" />
                </VBox.margin>
@@ -67,10 +67,14 @@
                   <Insets top="45.0" />
                </VBox.margin>
             </Group>
-            <Text fx:id="warningText" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="581.21875">
+            <Label fx:id="warningText" prefHeight="60.0" prefWidth="600.0" styleClass="warningText" text="Each instructor may only be selected once per cycle, and no more than 5 selections may be added per cycle. Please try again." textAlignment="CENTER" visible="false" wrapText="true">
                <VBox.margin>
                   <Insets bottom="20.0" />
-               </VBox.margin></Text>
+               </VBox.margin>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
             <HBox prefHeight="345.0" prefWidth="600.0">
                <children>
                   <ListView fx:id="availableListView" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
@@ -103,9 +107,9 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button fx:id="removeButtonClick" styleClass="list-button" alignment="CENTER" contentDisplay="CENTER" maxWidth="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#onRemoveButtonClick" prefHeight="27.0" prefWidth="10.0" text="&lt;" textAlignment="CENTER" GridPane.columnIndex="4" GridPane.halignment="CENTER" />
-                  <Button fx:id="clearButtonClick" styleClass="list-button" alignment="CENTER" contentDisplay="CENTER" maxWidth="100.0" mnemonicParsing="false" onAction="#onClearButtonClick" text="Clear" textAlignment="CENTER" GridPane.columnIndex="5" GridPane.halignment="CENTER" />
-                  <Button fx:id="addButtonClick" styleClass="list-button" alignment="CENTER" contentDisplay="CENTER" minWidth="30.0" mnemonicParsing="false" onAction="#onAddButtonClick" prefHeight="27.0" prefWidth="30.0" text="&gt;" textAlignment="CENTER" GridPane.columnIndex="6" GridPane.halignment="CENTER" />
+                  <Button fx:id="removeButtonClick" alignment="CENTER" contentDisplay="CENTER" maxWidth="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#onRemoveButtonClick" prefHeight="27.0" prefWidth="10.0" styleClass="list-button" text="&lt;" textAlignment="CENTER" GridPane.columnIndex="4" GridPane.halignment="CENTER" />
+                  <Button fx:id="clearButtonClick" alignment="CENTER" contentDisplay="CENTER" maxWidth="100.0" mnemonicParsing="false" onAction="#onClearButtonClick" styleClass="list-button" text="Clear" textAlignment="CENTER" GridPane.columnIndex="5" GridPane.halignment="CENTER" />
+                  <Button fx:id="addButtonClick" alignment="CENTER" contentDisplay="CENTER" minWidth="30.0" mnemonicParsing="false" onAction="#onAddButtonClick" prefHeight="27.0" prefWidth="30.0" styleClass="list-button" text="&gt;" textAlignment="CENTER" GridPane.columnIndex="6" GridPane.halignment="CENTER" />
                </children>
             </GridPane>
          </children>
