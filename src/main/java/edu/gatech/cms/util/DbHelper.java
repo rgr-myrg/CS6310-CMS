@@ -10,10 +10,11 @@ import java.sql.Statement;
 import edu.gatech.cms.logger.Log;
 import edu.gatech.cms.logger.Logger;
 import edu.gatech.cms.sql.AssignmentsTable;
-import edu.gatech.cms.sql.PrerequisitesTable;
-import edu.gatech.cms.sql.RequestsTable;
 import edu.gatech.cms.sql.CoursesTable;
+import edu.gatech.cms.sql.PrerequisitesTable;
 import edu.gatech.cms.sql.RecordsTable;
+import edu.gatech.cms.sql.RequestsTable;
+import edu.gatech.cms.sql.TotalStatisticsTable;
 import edu.gatech.cms.sql.UniversityPersonTable;
 import edu.gatech.cms.sql.WaitingTable;
 
@@ -84,6 +85,9 @@ public class DbHelper {
 			
 			preparedStatement = conn.prepareStatement(WaitingTable.CREATE_TABLE);
 			preparedStatement.execute();
+
+			preparedStatement = conn.prepareStatement(TotalStatisticsTable.CREATE_TABLE);
+			preparedStatement.execute();
 		} catch (SQLException e) {
 			logSqlException(e);
 		}
@@ -119,6 +123,8 @@ public class DbHelper {
 			preparedStatement = conn.prepareStatement(WaitingTable.DROP_TABLE);
 			preparedStatement.execute();
 
+			preparedStatement = conn.prepareStatement(TotalStatisticsTable.DROP_TABLE);
+			preparedStatement.execute();
 		} catch (SQLException e) {
 			logSqlException(e);
 		}
