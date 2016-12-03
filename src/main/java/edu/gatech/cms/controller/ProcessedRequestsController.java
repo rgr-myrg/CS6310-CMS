@@ -24,6 +24,7 @@ public class ProcessedRequestsController implements ScreenController{
 	@FXML private Group progressGroup;
 	@FXML private ImageView progressGif;
 	@FXML private Text welcomeText;
+	@FXML private TextArea statsTextResults;
 
 	public static final String TAG = InputFileHandler.class.getSimpleName();
 
@@ -33,6 +34,12 @@ public class ProcessedRequestsController implements ScreenController{
 
 			final String screenMsg = String.format(UiMessages.PROCESSED_REQUESTS_HEADING);
 	        welcomeText.setText(screenMsg);
+	        
+	        statsTextResults.setText(
+	        		InputFileHandler.getProcessedRequests() + "\n"
+	        		+ InputFileHandler.getSemesterStats() + "\n" 
+	        		+ InputFileHandler.getAcademicRecords() + "\n" 
+	        		+ InputFileHandler.getNewWaitingRequests());
 		};
 	}
 

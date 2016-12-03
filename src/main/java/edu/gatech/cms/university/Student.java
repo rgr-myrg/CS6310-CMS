@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.gatech.cms.InputFileHandler;
+import edu.gatech.cms.course.Assignment;
 import edu.gatech.cms.course.Course;
 import edu.gatech.cms.course.Record;
 import edu.gatech.cms.course.Request;
@@ -59,119 +60,6 @@ public class Student extends UniversityPerson {
 	//END GETTERS AND SETTERS SECTION
 	
 
-	public boolean enrollInCourse(Course course) {
-		//Status strings listed here for easy editing access
-		String rejectedFullCapacity = "no remaining seats at this time: (re-)added to waitlist";
-		String rejectedAlreadyTaken  = "student has already taken the course with a grade of C or higher";
-		String rejectedPrerequisites = "student is missing one or more prerequisites";
-		String accepted = "valid";
-		
-		InputFileHandler.incrementSemesterStats(InputFileHandler.getExaminedText());
-		InputFileHandler.incrementTotalStats(InputFileHandler.getExaminedText());
-		
-		//check prereqs, 1st highest 'priority'
-		if(hasPrerequisites(course)) {
-			//check if eligible, 2nd highest 'priority'
-			if(isEligibleToRetake(course)) {
-				//check if course has capacity, 3rd highest 'priority'
-				if(course.getTotalCourseCapacity() <= course.getTotalNumEnrolled()){
-					addToCourseRequestHistory(course, rejectedFullCapacity);
-					//add request to InputFileHandler and update statistics
-					Request r = new Request(InputFileHandler.getCurrentSemester(),this, course, RequestStatus.RejectedFullCapacity,rejectedFullCapacity);
-					InputFileHandler.addRequest(r);
-					InputFileHandler.incrementSemesterStats(InputFileHandler.getFailedText());
-					InputFileHandler.incrementTotalStats(InputFileHandler.getFailedText());
-					//add student to waitlist
-					course.addStudentToWaitlist(this);
-					return false;
-				}
-			}
-			else {
-				addToCourseRequestHistory(course, rejectedAlreadyTaken);
-				//add request to InputFileHandler and update statistics
-				Request r = new Request(InputFileHandler.getCurrentSemester(), this, course, RequestStatus.RejectedAlreadyTaken,rejectedAlreadyTaken);
-				InputFileHandler.addRequest(r);
-				InputFileHandler.incrementSemesterStats(InputFileHandler.getFailedText());
-				InputFileHandler.incrementTotalStats(InputFileHandler.getFailedText());
-				return false;
-			}
-		}
-		else {
-			addToCourseRequestHistory(course, rejectedPrerequisites);
-			//add request to InputFileHandler and update statistics
-			Request r = new Request(InputFileHandler.getCurrentSemester(), this, course, RequestStatus.RejectedPrerequisites,rejectedPrerequisites);
-			InputFileHandler.addRequest(r);
-			InputFileHandler.incrementSemesterStats(InputFileHandler.getFailedText());
-			InputFileHandler.incrementTotalStats(InputFileHandler.getFailedText());
-			return false;
-		}
-					
-		//only arrive at this code if all 3 requirements met
-		for( Section section : course.getSectionsOffered()){
-			//Search for available sections, break when one is found
-			if(enrollInSection(section)) {
-				coursesInCurrentSemester++;
-				//coursesGranted.add(course);
-				//InputFileHandler.getInstance().incrementNumRequestsGranted();
-				break;
-			}
-		}
-		
-		addToCourseRequestHistory(course, accepted);
-		//add request to InputFileHandler and update statistics
-		Request r = new Request(InputFileHandler.getCurrentSemester(),this, course, RequestStatus.Accepted,accepted);
-		InputFileHandler.addRequest(r);
-		InputFileHandler.incrementSemesterStats(InputFileHandler.getGrantedText());
-		InputFileHandler.incrementTotalStats(InputFileHandler.getGrantedText());
-
-		return true;
-	}
-
-	private boolean enrollInSection(Section section) {
-		boolean enrollmentSuccessful = false;
-		
-		//all things that must be true before enrolling in a section
-		boolean hasCapacity = section.hasCapacity();
-		boolean eligibleForMoreSections = (coursesInCurrentSemester < MAX_COURSES_ELIGIBLE);
-		
-		if(hasCapacity && eligibleForMoreSections) {
-			sectionsCurrentlyEnrolled.add(section);
-			section.addStudentToSection(this);
-			coursesInCurrentSemester++;
-			enrollmentSuccessful = true;
-			//Automatically add academic record for student
-			createAutoRecord(section.getTaughtBy(), section.getSectionOf());
-		}
-		else {
-			//record the failed attempt to enroll in single section, currently no action needed 
-		}
-		
-		return enrollmentSuccessful;
-	}
-	
-	private boolean hasPrerequisites(Course course) {
-		List<Course> prerequisites = course.getPrerequisites();
-		//make sure all prerequisites were taken and passed
-		for (Course c : prerequisites) { 
-			if(!(hasTakenAndPassed(c))) {
-				return false;
-			}
-		}
-		return true;	
-	}
-	
-	private void createAutoRecord(Instructor instructor, Course course) {
-		String grade = GradeDistributionUtil.createRandomGrade();
-		Record r = new Record(this, course, instructor, "no comment", grade);
-		recordHistory.add(r);
-		InputFileHandler.getRecords().add(r);
-	}
-	
-	public void disenrollInSection(Section section) {
-		sectionsCurrentlyEnrolled.remove(section);
-		coursesInCurrentSemester--;
-	}
-	
 	public void addCourseToList(Course course){
 		approvedCourseList.add(course);
 	}
@@ -242,6 +130,57 @@ public class Student extends UniversityPerson {
 		return isEligible;
 	}
 
+    public boolean checkPrerequisites(Course course) {
+        List<Course> prereqs = course.getPrerequisites();
+        if (prereqs.isEmpty()) return true;
+        boolean ok = true;
+        
+        for (Course prereq: prereqs) {
+            boolean prereqOk = false;
+            // check there is a record for that prereq
+            for (Record record: recordHistory) {
+                if (record.getCourse().getID() == prereq.getID())
+                    if ("A".equals(record.getGradeEarned()) 
+                            || "B".equals(record.getGradeEarned()) 
+                            || "C".equals(record.getGradeEarned()) 
+                            || "D".equals(record.getGradeEarned())) {
+                        prereqOk = true;
+                        continue;
+                    }
+            }
+            ok = ok & prereqOk;
+            if (!ok) return false;
+        }
+        
+        return ok;
+    }
+
+    public boolean checkCourseRecords(Course course) {
+        // it's possible that the student took several times that course
+        for (Record record: recordHistory) {
+            if (record.getCourse().getID() == course.getID())
+                if ("A".equals(record.getGradeEarned()) 
+                        || "B".equals(record.getGradeEarned()) 
+                        || "C".equals(record.getGradeEarned())) {
+                    return false;
+                }
+        }
+        
+        return true;
+    }
+
+    public boolean checkAvailableSeats(Course course) {
+    	List<Assignment> chosen = InputFileHandler.getCapacities(InputFileHandler.getCurrentSemester());
+    	for(Assignment assign: chosen) {
+    		if (assign.getCourse().getID() == course.getID()) {
+    			if (assign.getCapacity() > 0)
+    				return true;
+    		}
+    	}
+    	return false;
+    }
+	
+	
 	public String toString() {
 	    return "Student id: " + UUID + ", name: " + fullName + ", address: " + primaryAddress + ", phone: " + primaryPhone;
 	}
