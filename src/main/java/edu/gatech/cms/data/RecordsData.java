@@ -107,4 +107,26 @@ public class RecordsData extends CsvDataLoader {
 			DbHelper.logSqlException(e);
 		}
 	}
+	
+	public static void save(Record record) {
+		try {
+			PreparedStatement preparedStatement = DbHelper.getConnection().prepareStatement(RecordsTable.INSERT_SQL);
+
+			preparedStatement.setInt(1, record.getStudent().getUUID());
+			preparedStatement.setInt(2, record.getCourse().getID());
+			preparedStatement.setInt(3, record.getInstructor().getUUID());
+			preparedStatement.setString(4, record.getInstructorComments());
+			preparedStatement.setString(5, record.getGradeEarned());
+
+			preparedStatement.execute();
+			
+			if (Log.isDebug()) {
+				Logger.debug(TAG, "Saved record in DB - " + record);
+			}
+			
+		} catch (SQLException e) {
+			DbHelper.logSqlException(e);
+		}
+
+	}
 }

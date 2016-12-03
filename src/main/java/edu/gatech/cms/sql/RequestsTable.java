@@ -71,6 +71,11 @@ public class RequestsTable {
 			TABLE_NAME, REQUEST_STATUS_COLUMN, RequestStatus.Accepted.ordinal()
 	);
 
+	public static final String SELECT_WAITING_REQUESTS = String.format(
+			"SELECT * FROM %s WHERE %s = %d ORDER BY COURSE_REQUESTS._id",
+			TABLE_NAME, REQUEST_STATUS_COLUMN, RequestStatus.RejectedFullCapacity.ordinal()
+	);
+
 	public static final String SELECT_APPROVED_REQUESTS_INFO = String.format(
 			"SELECT REQUESTS.studentUuid AS userUuid, REQUESTS.courseId AS courseId, "
 				+ "UNIVERSITY_PERSON.name AS name, COURSES.courseTitle AS courseTitle "

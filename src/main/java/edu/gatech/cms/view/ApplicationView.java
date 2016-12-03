@@ -45,7 +45,7 @@ public class ApplicationView {
 		this.isAppLaunch = true;
 
 		loadScreen(WELCOME_SCREEN, () -> {
-			InputFileHandler.loadFromCSV();
+			InputFileHandler.load();
 
 			Platform.runLater(() -> {
 				stage.setTitle(UiMessages.WELCOME_WINDOW_TITLE);

@@ -11,6 +11,7 @@ import edu.gatech.cms.course.Assignment;
 import edu.gatech.cms.course.Course;
 import edu.gatech.cms.course.Record;
 import edu.gatech.cms.course.Request;
+import edu.gatech.cms.course.RequestStatus;
 import edu.gatech.cms.data.AssignmentsData;
 import edu.gatech.cms.data.CoursesData;
 import edu.gatech.cms.data.InstructorsData;
@@ -27,6 +28,7 @@ import edu.gatech.cms.university.Instructor;
 import edu.gatech.cms.university.Student;
 import edu.gatech.cms.university.University;
 import edu.gatech.cms.util.DbHelper;
+import edu.gatech.cms.util.GradeDistributionUtil;
 import edu.gatech.cms.view.ApplicationView;
 
 /**
@@ -38,13 +40,16 @@ public class InputFileHandler {
 	private static University university;
 	private static Department department;
 
-	private static Map<Integer, Course> courses = new TreeMap<>();					// key is Course ID
-	private static Map<Integer, Student> students = new TreeMap<>();				// key is Student ID
-	private static Map<Integer, Instructor> instructors = new TreeMap<>();			// key is Instructor ID
-	private static List<Record> records = new ArrayList<Record>();
+	private static Map<Integer, Course> courses = new TreeMap<>();				// key = Course ID
+	private static Map<Integer, Student> students = new TreeMap<>();			// key = Student ID
+	private static Map<Integer, Instructor> instructors = new TreeMap<>();		// key = Instructor ID
+	private static List<Record> records = new ArrayList<Record>();				// all records
 	
-	private static Map<Integer,List<Request>> requests = new TreeMap<>();			// key is semester
-	private static Map<Integer,List<Assignment>> assignments = new TreeMap<>();		// key is semester
+	private static Map<Integer,List<Request>> requests = new TreeMap<>();		// key = semester
+	private static Map<Integer,List<Assignment>> assignments = new TreeMap<>();	// key = semester (all assignments)
+	private static Map<Integer,List<Assignment>> capacities = new TreeMap<>();// key = semester (chosen assignments)
+	
+	
 	private static int currentSemester = 0;
 
 	private static WekaDataSource wekaDataSource = null;
@@ -57,7 +62,7 @@ public class InputFileHandler {
 	/**
 	 * This method is invoked by the ui when the app starts.
 	 */
-	public static void loadFromCSV() {
+	public static void load() {
 		// Select current semester from db. Should be in the model somewhere.
 		// TODO: Please move to the right place and replace with the method call.
 
@@ -134,7 +139,7 @@ public class InputFileHandler {
 		// Load requests for current semester
 		List<Request> semRequests = new ArrayList<>();
 		requests.put(currentSemester, semRequests);
-		RequestsData.load(currentSemester);
+		RequestsData.loadFromCSV(currentSemester);
 	}
 
 	public static void prepareDataForDataMining() {
@@ -152,18 +157,6 @@ public class InputFileHandler {
 		}
 
 		return String.valueOf(wekaDataSource.analyzeStudentRecords());
-	}
-
-	public static void calculateCapacityForCourser() {
-
-	}
-
-	public static void loackAssignmentsForSemester() {
-
-	}
-
-	public static void validateStudentRequests() {
-
 	}
 
 	// SIMPLE SETTERS, GETTERS for model objects
@@ -216,6 +209,14 @@ public class InputFileHandler {
 		return assignments.get(semester);
 	}
 
+	public static Map<Integer,List<Assignment>> getCapacities() {
+		return capacities;
+	}
+
+	public static List<Assignment> getCapacities(Integer semester) {
+		return capacities.get(semester);
+	}
+
 	public static List<String> getAssignmentsStrings(Integer semester) {
 		List<String> strings = new ArrayList<>();
 		for(Assignment assign: assignments.get(semester)) {
@@ -225,7 +226,7 @@ public class InputFileHandler {
 		}
 		return strings;
 	}
-
+	
 	public static int getCurrentSemester() {
 		return currentSemester;
 	}
@@ -233,4 +234,118 @@ public class InputFileHandler {
 	public static void setCurrentSemester(int sem) {
 		currentSemester = sem;
 	}
+	
+	
+	// UTILITY METHODS
+	
+	/**
+	 * Called by UI, when instructors are chosen for a semester.
+	 * @param selected
+	 */
+	public static void setChosenAssignments(List<String> selected){
+		List<Assignment> semAssignments = new ArrayList<>();
+		capacities.put(currentSemester, semAssignments);
+		
+		for (String element: selected) {
+			String[] splits = element.split(",");
+			String instructor = splits[0].substring("Instructor".length() + 1, splits[0].length());
+			String course = splits[1].substring(" course".length() + 1, splits[1].length());
+			String capac = splits[2].substring(" capacity".length() + 1, splits[2].length());
+			Assignment assign = getAssignment(instructor, course, Integer.valueOf(capac));
+			System.out.println("Found: " + assign);
+			// add capacity, if there's already the course in the "chosen"
+			boolean found = false;
+			for (Assignment assign2: capacities.get(currentSemester)) {
+				if (assign2.getCourse().getID() == assign.getCourse().getID()) {
+					assign2.setCapacity(assign2.getCapacity() + assign.getCapacity());
+					found = true;
+					break;
+				}
+			}
+			if (!found) capacities.get(currentSemester).add(assign);
+			System.out.println(capacities.get(currentSemester));
+		}
+	}
+	
+	/**
+	 * Method to find an assignment based on instructor, course and capacity (used with UI instructor selection).
+	 * 
+	 * @param instructor
+	 * @param course
+	 * @param capacity
+	 * @return
+	 */
+	public static Assignment getAssignment(String instructor, String course, Integer capacity) {
+		List<Assignment> semesterAssign = assignments.get(currentSemester);
+		for (Assignment assign: semesterAssign) {
+			if (instructor.equals(assign.getInstructor().getFullName())
+					&& course.equals(assign.getCourse().getTitle())
+					&& capacity == assign.getCapacity())
+				return assign;
+		}
+		// something really wrong happened
+		return null;
+	}
+
+	/**
+	 * Requests processing, starts with the waiting list
+	 */
+	public static void processRequests() {
+		// take care of waiting list first, the key is the courseId, and the values are the students, in order.
+		List<Request> waiting = RequestsData.getWaiting();
+		for (Request request: waiting) {
+			processRequest(request);
+		}
+		
+		// load and go through Requests for this semester
+		loadRequests();
+		List<Request> semRequests = requests.get(currentSemester);
+		for(Request request: semRequests) {
+			processRequest(request);
+		}
+	}
+
+	/**
+	 * Process one request. Check for conditions, if passed then create record. 
+	 * @param request
+	 */
+	private static void processRequest(Request request) {
+		Student student = request.getStudent();
+		Course course = request.getCourse();
+		
+        if (! student.checkPrerequisites(course)) { // check missing prereqs
+        	RequestsData.updateRequestDenied(RequestStatus.RejectedPrerequisites, student, course);
+        }
+        else if (! student.checkCourseRecords(course)) { // check previous records for the course
+        	RequestsData.updateRequestDenied(RequestStatus.RejectedAlreadyTaken, student, course);
+        }
+        else if (! student.checkAvailableSeats(course)) { // check no seats
+        	RequestsData.updateRequestDenied(RequestStatus.RejectedFullCapacity, student, course);
+        }
+        else {	// accepted!
+        	RequestsData.updateRequestAccepted(RequestStatus.Accepted, student, course);
+
+        	// reduce capacity for the course this semester
+        	List<Assignment> assigns = capacities.get(currentSemester);
+        	for (Assignment assign: assigns) {
+        		if (assign.getCourse().getID() == course.getID())
+        			assign.setCapacity(assign.getCapacity() - 1);
+        	}
+        	
+        	// automatically create a Record for this student this course this semester
+        	// find instructor (first one in list of assignments for this semester)
+        	Instructor instructor = null;
+        	assigns = assignments.get(currentSemester);
+        	for (Assignment assign: assigns) {
+        		if (assign.getCourse().getID() == course.getID())
+        			instructor = assign.getInstructor();
+        	}
+        	// add the record to DB
+        	Record record = new Record(student, course, instructor, "", GradeDistributionUtil.createRandomGrade());
+        	RecordsData.save(record);
+        	// add the record to model
+        	records.add(record);
+        }			
+	}
+	
 }

@@ -3,6 +3,8 @@ package edu.gatech.cms.controller;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import edu.gatech.cms.InputFileHandler;
 import edu.gatech.cms.view.ApplicationView;
@@ -86,6 +88,12 @@ public class InstructorController implements ScreenController{
 			showSelectionEmptyError();
 		}
 		else{
+			// get the selected instructors, calculate capacities, start filling requests
+			ObservableList<String> selected = addedListView.getItems();
+			// set the chosen assignments for the current semester
+			InputFileHandler.setChosenAssignments(selected);
+			InputFileHandler.processRequests();
+			
 			ApplicationView.getInstance().onInstructorControllerNextAction();
 		}
 	}	
