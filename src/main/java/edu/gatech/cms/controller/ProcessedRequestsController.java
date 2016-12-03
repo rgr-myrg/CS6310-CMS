@@ -35,7 +35,11 @@ public class ProcessedRequestsController implements ScreenController{
 			final String screenMsg = String.format(UiMessages.PROCESSED_REQUESTS_HEADING);
 	        welcomeText.setText(screenMsg);
 	        
-	        statsTextResults.setText(InputFileHandler.getSemesterStats() + "\n" + InputFileHandler.getAcademicRecords());
+	        statsTextResults.setText(
+	        		InputFileHandler.getProcessedRequests() + "\n"
+	        		+ InputFileHandler.getSemesterStats() + "\n" 
+	        		+ InputFileHandler.getAcademicRecords() + "\n" 
+	        		+ InputFileHandler.getNewWaitingRequests());
 		};
 	}
 
