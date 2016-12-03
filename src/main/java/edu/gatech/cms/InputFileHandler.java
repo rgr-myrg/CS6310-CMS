@@ -48,6 +48,7 @@ public class InputFileHandler {
 	private static List<Record> records = new ArrayList<Record>();				// all records
 	
 	private static Map<Integer,List<Request>> requests = new TreeMap<>();		// key = semester
+	private static List<Request> processedRequests = new ArrayList<>();			// per semester, includes waiting from previous
 	private static Map<Integer,List<Assignment>> assignments = new TreeMap<>();	// key = semester (all assignments)
 	private static Map<Integer,List<Assignment>> capacities = new TreeMap<>();	// key = semester (chosen assignments)
 	private static WekaDataSource wekaDataSource = new WekaDataSource();
@@ -305,20 +306,22 @@ public class InputFileHandler {
 		// reset the semester stats
 		resetSemesterStats();
 		
+		// reset the processed requests for this semester
+		processedRequests.clear();
+		
 		// take care of waiting list first, the key is the courseId, and the values are the students, in order.
 		List<Request> waiting = RequestsData.getWaiting();
 		for (Request request: waiting) {
-			processRequest(request, true);
+			processRequest(request, false);
+			processedRequests.add(request);
 		}
 		
 		// load and go through Requests for this semester
 		List<Request> semRequests = requests.get(currentSemester);
 		for(Request request: semRequests) {
 			processRequest(request, false);
+			processedRequests.add(request);
 		}
-		
-		System.out.println(getSemesterStats());
-		System.out.println(getAcademicRecords());
 	}
 
 	/**
@@ -338,6 +341,7 @@ public class InputFileHandler {
 		
         if (! student.checkPrerequisites(course)) { // check missing prereqs
         	RequestsData.updateRequestDenied(RequestStatus.RejectedPrerequisites, student, course);
+        	request.setStatus(RequestStatus.RejectedPrerequisites);
         	// stats
         	if (!isWaiting){
     			incrementSemesterStats(FAILED);
@@ -346,6 +350,7 @@ public class InputFileHandler {
         }
         else if (! student.checkCourseRecords(course)) { // check previous records for the course
         	RequestsData.updateRequestDenied(RequestStatus.RejectedAlreadyTaken, student, course);
+        	request.setStatus(RequestStatus.RejectedAlreadyTaken);
         	// stats
     		if (!isWaiting){
     			incrementSemesterStats(FAILED);
@@ -354,6 +359,7 @@ public class InputFileHandler {
         }
         else if (! student.checkAvailableSeats(course)) { // check no seats
         	RequestsData.updateRequestDenied(RequestStatus.RejectedFullCapacity, student, course);
+        	request.setStatus(RequestStatus.RejectedFullCapacity);
         	// stats
         	if (!isWaiting){
     			incrementSemesterStats(WAITLISTED);
@@ -362,7 +368,7 @@ public class InputFileHandler {
         }
         else {	// accepted!
         	RequestsData.updateRequestAccepted(RequestStatus.Accepted, student, course);
-
+        	request.setStatus(RequestStatus.Accepted);
         	// stats
     		if (!isWaiting){
     			incrementSemesterStats(GRANTED);
@@ -389,22 +395,35 @@ public class InputFileHandler {
         	RecordsData.save(record);
         	// add the record to model
         	records.add(record);
+        	// add the record to the student
+        	student.addRecord(record);
         }			
 	}
 	
 	
 	// STATS METHODS
 	
+	/**
+	 * Manipulate the semester stats
+	 * @param keyString
+	 */
 	public static void incrementSemesterStats(String keyString) {
 		Integer newInt = semesterStatistics.get(keyString) +  1;
 		semesterStatistics.put(keyString, newInt);
 	}
 	
+	/**
+	 * Manipulate the total stats
+	 * @param keyString
+	 */
 	public static void incrementTotalStats(String keyString) {
 		Integer newInt = totalStatistics.get(keyString) +  1;
 		totalStatistics.put(keyString, newInt);
 	}
 	
+	/**
+	 * Reset the semester counters
+	 */
 	private static void resetSemesterStats(){
 		semesterStatistics.put(EXAMINED, 0);
 		semesterStatistics.put(GRANTED, 0);
@@ -412,6 +431,9 @@ public class InputFileHandler {
 		semesterStatistics.put(WAITLISTED, 0);
 	}
 	
+	/**
+	 * Reset the total counters
+	 */
 	private static void resetTotalStats(){
 		totalStatistics.put(EXAMINED, 0);
 		totalStatistics.put(GRANTED, 0);
@@ -419,6 +441,10 @@ public class InputFileHandler {
 		totalStatistics.put(WAITLISTED, 0);
 	}
 	
+	/** 
+	 * Build a string with the semester stats
+	 * @return
+	 */
 	public static String getSemesterStats() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Semester Statistics\n");
@@ -436,7 +462,10 @@ public class InputFileHandler {
 		return sb.toString();
 	}
 
-	//This method will print all academic records
+	/**
+	 * Build a string with the total stats
+	 * @return
+	 */
 	public static String getAcademicRecords(){
 		StringBuilder sb = new StringBuilder();
 		sb.append("Academic Records\n");
@@ -447,6 +476,39 @@ public class InputFileHandler {
 			sb.append(r.getInstructorComments() + ", ");
 			sb.append(r.getGradeEarned()).append("\n");
 		}
+		
+		return sb.toString();
+	}
+	
+	/**
+	 * Build a string with the waiting requests
+	 * @return
+	 */
+	public static String getNewWaitingRequests(){
+		StringBuilder sb = new StringBuilder();
+		sb.append("Wait Listed Requests\n");
+		for(Request r : requests.get(currentSemester)) {
+			if (r.getStatus() == RequestStatus.RejectedFullCapacity) {
+				sb.append(r.getStudent().getUUID() + ", " + r.getStudent().getFullName() + ", ");
+				sb.append(r.getCourse().getID() + ", " + r.getCourse().getTitle()).append("\n");
+			}
+		}
+		
+		return sb.toString();
+	}
+	
+	/**
+	 * Build a string with the processed requests
+	 * @return
+	 */
+	public static String getProcessedRequests(){
+		StringBuilder sb = new StringBuilder();
+		sb.append("Processed Requests\n");
+		for(Request r : processedRequests) {
+			sb.append("request (" + r.getStudent().getUUID() + ", " + r.getCourse().getID() + "): ");
+			sb.append(r.getStatus().getMessage()).append("\n");
+		}
+		sb.append("\n");
 		
 		return sb.toString();
 	}
