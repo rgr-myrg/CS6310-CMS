@@ -205,6 +205,8 @@ public class ApplicationView {
 	}
 
 	public void onUnableToReadFileException(final String filename) {
-		// TODO: UI Message We're all outta semesters.
+		if (filename.startsWith("assignments")) {
+			// TODO: UI Message We're all outta semesters.
+		}
 	}
 }
