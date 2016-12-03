@@ -273,8 +273,9 @@ public class InputFileHandler {
 			}
 			if (!found) capacities.get(currentSemester).add(assign);
 
-			if (Log.isDebug()) Logger.debug(TAG, capacities.get(currentSemester));
 		}
+
+		if (Log.isDebug()) Logger.debug(TAG, capacities.get(currentSemester));
 	}
 	
 	/**
@@ -378,7 +379,7 @@ public class InputFileHandler {
         	// automatically create a Record for this student this course this semester
         	// find instructor (first one in list of assignments for this semester)
         	Instructor instructor = null;
-        	assigns = assignments.get(currentSemester);
+        	assigns = capacities.get(currentSemester);
         	for (Assignment assign: assigns) {
         		if (assign.getCourse().getID() == course.getID())
         			instructor = assign.getInstructor();
