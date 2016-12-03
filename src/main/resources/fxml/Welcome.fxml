@@ -95,7 +95,7 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <RadioButton id="resumeOption" mnemonicParsing="false" selected="true">
+                        <RadioButton id="resumeOption" mnemonicParsing="false" selected="false">
                            <toggleGroup>
                               <ToggleGroup fx:id="radioToggleGroup" />
                            </toggleGroup>
@@ -105,7 +105,7 @@
                               <Insets />
                            </GridPane.margin>
                         </Label>
-                        <RadioButton id="startOption" layoutX="10.0" layoutY="16.0" mnemonicParsing="false" toggleGroup="$radioToggleGroup" GridPane.rowIndex="1" />
+                        <RadioButton id="startOption" layoutX="10.0" layoutY="16.0" mnemonicParsing="false" selected="true" toggleGroup="$radioToggleGroup" GridPane.rowIndex="1" />
                         <Label layoutX="310.0" layoutY="17.0" text="Start" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                      </children>
                      <padding>

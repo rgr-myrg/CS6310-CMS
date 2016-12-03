@@ -262,10 +262,10 @@ public class InputFileHandler {
 		return currentSemester;
 	}
 
-	public static void setCurrentSemester(int sem) {
-		currentSemester = sem;
+	public static void setCurrentSemester(int semester) {
+		currentSemester = semester;
 	}
-	
+
 	
 	// UTILITY METHODS
 	

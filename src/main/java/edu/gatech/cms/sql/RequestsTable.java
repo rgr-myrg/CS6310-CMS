@@ -41,8 +41,8 @@ public class RequestsTable {
 	);
 
 	public static final String SELECT_MAX_SEMESTER = String.format(
-			"SELECT MAX(%s) AS %s FROM %s", 
-			SEMESTER_COLUMN, SEMESTER_COLUMN ,TABLE_NAME);
+			"SELECT COALESCE(MAX(%s),0) AS %s FROM %s WHERE %s != %d OR %s != ''", 
+			SEMESTER_COLUMN, SEMESTER_COLUMN ,TABLE_NAME, REQUEST_STATUS_COLUMN, RequestStatus.Pending.ordinal(), STATUS_REASON_COLUMN);
 
 	public static final String SELECT_COUNT = String.format(
 			"SELECT COUNT(%s) AS total FROM %s", 
@@ -62,15 +62,6 @@ public class RequestsTable {
 	public static final String SELECT_OPEN_REQUESTS = String.format(
 			"SELECT * FROM %s WHERE %s = %d",
 			TABLE_NAME, REQUEST_STATUS_COLUMN, OPEN_REQUEST_DEFAULT_VALUE
-	);
-
-	public static final String UPDATE_REQUESTS_TO_ACCEPTED = String.format(
-			"UPDATE %s SET %s = %d, %s = ?, %s = ?, timestamp = CURRENT_TIMESTAMP " 
-				+ "WHERE %s = ? AND %s = ?",
-			TABLE_NAME, REQUEST_STATUS_COLUMN, RequestStatus.Accepted.ordinal(),
-			SEMESTER_COLUMN,
-			STATUS_REASON_COLUMN, 
-			STUDENT_ID_COLUMN, COURSE_ID_COLUMN
 	);
 
 	public static final String SELECT_APPROVED_REQUESTS = String.format(
@@ -102,6 +93,16 @@ public class RequestsTable {
 			"UPDATE %s SET %s = ? WHERE %s = ? AND %s = ?",
 			TABLE_NAME, STATUS_REASON_COLUMN, STUDENT_ID_COLUMN, COURSE_ID_COLUMN
 	);
+	
+	public static final String UPDATE_REQUESTS_TO_ACCEPTED = String.format(
+			"UPDATE %s SET %s = %d, %s = ?, %s = ?, timestamp = CURRENT_TIMESTAMP " 
+				+ "WHERE %s = ? AND %s = ?",
+			TABLE_NAME, REQUEST_STATUS_COLUMN, RequestStatus.Accepted.ordinal(),
+			SEMESTER_COLUMN,
+			STATUS_REASON_COLUMN, 
+			STUDENT_ID_COLUMN, COURSE_ID_COLUMN
+	);
+
 }
 
 /*

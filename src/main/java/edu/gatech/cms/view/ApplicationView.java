@@ -5,6 +5,12 @@ import java.io.IOException;
 import edu.gatech.cms.InputFileHandler;
 import edu.gatech.cms.InputFileHandler.UiMode;
 import edu.gatech.cms.controller.ScreenController;
+import edu.gatech.cms.data.CoursesData;
+import edu.gatech.cms.data.InstructorsData;
+import edu.gatech.cms.data.PrerequisitesData;
+import edu.gatech.cms.data.RecordsData;
+import edu.gatech.cms.data.StudentsData;
+import edu.gatech.cms.util.DbHelper;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -112,6 +118,23 @@ public class ApplicationView {
 		this.uiMode = uiMode;
 
 		loadScreen(APRIORI_SCREEN, () -> {
+			
+			// if possible it was already loaded from DB, 
+			// in which case an "initial" choice should reset the data
+			if (uiMode == UiMode.INITIAL) {
+				DbHelper.dropTables();
+				DbHelper.createTables();
+
+				//load from CSV
+				StudentsData.loadFromCSV();
+				CoursesData.loadFromCSV();
+				PrerequisitesData.loadFromCSV();
+				InstructorsData.loadFromCSV();
+				RecordsData.loadFromCSV();
+				
+				InputFileHandler.setCurrentSemester(0);
+			}
+			
 			InputFileHandler.initialSemester();
 			System.out.println("CURRENT SEMESTER WELCOME: " + InputFileHandler.getCurrentSemester());
 			InputFileHandler.loadAssignments();

@@ -75,14 +75,6 @@ public class RequestsData extends CsvDataLoader {
 				}
 			}
 		}
-		
-		if (Log.isDebug()) {
-			Logger.debug(TAG, "Loaded from CSV - " + 
-					InputFileHandler.getRequests().get(InputFileHandler.getCurrentSemester()) + 
-					"requests for semester" + 
-					InputFileHandler.getCurrentSemester());
-		}
-
 	}
 
 	/**
@@ -166,8 +158,9 @@ public class RequestsData extends CsvDataLoader {
 		try {
 			PreparedStatement preparedStatement = DbHelper.getConnection().prepareStatement(RequestsTable.UPDATE_REQUESTS_TO_ACCEPTED);
 			preparedStatement.setInt(1, rs.ordinal());
-			preparedStatement.setInt(2, Integer.valueOf(student.getUUID()));
-			preparedStatement.setInt(3, Integer.valueOf(course.getID()));
+			preparedStatement.setInt(2, 0);
+			preparedStatement.setInt(3, Integer.valueOf(student.getUUID()));
+			preparedStatement.setInt(4, Integer.valueOf(course.getID()));
 
 			preparedStatement.execute();
 
