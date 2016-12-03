@@ -1,7 +1,5 @@
 package edu.gatech.cms;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +20,6 @@ import edu.gatech.cms.data.StudentsData;
 import edu.gatech.cms.data.WekaDataSource;
 import edu.gatech.cms.logger.Log;
 import edu.gatech.cms.logger.Logger;
-import edu.gatech.cms.sql.RequestsTable;
 import edu.gatech.cms.university.Department;
 import edu.gatech.cms.university.Instructor;
 import edu.gatech.cms.university.Student;
@@ -71,7 +68,9 @@ public class InputFileHandler {
 	 * This method is invoked by the ui when the app starts.
 	 */
 	public static void load() {
-		extractSemester();
+		// Select current semester from db. 
+		currentSemester = RequestsData.getMaxSemester();
+
 		instantiateStatsTreeMaps();
 
 		if (Log.isDebug()) {
@@ -98,6 +97,7 @@ public class InputFileHandler {
 			InstructorsData.loadFromDB();
 			RecordsData.loadFromDB();
 			RequestsData.loadFromDB();
+			
 			//clear out 'semesterStatistics' counts
 			for(Map.Entry<String,Integer> statCategory : semesterStatistics.entrySet()) {
 				  statCategory.setValue(0);
@@ -105,25 +105,6 @@ public class InputFileHandler {
 		}
 	}
 	
-	/** 
-	 * Find "last" semester processed.  
-	 */
-	private static void extractSemester() {
-		// Select current semester from db. 
-		try {
-			final ResultSet resultSet = DbHelper.doSql(RequestsTable.SELECT_MAX_SEMESTER);
-
-			if (resultSet != null && resultSet.next()) {
-				currentSemester = resultSet.getInt(RequestsTable.SEMESTER_COLUMN);
-				resultSet.close();
-			} else {
-				currentSemester = 0;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
 	/**
 	 * This method is invoked after the user selects 
 	 * 'initial' or 'resume' on the Welcome screen
@@ -177,16 +158,6 @@ public class InputFileHandler {
 
 	// SIMPLE SETTERS, GETTERS for model objects
 
-	public static void incrementSemesterStats(String keyString) {
-		Integer newInt = semesterStatistics.get(keyString) +  1;
-		semesterStatistics.put(keyString, newInt);
-	}
-	
-	public static void incrementTotalStats(String keyString) {
-		Integer newInt = totalStatistics.get(keyString) +  1;
-		totalStatistics.put(keyString, newInt);
-	}
-	
 	public static University getUniversity() {
 		return university;
 	}
@@ -266,7 +237,38 @@ public class InputFileHandler {
 		currentSemester = semester;
 	}
 
-	
+	public static String getExaminedText() {
+		return examinedText;
+	}
+
+	public static void setExaminedText(String examinedText) {
+		InputFileHandler.examinedText = examinedText;
+	}
+
+	public static String getGrantedText() {
+		return grantedText;
+	}
+
+	public static void setGrantedText(String grantedText) {
+		InputFileHandler.grantedText = grantedText;
+	}
+
+	public static String getFailedText() {
+		return failedText;
+	}
+
+	public static void setFailedText(String failedText) {
+		InputFileHandler.failedText = failedText;
+	}
+
+	public static String getWaitlistText() {
+		return waitlistText;
+	}
+
+	public static void setWaitlistText(String waitlistText) {
+		InputFileHandler.waitlistText = waitlistText;
+	}
+		
 	// UTILITY METHODS
 	
 	/**
@@ -383,36 +385,14 @@ public class InputFileHandler {
 	
 	// STATS METHODS
 	
-	public static String getExaminedText() {
-		return examinedText;
+	public static void incrementSemesterStats(String keyString) {
+		Integer newInt = semesterStatistics.get(keyString) +  1;
+		semesterStatistics.put(keyString, newInt);
 	}
-
-	public static void setExaminedText(String examinedText) {
-		InputFileHandler.examinedText = examinedText;
-	}
-
-	public static String getGrantedText() {
-		return grantedText;
-	}
-
-	public static void setGrantedText(String grantedText) {
-		InputFileHandler.grantedText = grantedText;
-	}
-
-	public static String getFailedText() {
-		return failedText;
-	}
-
-	public static void setFailedText(String failedText) {
-		InputFileHandler.failedText = failedText;
-	}
-
-	public static String getWaitlistText() {
-		return waitlistText;
-	}
-
-	public static void setWaitlistText(String waitlistText) {
-		InputFileHandler.waitlistText = waitlistText;
+	
+	public static void incrementTotalStats(String keyString) {
+		Integer newInt = totalStatistics.get(keyString) +  1;
+		totalStatistics.put(keyString, newInt);
 	}
 	
 	private static void instantiateStatsTreeMaps(){

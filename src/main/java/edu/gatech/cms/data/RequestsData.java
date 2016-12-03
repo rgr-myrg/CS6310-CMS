@@ -201,4 +201,24 @@ public class RequestsData extends CsvDataLoader {
 
 		return waiting;
 	}
+	
+	/**
+	 * Return last semester processed. 
+	 * @return
+	 */
+	public static final int getMaxSemester() {
+		Integer ret = 0;
+		final ResultSet resultSet = DbHelper.doSql(RequestsTable.SELECT_MAX_SEMESTER);
+
+		try {
+			if (resultSet != null && resultSet.next()) {
+				ret = resultSet.getInt(RequestsTable.SEMESTER_COLUMN);
+				resultSet.close();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return ret;
+	}
 }
