@@ -22,13 +22,14 @@ public class RecordsData extends CsvDataLoader {
 		super(FILE_NAME);
 	}
 
+	/**
+	 * Load from CSV (rows) into DB and memory.
+	 */
 	@Override
 	public void populateCsvDataToDb(final String[] rawDataArray) {
 		if (rawDataArray.length == 0) {
 			return;
 		}
-
-		PreparedStatement preparedStatement = null;
 
 		// student uuid, course id, instructor id, comments, letter grade
 		// 16,8,3,completes work with quality in mind,D
@@ -45,7 +46,7 @@ public class RecordsData extends CsvDataLoader {
 				    String letterGrade = parts[4];
 				    
 				    // load the record in db
-					preparedStatement = DbHelper.getConnection().prepareStatement(RecordsTable.INSERT_SQL);
+				    PreparedStatement preparedStatement = DbHelper.getConnection().prepareStatement(RecordsTable.INSERT_SQL);
 					preparedStatement.setInt(1, studentId);
 					preparedStatement.setInt(2, courseId);
 					preparedStatement.setInt(3, instructorId);
@@ -78,10 +79,16 @@ public class RecordsData extends CsvDataLoader {
 		}
 	}
 
+	/**
+	 * Load CSV with records.
+	 */
 	public static final void loadFromCSV() {
 		new RecordsData();
 	}
 	
+	/**
+	 * Load from DB (resume option).
+	 */
 	public static final void loadFromDB() {
 		try {
 			PreparedStatement preparedStatement = DbHelper.getConnection().prepareStatement(RecordsTable.SELECT_SQL);
@@ -108,6 +115,10 @@ public class RecordsData extends CsvDataLoader {
 		}
 	}
 	
+	/**
+	 * Save a new Record in DB. 
+	 * @param record
+	 */
 	public static void save(Record record) {
 		try {
 			PreparedStatement preparedStatement = DbHelper.getConnection().prepareStatement(RecordsTable.INSERT_SQL);

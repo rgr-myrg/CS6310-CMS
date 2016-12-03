@@ -20,6 +20,9 @@ public class InstructorsData extends CsvDataLoader {
 		super(FILE_NAME);
 	}
 
+	/**
+	 * Load instructors from CSV (rows) into DB and in memory.
+	 */
 	@Override
 	public void populateCsvDataToDb(final String[] rawDataArray) {
 		if (rawDataArray.length == 0) {
@@ -66,10 +69,16 @@ public class InstructorsData extends CsvDataLoader {
 		}
 	}
 
+	/**
+	 * Load the CSV file.
+	 */
 	public static final void loadFromCSV() {
 		new InstructorsData();
 	}
 	
+	/**
+	 * Loads from DB in memory (resume option).
+	 */
 	public static final void loadFromDB() {
 		try {
 			PreparedStatement preparedStatement = DbHelper.getConnection().prepareStatement(UniversityPersonTable.SELECT_INSTRUCTORS);

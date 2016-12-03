@@ -24,13 +24,14 @@ public class RequestsData extends CsvDataLoader {
 		super(filename);
 	}
 
+	/** 
+	 * Load the requests from a CSV (rows data) into DB and in memory. 
+	 */
 	@Override
 	public void populateCsvDataToDb(final String[] rawDataArray) {
 		if (rawDataArray.length == 0) {
 			return;
 		}
-
-		PreparedStatement preparedStatement = null;
 
 		// studentUuid, courseId
 		// 9,13
@@ -43,7 +44,7 @@ public class RequestsData extends CsvDataLoader {
 					int studentId = Integer.valueOf(parts[0]);
 					int courseId = Integer.valueOf(parts[1]);
 					
-					preparedStatement = DbHelper.getConnection().prepareStatement(RequestsTable.INSERT_SQL);
+					PreparedStatement preparedStatement = DbHelper.getConnection().prepareStatement(RequestsTable.INSERT_SQL);
 					preparedStatement.setInt(1, studentId);
 					preparedStatement.setInt(2, courseId);
 					preparedStatement.setInt(3, InputFileHandler.getCurrentSemester());
@@ -84,12 +85,20 @@ public class RequestsData extends CsvDataLoader {
 
 	}
 
+	/**
+	 * Load a CSV file with requests, for a semester. 
+	 * @param semester
+	 */
 	public static final void loadFromCSV(final int semester) {
 		// Filename format: requests_<semester>.csv
 		final String filename = String.format(FILE_NAME, semester);
+		if (Log.isDebug()) Logger.debug(TAG, "Loading requests: " + filename);
 		new RequestsData(filename);
 	}
 	
+	/**
+	 * Load all requests from DB in memory. 
+	 */
 	public static final void loadFromDB() {
 		try {
 			
@@ -121,6 +130,12 @@ public class RequestsData extends CsvDataLoader {
 
 	}
 
+	/**
+	 * Update a request with a rejected status. 
+	 * @param rs
+	 * @param student
+	 * @param course
+	 */
 	public static final void updateRequestDenied(RequestStatus rs, Student student, Course course) {
 		try {
 			PreparedStatement preparedStatement = DbHelper.getConnection().prepareStatement(RequestsTable.UPDATE_REQUESTS_WITH_DENIED_REASON);
@@ -141,6 +156,12 @@ public class RequestsData extends CsvDataLoader {
 		}
 	}
 	
+	/**
+	 * Update a request with the "accepted" field.
+	 * @param rs
+	 * @param student
+	 * @param course
+	 */
 	public static final void updateRequestAccepted(RequestStatus rs, Student student, Course course) {
 		try {
 			PreparedStatement preparedStatement = DbHelper.getConnection().prepareStatement(RequestsTable.UPDATE_REQUESTS_TO_ACCEPTED);
@@ -160,7 +181,10 @@ public class RequestsData extends CsvDataLoader {
 		}
 	}
 	
-	
+	/**
+	 * Return list of requests in "waiting" state. 
+	 * @return
+	 */
 	public static final List<Request> getWaiting() {
 		List<Request> waiting = new ArrayList<>();
 		try {

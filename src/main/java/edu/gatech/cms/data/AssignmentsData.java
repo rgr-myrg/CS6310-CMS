@@ -19,13 +19,14 @@ public class AssignmentsData extends CsvDataLoader {
 		super(filename);
 	}
 
+	/**
+	 * Load assignments from CSV (rows) into DB and in memory.
+	 */
 	@Override
 	public void populateCsvDataToDb(final String[] rawDataArray) {
 		if (rawDataArray.length == 0) {
 			return;
 		}
-
-		PreparedStatement preparedStatement = null;
 
 		// instructorUuid, courseId, capacity
 		// 2,13,2
@@ -40,7 +41,7 @@ public class AssignmentsData extends CsvDataLoader {
 					Integer courseID = Integer.valueOf(parts[1]);
 					Integer capacity = Integer.valueOf(parts[2]);
 				
-					preparedStatement = DbHelper.getConnection().prepareStatement(AssignmentsTable.INSERT_SQL);
+					PreparedStatement preparedStatement = DbHelper.getConnection().prepareStatement(AssignmentsTable.INSERT_SQL);
 					preparedStatement.setInt(1, semester);
 					preparedStatement.setInt(2, instructorID);
 					preparedStatement.setInt(3, courseID);
@@ -70,9 +71,14 @@ public class AssignmentsData extends CsvDataLoader {
 		}
 	}
 
-	public static final void load(final int cycleNumber) {
+	/**
+	 * Load a CSV file with assignments. 
+	 * @param cycleNumber
+	 */
+	public static final void loadFromCSV(final int cycleNumber) {
 		// Filename format: assignments_<cycle number>.csv
 		final String filename = String.format(FILE_NAME, cycleNumber);
+		if (Log.isDebug()) Logger.debug(TAG, "Loading assignments: " + filename);
 		new AssignmentsData(filename);
 	}
 }

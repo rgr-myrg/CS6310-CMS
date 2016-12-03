@@ -112,11 +112,11 @@ public class ApplicationView {
 		this.uiMode = uiMode;
 
 		loadScreen(APRIORI_SCREEN, () -> {
-			InputFileHandler.designateSemester();
+			InputFileHandler.initialSemester();
+			System.out.println("CURRENT SEMESTER WELCOME: " + InputFileHandler.getCurrentSemester());
 			InputFileHandler.loadAssignments();
 			InputFileHandler.loadRequests();
-			InputFileHandler.prepareDataForDataMining();
-			aprioriResults = InputFileHandler.analyzeHistoryAndRoster();
+			aprioriResults = InputFileHandler.runDataMining();
 
 			Platform.runLater(() -> {
 				stage.setTitle(UiMessages.APRIORI_WINDOW_TITLE);
@@ -154,11 +154,11 @@ public class ApplicationView {
 
 	public void onProcessedRequestsControllerNextSemesterAction(){
 		loadScreen(APRIORI_SCREEN, () -> {
-			InputFileHandler.designateSemester();
+			InputFileHandler.nextSemester();
+			System.out.println("CURRENT SEMESTER NEXT: " + InputFileHandler.getCurrentSemester());
 			InputFileHandler.loadAssignments();
 			InputFileHandler.loadRequests();
-			InputFileHandler.prepareDataForDataMining();
-			aprioriResults = InputFileHandler.analyzeHistoryAndRoster();
+			aprioriResults = InputFileHandler.runDataMining();
 
 			Platform.runLater(() -> {
 				stage.setTitle(UiMessages.APRIORI_WINDOW_TITLE);
