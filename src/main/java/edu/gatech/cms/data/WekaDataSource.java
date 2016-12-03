@@ -42,6 +42,9 @@ public class WekaDataSource {
 			System.lineSeparator(),
 			System.lineSeparator());
 
+	/**
+	 * Constructor.
+	 */
 	public WekaDataSource() {
 		try {
 			FileUtil.writeToFile(SETTINGS, FILE_NAME);
@@ -51,6 +54,11 @@ public class WekaDataSource {
 		}
 	}
 
+	/**
+	 * Associations analysis.
+	 * @param sql
+	 * @return
+	 */
 	public Apriori getAprioriAssociationsWithSql(final String sql) {
 		final Apriori apriori = new Apriori();
 
@@ -78,6 +86,10 @@ public class WekaDataSource {
 		return apriori;
 	}
 
+	/**
+	 * Course requests analysis. 
+	 * @return
+	 */
 	public Apriori analyzeCourseRequests() {
 		if (Log.isDebug()) {
 			Logger.debug(TAG, "Analyzing Requests Data");
@@ -86,13 +98,15 @@ public class WekaDataSource {
 		return getAprioriAssociationsWithSql(RequestsTable.SELECT_REQUESTS);
 	}
 
+	/**
+	 * The records analysis. 
+	 * @return
+	 */
 	public Apriori analyzeStudentRecords() {
 		if (Log.isDebug()) {
 			Logger.debug(TAG, "Analyzing Records Data");
 		}
 
-//		return getAprioriAssociationsWithSql(RecordsTable.SELECT_RECORDS);
-		
 		// Process records, create the right matrix for associations analysis.
 		// The matrix has only courses on each line, for each student. If we 
 		// consider each student's list of courses as "basket", we can find the 
@@ -103,7 +117,7 @@ public class WekaDataSource {
 		// 1. pick a file name
 		String arffName = System.currentTimeMillis() + ".arff";
 		Path path = Paths.get(arffName);
-		System.out.println(path.getFileName());
+		if (Log.isDebug()) Logger.debug(TAG, path.getFileName());
 		
 		// 2. open file for writing
 		try (BufferedWriter bw = Files.newBufferedWriter(path, StandardOpenOption.CREATE)) {
@@ -121,7 +135,6 @@ public class WekaDataSource {
 		        recordCourses.put(record.getCourse().getID(), record.getCourse());
 		    }
 		    for (Course course: recordCourses.values()) {
-		        //bw.write("@attribute course" + course.getID() + " { T}\n");
                 bw.write("@attribute course" + course.getID() + " {taken,none}\n");
 		    }
 		    bw.write("\n");
@@ -152,13 +165,11 @@ public class WekaDataSource {
 		            
 		            // actually write in the file
 		            if (found) {
-                        //bw.write("T");
                         bw.write("taken");
                         if (i == numCourses - 1) bw.write("\n");
                         else bw.write(",");
 		            }
 		            else {
-                        //bw.write("?");
                         bw.write("none");
                         if (i == numCourses - 1) bw.write("\n");
                         else bw.write(",");

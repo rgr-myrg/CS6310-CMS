@@ -19,13 +19,14 @@ public class PrerequisitesData extends CsvDataLoader {
 		super(FILE_NAME);
 	}
 
+	/**
+	 * Load CSV with prereqs (rows) in DB and memory.
+	 */
 	@Override
 	public void populateCsvDataToDb(final String[] rawDataArray) {
 		if (rawDataArray.length == 0) {
 			return;
 		}
-
-		PreparedStatement preparedStatement = null;
 
 		// preReqCourseId, courseId
 		// 2,10
@@ -37,7 +38,7 @@ public class PrerequisitesData extends CsvDataLoader {
 					
 					Integer prereqId = Integer.valueOf(parts[0]);
 					Integer courseId = Integer.valueOf(parts[1]);
-					preparedStatement = DbHelper.getConnection().prepareStatement(PrerequisitesTable.INSERT_SQL);
+					PreparedStatement preparedStatement = DbHelper.getConnection().prepareStatement(PrerequisitesTable.INSERT_SQL);
 					preparedStatement.setInt(1, prereqId);
 					preparedStatement.setInt(2, courseId);
 
@@ -59,10 +60,16 @@ public class PrerequisitesData extends CsvDataLoader {
 		}
 	}
 
+	/**
+	 * Load from CSV. 
+	 */
 	public static final void loadFromCSV() {
 		new PrerequisitesData();
 	}
 	
+	/**
+	 * Load from DB (resume option).
+	 */
 	public static final void loadFromDB() {
 		try {
 			PreparedStatement preparedStatement = DbHelper.getConnection().prepareStatement(PrerequisitesTable.SELECT_PREREQUISITES);

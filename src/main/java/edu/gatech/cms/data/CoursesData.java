@@ -26,13 +26,14 @@ public class CoursesData extends CsvDataLoader {
 		super(FILE_NAME);
 	}
 
+	/**
+	 * Load courses from CSV (rows) into DB and memory.
+	 */
 	@Override
 	public void populateCsvDataToDb(final String[] rawDataArray) {
 		if (rawDataArray == null || rawDataArray.length == 0) {
 			return;
 		}
-
-		PreparedStatement preparedStatement = null;
 
 		for (String line : rawDataArray) {
 			Matcher match = pattern.matcher(line);
@@ -46,16 +47,15 @@ public class CoursesData extends CsvDataLoader {
 				    String semesters = match.group(3);
 				    
 				    // insert in db
-					preparedStatement = DbHelper.getConnection().prepareStatement(CoursesTable.INSERT_SQL);
+				    PreparedStatement preparedStatement = DbHelper.getConnection().prepareStatement(CoursesTable.INSERT_SQL);
 					preparedStatement.setInt(1, id);
 					preparedStatement.setString(2, name);
 					preparedStatement.setString(3, semesters);
+					// (will ignore semesters for now)
 					preparedStatement.execute();
 					
 					// save in memory as well
 					Course course = new Course(id, name, "");
-					// TODO - ignore semesters for now
-					
 					InputFileHandler.getCourses().put(id, course);
 
 					if (Log.isDebug()) {
@@ -69,6 +69,9 @@ public class CoursesData extends CsvDataLoader {
 		}
 	}
 
+	/**
+	 * Load a CSV file with courses.
+	 */
 	public static final void loadFromCSV() {
 		new CoursesData();
 	}

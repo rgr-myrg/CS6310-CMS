@@ -10,6 +10,7 @@ import edu.gatech.cms.sql.TotalStatisticsTable;
 import edu.gatech.cms.util.DbHelper;
 
 public class TotalStatisticsData {
+
 	public static final void load() {
 		PreparedStatement preparedStatement = null;
 
@@ -26,7 +27,7 @@ public class TotalStatisticsData {
 			preparedStatement = DbHelper.getConnection().prepareStatement(TotalStatisticsTable.INSERT_WAITLISTED);
 			preparedStatement.execute();
 		} catch (SQLException e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 
@@ -42,7 +43,7 @@ public class TotalStatisticsData {
 					totalStatistics.put(statName, statTotal);
 				}
 			} catch (SQLException e) {
-				//e.printStackTrace();
+				e.printStackTrace();
 			}
 		}
 
@@ -57,8 +58,7 @@ public class TotalStatisticsData {
 			preparedStatement.setInt(1, total);
 			preparedStatement.setString(2, column);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 

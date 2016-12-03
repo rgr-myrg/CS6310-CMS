@@ -20,13 +20,14 @@ public class StudentsData extends CsvDataLoader {
 		super(FILE_NAME);
 	}
 
+	/**
+	 * Load CSV with students (rows) into DB and memory.
+	 */
 	@Override
 	public void populateCsvDataToDb(final String[] rawDataArray) {
 		if (rawDataArray.length == 0) {
 			return;
 		}
-
-		PreparedStatement preparedStatement = null;
 
 		// uuid, name, address, phone
 		// 8,REBECCA CURRY,692 Ashley Court 92876,9636667844
@@ -43,7 +44,7 @@ public class StudentsData extends CsvDataLoader {
 				    String phone = parts[3];
 				    
                     // insert in db
-					preparedStatement = DbHelper.getConnection().prepareStatement(UniversityPersonTable.INSERT_SQL);
+				    PreparedStatement preparedStatement = DbHelper.getConnection().prepareStatement(UniversityPersonTable.INSERT_SQL);
 					preparedStatement.setInt(1, id);
 					preparedStatement.setString(2, name);
 					preparedStatement.setString(3, address);
@@ -67,10 +68,16 @@ public class StudentsData extends CsvDataLoader {
 		}
 	}
 
+	/**
+	 * Load CSV file. 
+	 */
 	public static final void loadFromCSV() {
 		new StudentsData();
 	}
 	
+	/**
+	 * Load students from DB (resume option).
+	 */
 	public static final void loadFromDB() {
 		try {
 			PreparedStatement preparedStatement = DbHelper.getConnection().prepareStatement(UniversityPersonTable.SELECT_STUDENTS);

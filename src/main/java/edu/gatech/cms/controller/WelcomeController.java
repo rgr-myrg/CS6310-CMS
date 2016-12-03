@@ -32,7 +32,7 @@ public class WelcomeController implements ScreenController {
 			final int semesterCount = InputFileHandler.getCurrentSemester();
 			String welcomeMsg = UiMessages.START_SEMESTER;
 
-			if (semesterCount > 1) {
+			if (semesterCount >= 1) {
 				welcomeMsg = String.format(UiMessages.RESUME_SEMESTER, semesterCount);
 				resumeGroup.setVisible(true);
 			}
