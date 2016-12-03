@@ -36,8 +36,8 @@ public class RequestsTable {
 	public static final String DROP_TABLE = String.format("DROP TABLE IF EXISTS %s", TABLE_NAME);
 
 	public static final String INSERT_SQL = String.format(
-			"INSERT INTO %s (%s, %s, %s) VALUES (?, ?, ?)", 
-			TABLE_NAME, STUDENT_ID_COLUMN, COURSE_ID_COLUMN, REQUEST_STATUS_COLUMN
+			"INSERT INTO %s (%s, %s, %s, %s, %s) VALUES (?, ?, ?, ?, ?)", 
+			TABLE_NAME, STUDENT_ID_COLUMN, COURSE_ID_COLUMN, SEMESTER_COLUMN, REQUEST_STATUS_COLUMN, STATUS_REASON_COLUMN
 	);
 
 	public static final String SELECT_MAX_SEMESTER = String.format(
@@ -54,6 +54,11 @@ public class RequestsTable {
 			STUDENT_ID_COLUMN, COURSE_ID_COLUMN, TABLE_NAME
 			);
 
+	public static final String SELECT_ALL_REQUESTS = String.format(
+			"SELECT * FROM %s",
+			TABLE_NAME
+			);
+
 	public static final String SELECT_OPEN_REQUESTS = String.format(
 			"SELECT * FROM %s WHERE %s = %d",
 			TABLE_NAME, REQUEST_STATUS_COLUMN, OPEN_REQUEST_DEFAULT_VALUE
@@ -67,12 +72,12 @@ public class RequestsTable {
 	);
 
 	public static final String SELECT_APPROVED_REQUESTS = String.format(
-			"SELECT * FROM %s WHERE %s = %d ORDER BY COURSE_REQUESTS._id",
+			"SELECT * FROM %s WHERE %s = %d ORDER BY _id",
 			TABLE_NAME, REQUEST_STATUS_COLUMN, RequestStatus.Accepted.ordinal()
 	);
 
 	public static final String SELECT_WAITING_REQUESTS = String.format(
-			"SELECT * FROM %s WHERE %s = %d ORDER BY COURSE_REQUESTS._id",
+			"SELECT * FROM %s WHERE %s = %d ORDER BY _id",
 			TABLE_NAME, REQUEST_STATUS_COLUMN, RequestStatus.RejectedFullCapacity.ordinal()
 	);
 

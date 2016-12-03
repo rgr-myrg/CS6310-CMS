@@ -46,7 +46,9 @@ public class RequestsData extends CsvDataLoader {
 					preparedStatement = DbHelper.getConnection().prepareStatement(RequestsTable.INSERT_SQL);
 					preparedStatement.setInt(1, studentId);
 					preparedStatement.setInt(2, courseId);
-					preparedStatement.setInt(3, RequestStatus.Pending.ordinal());
+					preparedStatement.setInt(3, InputFileHandler.getCurrentSemester());
+					preparedStatement.setInt(4, RequestStatus.Pending.ordinal());
+					preparedStatement.setString(5, "");
 
 					preparedStatement.execute();
 					
@@ -89,7 +91,34 @@ public class RequestsData extends CsvDataLoader {
 	}
 	
 	public static final void loadFromDB() {
-		
+		try {
+			
+			PreparedStatement preparedStatement = DbHelper.getConnection().prepareStatement(RequestsTable.SELECT_ALL_REQUESTS);
+			ResultSet rs = preparedStatement.executeQuery();
+			while (rs.next()) {
+				Student student = InputFileHandler.getStudents().get(rs.getInt(2));
+				Course course = InputFileHandler.getCourses().get(rs.getInt(3));
+				int semester = rs.getInt(4);
+				int status = rs.getInt(5);
+				String reason = rs.getString(6);
+				
+				Request request = new Request(semester, student, course, RequestStatus.values()[status], reason);
+				List<Request> requests = InputFileHandler.getRequests(semester);
+				if (requests == null) {
+					requests = new ArrayList<>();
+					InputFileHandler.getRequests().put(semester, requests);
+				}
+				requests.add(request);
+				
+				if (Log.isDebug()) {
+					Logger.debug(TAG, "Loaded request: " + request);
+				}
+			}
+			
+		} catch (SQLException e) {
+			DbHelper.logSqlException(e);
+		}
+
 	}
 
 	public static final void updateRequestDenied(RequestStatus rs, Student student, Course course) {

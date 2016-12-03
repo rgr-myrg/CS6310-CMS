@@ -298,7 +298,6 @@ public class InputFileHandler {
 		}
 		
 		// load and go through Requests for this semester
-		loadRequests();
 		List<Request> semRequests = requests.get(currentSemester);
 		for(Request request: semRequests) {
 			processRequest(request);
