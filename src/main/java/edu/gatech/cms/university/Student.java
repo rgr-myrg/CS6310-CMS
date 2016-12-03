@@ -8,7 +8,9 @@ import edu.gatech.cms.course.Assignment;
 import edu.gatech.cms.course.Course;
 import edu.gatech.cms.course.Record;
 import edu.gatech.cms.course.Request;
+import edu.gatech.cms.course.RequestStatus;
 import edu.gatech.cms.course.Section;
+import edu.gatech.cms.util.GradeDistributionUtil;
 
 public class Student extends UniversityPerson {
     public static final int MAX_COURSES_ELIGIBLE = 5;
@@ -58,82 +60,89 @@ public class Student extends UniversityPerson {
 	//END GETTERS AND SETTERS SECTION
 	
 
-//	public boolean enrollInCourse(Course course) {
-//		//check prereqs, 1st highest 'priority'
-//		if(hasPrerequisites(course)) {
-//			//check if eligible, 2nd highest 'priority'
-//			if(isEligibleToRetake(course)) {
-//				//check if course has capacity, 3rd highest 'priority'
-//				if(course.getTotalCourseCapacity() <= course.getTotalNumEnrolled()){
-//					//InputFileHandler.getInstance().incrementNumDeniedDueToCapacity();
-//					addToCourseRequestHistory(course, "no remaining seats available for the course at this time");
-//					return false;
-//				}
-//			}
-//			else {
-//				//InputFileHandler.getInstance().incrementNumDeniedDueToCoursesAlreadyTaken();
-//				addToCourseRequestHistory(course, "student has already taken the course with a grade of C or higher");
-//				return false;
-//			}
-//		}
-//		else {
-//			//InputFileHandler.getInstance().incrementNumDeniedDueToPrereqs();
-//			addToCourseRequestHistory(course, "student is missing one or more prerequisites");
-//			return false;
-//		}
-//					
-//		//only arrive at this code if all 3 requirements met
-//		for( Section section : course.getSectionsOffered()){
-//			//Search for available sections, break when one is found
-//			if(enrollInSection(section)) {
-//				coursesInCurrentSemester++;
-//				//coursesGranted.add(course);
-//				//InputFileHandler.getInstance().incrementNumRequestsGranted();
-//				break;
-//			}
-//		}
-//		
-//		addToCourseRequestHistory(course, "request is valid");
-//		//String addToApproved = getUUID() + ", " + getFullName() + ", " + course.getID() + ", " + course.getTitle();
-//		//InputFileHandler.getInstance().getApprovedRequests().add(addToApproved);
-//		return true;
-//	}
+	public boolean enrollInCourse(Course course) {
+		//check prereqs, 1st highest 'priority'
+		if(hasPrerequisites(course)) {
+			//check if eligible, 2nd highest 'priority'
+			if(isEligibleToRetake(course)) {
+				//check if course has capacity, 3rd highest 'priority'
+				if(course.getTotalCourseCapacity() <= course.getTotalNumEnrolled()){
+					//InputFileHandler.getInstance().incrementNumDeniedDueToCapacity();
+					addToCourseRequestHistory(course, "no remaining seats available for the course at this time");
+					return false;
+				}
+			}
+			else {
+				//InputFileHandler.getInstance().incrementNumDeniedDueToCoursesAlreadyTaken();
+				addToCourseRequestHistory(course, "student has already taken the course with a grade of C or higher");
+				return false;
+			}
+		}
+		else {
+			//InputFileHandler.getInstance().incrementNumDeniedDueToPrereqs();
+			addToCourseRequestHistory(course, "student is missing one or more prerequisites");
+			return false;
+		}
+					
+		//only arrive at this code if all 3 requirements met
+		for( Section section : course.getSectionsOffered()){
+			//Search for available sections, break when one is found
+			if(enrollInSection(section)) {
+				coursesInCurrentSemester++;
+				//coursesGranted.add(course);
+				//InputFileHandler.getInstance().incrementNumRequestsGranted();
+				break;
+			}
+		}
+		
+		addToCourseRequestHistory(course, "request is valid");
+		//String addToApproved = getUUID() + ", " + getFullName() + ", " + course.getID() + ", " + course.getTitle();
+		//InputFileHandler.getInstance().getApprovedRequests().add(addToApproved);
+		return true;
+	}
 
-//	private boolean enrollInSection(Section section) {
-//		boolean enrollmentSuccessful = false;
-//		
-//		//all things that must be true before enrolling in a section
-//		boolean hasCapacity = section.hasCapacity();
-//		boolean eligibleForMoreSections = (coursesInCurrentSemester < MAX_COURSES_ELIGIBLE);
-//		
-//		if(hasCapacity && eligibleForMoreSections) {
-//			sectionsCurrentlyEnrolled.add(section);
-//			section.addStudentToSection(this);
-//			coursesInCurrentSemester++;
-//			enrollmentSuccessful = true;
-//		}
-//		else {
-//			//record the failed attempt to enroll in single section, currently no action needed 
-//		}
-//		
-//		return enrollmentSuccessful;
-//	}
+	private boolean enrollInSection(Section section) {
+		boolean enrollmentSuccessful = false;
+		
+		//all things that must be true before enrolling in a section
+		boolean hasCapacity = section.hasCapacity();
+		boolean eligibleForMoreSections = (coursesInCurrentSemester < MAX_COURSES_ELIGIBLE);
+		
+		if(hasCapacity && eligibleForMoreSections) {
+			sectionsCurrentlyEnrolled.add(section);
+			section.addStudentToSection(this);
+			coursesInCurrentSemester++;
+			enrollmentSuccessful = true;
+		}
+		else {
+			//record the failed attempt to enroll in single section, currently no action needed 
+		}
+		
+		return enrollmentSuccessful;
+	}
 	
-//	private boolean hasPrerequisites(Course course) {
-//		List<Course> prerequisites = course.getPrerequisites();
-//		//make sure all prerequisites were taken and passed
-//		for (Course c : prerequisites) { 
-//			if(!(hasTakenAndPassed(c))) {
-//				return false;
-//			}
-//		}
-//		return true;	
-//	}
+	private boolean hasPrerequisites(Course course) {
+		List<Course> prerequisites = course.getPrerequisites();
+		//make sure all prerequisites were taken and passed
+		for (Course c : prerequisites) { 
+			if(!(hasTakenAndPassed(c))) {
+				return false;
+			}
+		}
+		return true;	
+	}
 	
-//	public void disenrollInSection(Section section) {
-//		sectionsCurrentlyEnrolled.remove(section);
-//		coursesInCurrentSemester--;
-//	}
+	public void disenrollInSection(Section section) {
+		sectionsCurrentlyEnrolled.remove(section);
+		coursesInCurrentSemester--;
+	}
+
+	private void createAutoRecord(Instructor instructor, Course course) {
+		String grade = GradeDistributionUtil.createRandomGrade();
+		Record r = new Record(this, course, instructor, "no comment", grade);
+		recordHistory.add(r);
+		InputFileHandler.getRecords().add(r);
+	}
 	
 	public void addCourseToList(Course course){
 		approvedCourseList.add(course);
@@ -166,44 +175,44 @@ public class Student extends UniversityPerson {
 		return recordsForCourse;
 	}
 	
-//	public boolean hasTakenAndPassed(Course course) {
-//		boolean hasTakenAndPassed = false;
-//		List<Record> recordsForCourse = recordsForCourse(course);
-//		//check if course has ever been taken
-//		if(recordsForCourse.size() < 1) {
-//			return hasTakenAndPassed;
-//		}
-//		//check if course has ever been passed
-//		for( Record record : recordsForCourse) {
-//			if(!(record.getGradeEarned() == "F")) {
-//				hasTakenAndPassed = true;
-//				break;
-//			}
-//		}
-//		return hasTakenAndPassed;
-//	}
+	public boolean hasTakenAndPassed(Course course) {
+		boolean hasTakenAndPassed = false;
+		List<Record> recordsForCourse = recordsForCourse(course);
+		//check if course has ever been taken
+		if(recordsForCourse.size() < 1) {
+			return hasTakenAndPassed;
+		}
+		//check if course has ever been passed
+		for( Record record : recordsForCourse) {
+			if(!(record.getGradeEarned() == "F")) {
+				hasTakenAndPassed = true;
+				break;
+			}
+		}
+		return hasTakenAndPassed;
+	}
 	
-//	public boolean isEligibleToRetake(Course course){
-//		boolean isEligible = false;
-//		List<Record> recordsForCourse = recordsForCourse(course);
-//		//check if course has ever been taken
-//		if(recordsForCourse.size() < 1) {
-//			isEligible = true;
-//		}
-//		else {
-//			//check if past course had a D or F
-//			for( Record record : recordsForCourse) {
-//				if((record.getGradeEarned() == "D") || (record.getGradeEarned() == "F")) {
-//					isEligible = true;
-//				} else {
-//					isEligible = false;
-//					break;
-//				}
-//			}
-//		}
-//
-//		return isEligible;
-//	}
+	public boolean isEligibleToRetake(Course course){
+		boolean isEligible = false;
+		List<Record> recordsForCourse = recordsForCourse(course);
+		//check if course has ever been taken
+		if(recordsForCourse.size() < 1) {
+			isEligible = true;
+		}
+		else {
+			//check if past course had a D or F
+			for( Record record : recordsForCourse) {
+				if((record.getGradeEarned() == "D") || (record.getGradeEarned() == "F")) {
+					isEligible = true;
+				} else {
+					isEligible = false;
+					break;
+				}
+			}
+		}
+
+		return isEligible;
+	}
 
     public boolean checkPrerequisites(Course course) {
         List<Course> prereqs = course.getPrerequisites();

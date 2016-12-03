@@ -21,12 +21,15 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane fx:id="mainBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: #FFFFFF;" stylesheets="@../css/Main.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.gatech.cms.controller.WelcomeController">
+<BorderPane fx:id="mainBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: #FFFFFF;" styleClass="root" stylesheets="@../css/Main.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.gatech.cms.controller.WelcomeController">
    <bottom>
       <HBox BorderPane.alignment="BOTTOM_CENTER">
          <children>
             <Region prefWidth="400.0" HBox.hgrow="ALWAYS" />
-            <Button id="nextButton" mnemonicParsing="false" onAction="#onNextButtonClick" text="Next &gt;&gt;" />
+            <Button id="nextButton" mnemonicParsing="false" onAction="#onNextButtonClick" styleClass="next-button" text="Next &gt;&gt;">
+               <HBox.margin>
+                  <Insets bottom="15.0" right="30.0" />
+               </HBox.margin></Button>
          </children>
          <padding>
             <Insets bottom="5.0" right="10.0" />
@@ -38,7 +41,7 @@
         <menus>
           <Menu mnemonicParsing="false" text="Help">
             <items>
-              <MenuItem mnemonicParsing="false" text="About" onAction="#onAboutMenuSelected"/>
+              <MenuItem mnemonicParsing="false" onAction="#onAboutMenuSelected" text="About" />
             </items>
           </Menu>
         </menus>
@@ -47,16 +50,16 @@
    <center>
       <VBox id="welcomeMainVBox" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <Label text="Course Management System v1.0">
+            <Label fx:id="screenHeader" prefHeight="45.0" prefWidth="330.0" text="Course Management System v1.0" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
                <VBox.margin>
                   <Insets top="15.0" />
                </VBox.margin></Label>
-            <Text fx:id="welcomeText" lineSpacing="5.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="500.0">
+            <Text fx:id="welcomeText" styleClass="welcomeText" lineSpacing="5.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="537.0">
                <VBox.margin>
-                  <Insets left="55.0" right="30.0" top="15.0" />
+                  <Insets left="30.0" right="30.0" top="15.0" />
                </VBox.margin>
                <font>
                   <Font size="15.0" />

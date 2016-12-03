@@ -1,6 +1,8 @@
 package edu.gatech.cms.controller;
 
 import java.util.Arrays;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -23,6 +25,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -36,6 +39,7 @@ public class InstructorController implements ScreenController{
 	@FXML private ListView availableListView;
 	@FXML private ListView addedListView;
 	@FXML private Text welcomeText;
+	@FXML private Label warningText;
 
 	public static final String TAG = InputFileHandler.class.getSimpleName();
 
@@ -44,9 +48,6 @@ public class InstructorController implements ScreenController{
 			progressGroup.getChildren().remove(progressGif);
 			availableListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 			addedListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-	        
-	        //List<String> items = Arrays.asList("One", "Two", "Three");        
-	        //availableListView.setItems(FXCollections.observableArrayList(items));
 
 			availableListView.setItems(FXCollections.observableArrayList(InputFileHandler.getAssignmentsStrings(InputFileHandler.getCurrentSemester())));
 
@@ -60,7 +61,6 @@ public class InstructorController implements ScreenController{
 			        	Platform.runLater(() -> {
 				        	addedListView.getSelectionModel().select(-1);
 			        	});
-			        	Logger.debug(TAG, "Clicked item: " + newValue);				        	
 			        }
 		    	}
 		    });
@@ -72,8 +72,7 @@ public class InstructorController implements ScreenController{
 				        Platform.runLater(() -> {
 							availableListView.getSelectionModel().select(-1);
 				        });    	
-				    }			        
-			        Logger.debug(TAG, "Clicked item: " + newValue);
+				    }
 		    	}
 		    });		    
 		};
@@ -100,8 +99,18 @@ public class InstructorController implements ScreenController{
 
 	@FXML protected void onAddButtonClick(ActionEvent event) {
 		ObservableList<String> selectedItems = availableListView.getSelectionModel().getSelectedItems();
-		addedListView.getItems().addAll(selectedItems);
-		availableListView.getItems().removeAll(selectedItems);
+		Boolean isValid = validateSelection(selectedItems, addedListView.getItems());
+		warningText.setVisible(false);
+		if(isValid){			
+			addedListView.getItems().addAll(selectedItems);
+			availableListView.getItems().removeAll(selectedItems);
+		}
+		else{
+			warningText.setVisible(true);
+			warningText.setStyle("warningText");
+		}
+		addedListView.getSelectionModel().select(-1);
+		availableListView.getSelectionModel().select(-1);								
 	}
 
 	@FXML protected void onRemoveButtonClick(ActionEvent event) {
@@ -111,6 +120,7 @@ public class InstructorController implements ScreenController{
 	}
 
 	@FXML protected void onClearButtonClick(ActionEvent event) {
+		warningText.setVisible(false);
 		availableListView.getItems().clear();
 		addedListView.getItems().clear();
 	    availableListView.setItems(FXCollections.observableArrayList(InputFileHandler.getAssignmentsStrings(InputFileHandler.getCurrentSemester())));
@@ -124,6 +134,30 @@ public class InstructorController implements ScreenController{
 		alert.getDialogPane().setPrefSize(325, 200);		
 		alert.setContentText(UiMessages.EMPTY_SELECTION_ERROR_BODY);
 		alert.showAndWait();
+	}
+
+	protected Boolean validateSelection(ObservableList<String> selected, ObservableList<String> added){
+		Boolean isValid = true;
+		List<String> tempItems = new ArrayList<String>();
+		tempItems.addAll(selected);
+		tempItems.addAll(added);
+		if(tempItems.size() > 5){
+			isValid = false;
+		}
+		else{
+			String instructor = "";
+			Set<String> instructorSet = new HashSet<String>();
+			for(String item : tempItems){				
+				instructor = item.split(",")[0];
+				if(instructorSet.contains(instructor)){
+					isValid = false;
+				}				
+				else{
+					instructorSet.add(instructor);
+				}
+			}
+		}
+		return isValid;
 	}
 
 	@Override

@@ -33,6 +33,8 @@ public final class UiMessages {
 
 	public static final String INSTRUCTOR_HEADING = "Instructor Assignment";
 
+	public static final String INSTRUCTOR_SELECTION_ERROR = "Each instructor may only be selected once per cycle, and no more than 5 selections may be added per cycle. Please try again.";
+
 	public static final String PROCESSED_REQUESTS_HEADING = "Processed Requests";
 
 	public static final String CONFIRM_EXIT_TITLE = "Confirm Exit";
