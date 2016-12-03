@@ -204,4 +204,7 @@ public class ApplicationView {
 	    stage.close();
 	}
 
+	public void onUnableToReadFileException(final String filename) {
+		// TODO: UI Message We're all outta semesters.
+	}
 }
