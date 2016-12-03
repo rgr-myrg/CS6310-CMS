@@ -41,7 +41,7 @@ public class RequestsTable {
 	);
 
 	public static final String SELECT_MAX_SEMESTER = String.format(
-			"SELECT COALESCE(MAX(%s),0) AS %s FROM %s WHERE %s != %d OR %s != ''", 
+			"SELECT MAX(%s) AS %s FROM %s WHERE %s != %d OR %s != ''", 
 			SEMESTER_COLUMN, SEMESTER_COLUMN ,TABLE_NAME, REQUEST_STATUS_COLUMN, RequestStatus.Pending.ordinal(), STATUS_REASON_COLUMN);
 
 	public static final String SELECT_COUNT = String.format(
@@ -71,7 +71,7 @@ public class RequestsTable {
 
 	public static final String SELECT_WAITING_REQUESTS = String.format(
 			"SELECT * FROM %s WHERE %s = %d ORDER BY _id",
-			TABLE_NAME, REQUEST_STATUS_COLUMN, RequestStatus.RejectedFullCapacity.ordinal()
+			TABLE_NAME, STATUS_REASON_COLUMN, RequestStatus.RejectedFullCapacity.ordinal()
 	);
 
 	public static final String SELECT_APPROVED_REQUESTS_INFO = String.format(

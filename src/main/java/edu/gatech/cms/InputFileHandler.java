@@ -1,7 +1,5 @@
 package edu.gatech.cms;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +20,6 @@ import edu.gatech.cms.data.StudentsData;
 import edu.gatech.cms.data.WekaDataSource;
 import edu.gatech.cms.logger.Log;
 import edu.gatech.cms.logger.Logger;
-import edu.gatech.cms.sql.RequestsTable;
 import edu.gatech.cms.university.Department;
 import edu.gatech.cms.university.Instructor;
 import edu.gatech.cms.university.Student;
@@ -37,6 +34,11 @@ import edu.gatech.cms.view.ApplicationView;
 public class InputFileHandler {
 	public static final String TAG = InputFileHandler.class.getSimpleName();
 
+	private static final String EXAMINED = "Examined";
+	private static final String GRANTED = "Granted";
+	private static final String FAILED = "Failed";
+	private static final String WAITLISTED = "Wait Listed";
+
 	private static University university;
 	private static Department department;
 
@@ -48,6 +50,7 @@ public class InputFileHandler {
 	private static Map<Integer,List<Request>> requests = new TreeMap<>();		// key = semester
 	private static Map<Integer,List<Assignment>> assignments = new TreeMap<>();	// key = semester (all assignments)
 	private static Map<Integer,List<Assignment>> capacities = new TreeMap<>();	// key = semester (chosen assignments)
+	private static WekaDataSource wekaDataSource = new WekaDataSource();
 	
 	
 	private static int currentSemester = 0;
@@ -55,12 +58,7 @@ public class InputFileHandler {
 	//Note: semester stats must be reset each cycle, total stats will not be reset
 	private static Map<String, Integer> semesterStatistics = new TreeMap<>();
 	private static Map<String, Integer> totalStatistics = new TreeMap<>();
-	private static String examinedText = "Examined";
-	private static String grantedText = "Granted";
-	private static String failedText = "Failed";
-	private static String waitlistText = "Wait Listed";
 
-	private static WekaDataSource wekaDataSource = new WekaDataSource();
 
 	public static enum UiMode {
 		INITIAL, 
@@ -71,8 +69,11 @@ public class InputFileHandler {
 	 * This method is invoked by the ui when the app starts.
 	 */
 	public static void load() {
-		extractSemester();
-		instantiateStatsTreeMaps();
+		// Select current semester from db. 
+		currentSemester = RequestsData.getMaxSemester();
+
+		resetSemesterStats();
+		resetTotalStats();
 
 		if (Log.isDebug()) {
 			Logger.debug(TAG, "Load currentSemester: " + currentSemester);
@@ -98,6 +99,7 @@ public class InputFileHandler {
 			InstructorsData.loadFromDB();
 			RecordsData.loadFromDB();
 			RequestsData.loadFromDB();
+			
 			//clear out 'semesterStatistics' counts
 			for(Map.Entry<String,Integer> statCategory : semesterStatistics.entrySet()) {
 				  statCategory.setValue(0);
@@ -105,25 +107,6 @@ public class InputFileHandler {
 		}
 	}
 	
-	/** 
-	 * Find "last" semester processed.  
-	 */
-	private static void extractSemester() {
-		// Select current semester from db. 
-		try {
-			final ResultSet resultSet = DbHelper.doSql(RequestsTable.SELECT_MAX_SEMESTER);
-
-			if (resultSet != null && resultSet.next()) {
-				currentSemester = resultSet.getInt(RequestsTable.SEMESTER_COLUMN);
-				resultSet.close();
-			} else {
-				currentSemester = 0;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
 	/**
 	 * This method is invoked after the user selects 
 	 * 'initial' or 'resume' on the Welcome screen
@@ -177,16 +160,6 @@ public class InputFileHandler {
 
 	// SIMPLE SETTERS, GETTERS for model objects
 
-	public static void incrementSemesterStats(String keyString) {
-		Integer newInt = semesterStatistics.get(keyString) +  1;
-		semesterStatistics.put(keyString, newInt);
-	}
-	
-	public static void incrementTotalStats(String keyString) {
-		Integer newInt = totalStatistics.get(keyString) +  1;
-		totalStatistics.put(keyString, newInt);
-	}
-	
 	public static University getUniversity() {
 		return university;
 	}
@@ -217,6 +190,10 @@ public class InputFileHandler {
 
 	public static List<Record> getRecords() {
 		return records;
+	}
+	
+	public static void resetRecords() {
+		records.clear();
 	}
 
 	public static Map<Integer,List<Request>> getRequests() {
@@ -266,7 +243,7 @@ public class InputFileHandler {
 		currentSemester = semester;
 	}
 
-	
+		
 	// UTILITY METHODS
 	
 	/**
@@ -296,8 +273,9 @@ public class InputFileHandler {
 			}
 			if (!found) capacities.get(currentSemester).add(assign);
 
-			if (Log.isDebug()) Logger.debug(TAG, capacities.get(currentSemester));
 		}
+
+		if (Log.isDebug()) Logger.debug(TAG, capacities.get(currentSemester));
 	}
 	
 	/**
@@ -324,38 +302,72 @@ public class InputFileHandler {
 	 * Requests processing, starts with the waiting list
 	 */
 	public static void processRequests() {
+		// reset the semester stats
+		resetSemesterStats();
+		
 		// take care of waiting list first, the key is the courseId, and the values are the students, in order.
 		List<Request> waiting = RequestsData.getWaiting();
 		for (Request request: waiting) {
-			processRequest(request);
+			processRequest(request, true);
 		}
 		
 		// load and go through Requests for this semester
 		List<Request> semRequests = requests.get(currentSemester);
 		for(Request request: semRequests) {
-			processRequest(request);
+			processRequest(request, false);
 		}
+		
+		System.out.println(getSemesterStats());
+		System.out.println(getAcademicRecords());
 	}
 
 	/**
 	 * Process one request. Check for conditions, if passed then create record. 
+	 * Only the non-waiting requests participate in statistics. 
 	 * @param request
 	 */
-	private static void processRequest(Request request) {
+	private static void processRequest(Request request, boolean isWaiting) {
 		Student student = request.getStudent();
 		Course course = request.getCourse();
 		
+		// stats
+		if (!isWaiting){
+			incrementSemesterStats(EXAMINED);
+			incrementTotalStats(EXAMINED);
+		}
+		
         if (! student.checkPrerequisites(course)) { // check missing prereqs
         	RequestsData.updateRequestDenied(RequestStatus.RejectedPrerequisites, student, course);
+        	// stats
+        	if (!isWaiting){
+    			incrementSemesterStats(FAILED);
+    			incrementTotalStats(FAILED);
+    		}
         }
         else if (! student.checkCourseRecords(course)) { // check previous records for the course
         	RequestsData.updateRequestDenied(RequestStatus.RejectedAlreadyTaken, student, course);
+        	// stats
+    		if (!isWaiting){
+    			incrementSemesterStats(FAILED);
+    			incrementTotalStats(FAILED);
+    		}
         }
         else if (! student.checkAvailableSeats(course)) { // check no seats
         	RequestsData.updateRequestDenied(RequestStatus.RejectedFullCapacity, student, course);
+        	// stats
+        	if (!isWaiting){
+    			incrementSemesterStats(WAITLISTED);
+    			incrementTotalStats(WAITLISTED);
+    		}
         }
         else {	// accepted!
         	RequestsData.updateRequestAccepted(RequestStatus.Accepted, student, course);
+
+        	// stats
+    		if (!isWaiting){
+    			incrementSemesterStats(GRANTED);
+    			incrementTotalStats(GRANTED);
+    		}
 
         	// reduce capacity for the course this semester
         	List<Assignment> assigns = capacities.get(currentSemester);
@@ -367,13 +379,13 @@ public class InputFileHandler {
         	// automatically create a Record for this student this course this semester
         	// find instructor (first one in list of assignments for this semester)
         	Instructor instructor = null;
-        	assigns = assignments.get(currentSemester);
+        	assigns = capacities.get(currentSemester);
         	for (Assignment assign: assigns) {
         		if (assign.getCourse().getID() == course.getID())
         			instructor = assign.getInstructor();
         	}
         	// add the record to DB
-        	Record record = new Record(student, course, instructor, "", GradeDistributionUtil.createRandomGrade());
+        	Record record = new Record(student, course, instructor, "random comment", GradeDistributionUtil.createRandomGrade());
         	RecordsData.save(record);
         	// add the record to model
         	records.add(record);
@@ -383,73 +395,59 @@ public class InputFileHandler {
 	
 	// STATS METHODS
 	
-	public static String getExaminedText() {
-		return examinedText;
-	}
-
-	public static void setExaminedText(String examinedText) {
-		InputFileHandler.examinedText = examinedText;
-	}
-
-	public static String getGrantedText() {
-		return grantedText;
-	}
-
-	public static void setGrantedText(String grantedText) {
-		InputFileHandler.grantedText = grantedText;
-	}
-
-	public static String getFailedText() {
-		return failedText;
-	}
-
-	public static void setFailedText(String failedText) {
-		InputFileHandler.failedText = failedText;
-	}
-
-	public static String getWaitlistText() {
-		return waitlistText;
-	}
-
-	public static void setWaitlistText(String waitlistText) {
-		InputFileHandler.waitlistText = waitlistText;
+	public static void incrementSemesterStats(String keyString) {
+		Integer newInt = semesterStatistics.get(keyString) +  1;
+		semesterStatistics.put(keyString, newInt);
 	}
 	
-	private static void instantiateStatsTreeMaps(){
-		semesterStatistics.put(examinedText, 0);
-		semesterStatistics.put(grantedText, 0);
-		semesterStatistics.put(failedText, 0);
-		semesterStatistics.put(waitlistText, 0);
-		
-		totalStatistics.put(examinedText, 0);
-		totalStatistics.put(grantedText, 0);
-		totalStatistics.put(failedText, 0);
-		totalStatistics.put(waitlistText, 0);
+	public static void incrementTotalStats(String keyString) {
+		Integer newInt = totalStatistics.get(keyString) +  1;
+		totalStatistics.put(keyString, newInt);
 	}
 	
-	private static void getSemesterStats() {
-		System.out.println("Semester Statistics");
-		System.out.print(examinedText + ": " + semesterStatistics.get(examinedText) + " ");
-		System.out.print(grantedText + ": " + semesterStatistics.get(grantedText) + " ");
-		System.out.print(failedText + ": " + semesterStatistics.get(grantedText) + " ");
-		System.out.println(waitlistText + ": " + semesterStatistics.get(grantedText));
+	private static void resetSemesterStats(){
+		semesterStatistics.put(EXAMINED, 0);
+		semesterStatistics.put(GRANTED, 0);
+		semesterStatistics.put(FAILED, 0);
+		semesterStatistics.put(WAITLISTED, 0);
+	}
+	
+	private static void resetTotalStats(){
+		totalStatistics.put(EXAMINED, 0);
+		totalStatistics.put(GRANTED, 0);
+		totalStatistics.put(FAILED, 0);
+		totalStatistics.put(WAITLISTED, 0);
+	}
+	
+	public static String getSemesterStats() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Semester Statistics\n");
+		sb.append(EXAMINED + ": " + semesterStatistics.get(EXAMINED) + " ");
+		sb.append(GRANTED + ": " + semesterStatistics.get(GRANTED) + " ");
+		sb.append(FAILED + ": " + semesterStatistics.get(FAILED) + " ");
+		sb.append(WAITLISTED + ": " + semesterStatistics.get(WAITLISTED)).append("\n\n");
 		
-		System.out.println("Total Statistics");
-		System.out.print(examinedText + ": " + totalStatistics.get(examinedText) + " ");
-		System.out.print(grantedText + ": " + totalStatistics.get(grantedText) + " ");
-		System.out.print(failedText + ": " + totalStatistics.get(grantedText) + " ");
-		System.out.println(waitlistText + ": " + totalStatistics.get(grantedText));
+		sb.append("Total Statistics\n");
+		sb.append(EXAMINED + ": " + totalStatistics.get(EXAMINED) + " ");
+		sb.append(GRANTED + ": " + totalStatistics.get(GRANTED) + " ");
+		sb.append(FAILED + ": " + totalStatistics.get(FAILED) + " ");
+		sb.append(WAITLISTED + ": " + totalStatistics.get(WAITLISTED)).append("\n\n");
+		
+		return sb.toString();
 	}
 
 	//This method will print all academic records
-	public static void printAcademicRecords(){
-		System.out.println("Academic Records");
+	public static String getAcademicRecords(){
+		StringBuilder sb = new StringBuilder();
+		sb.append("Academic Records\n");
 		for(Record r : records) {
-			System.out.print(r.getStudent().getUUID() + ", ");
-			System.out.print(r.getCourse().getID() + ", ");
-			System.out.print(r.getInstructor().getUUID() + ", ");
-			System.out.print(r.getInstructorComments() + ", ");
-			System.out.println(r.getGradeEarned());
+			sb.append(r.getStudent().getUUID() + ", ");
+			sb.append(r.getCourse().getID() + ", ");
+			sb.append(r.getInstructor().getUUID() + ", ");
+			sb.append(r.getInstructorComments() + ", ");
+			sb.append(r.getGradeEarned()).append("\n");
 		}
+		
+		return sb.toString();
 	}
 }

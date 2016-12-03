@@ -27,6 +27,10 @@ public class RecordsData extends CsvDataLoader {
 	 */
 	@Override
 	public void populateCsvDataToDb(final String[] rawDataArray) {
+
+		// reset records in memory
+		InputFileHandler.resetRecords();
+		
 		if (rawDataArray.length == 0) {
 			return;
 		}

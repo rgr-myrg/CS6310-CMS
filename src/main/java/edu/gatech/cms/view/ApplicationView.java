@@ -10,6 +10,8 @@ import edu.gatech.cms.data.InstructorsData;
 import edu.gatech.cms.data.PrerequisitesData;
 import edu.gatech.cms.data.RecordsData;
 import edu.gatech.cms.data.StudentsData;
+import edu.gatech.cms.logger.Log;
+import edu.gatech.cms.logger.Logger;
 import edu.gatech.cms.util.DbHelper;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -136,7 +138,9 @@ public class ApplicationView {
 			}
 			
 			InputFileHandler.initialSemester();
-			System.out.println("CURRENT SEMESTER WELCOME: " + InputFileHandler.getCurrentSemester());
+			
+			if (Log.isDebug()) Logger.debug(APRIORI_SCREEN, "Current semester (welcome): " + InputFileHandler.getCurrentSemester());
+
 			InputFileHandler.loadAssignments();
 			InputFileHandler.loadRequests();
 			aprioriResults = InputFileHandler.runDataMining();
@@ -178,7 +182,9 @@ public class ApplicationView {
 	public void onProcessedRequestsControllerNextSemesterAction(){
 		loadScreen(APRIORI_SCREEN, () -> {
 			InputFileHandler.nextSemester();
-			System.out.println("CURRENT SEMESTER NEXT: " + InputFileHandler.getCurrentSemester());
+			
+			if (Log.isDebug()) Logger.debug(APRIORI_SCREEN, "Current semester (next): " + InputFileHandler.getCurrentSemester());
+			
 			InputFileHandler.loadAssignments();
 			InputFileHandler.loadRequests();
 			aprioriResults = InputFileHandler.runDataMining();
