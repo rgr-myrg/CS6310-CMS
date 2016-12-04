@@ -5,9 +5,6 @@ import java.util.Optional;
 import edu.gatech.cms.InputFileHandler;
 import edu.gatech.cms.view.ApplicationView;
 import edu.gatech.cms.view.UiMessages;
-import edu.gatech.cms.course.Request;
-import edu.gatech.cms.logger.Log;
-import edu.gatech.cms.logger.Logger;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,12 +16,14 @@ import javafx.stage.Stage;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Button;
 
 public class ProcessedRequestsController implements ScreenController{
 	@FXML private Group progressGroup;
 	@FXML private ImageView progressGif;
 	@FXML private Text welcomeText;
 	@FXML private TextArea statsTextResults;
+	@FXML private Button nextButton1;
 
 	public static final String TAG = InputFileHandler.class.getSimpleName();
 
@@ -40,9 +39,14 @@ public class ProcessedRequestsController implements ScreenController{
 	        		+ InputFileHandler.getSemesterStats() + "\n" 
 	        		+ InputFileHandler.getAcademicRecords() + "\n" 
 	        		+ InputFileHandler.getNewWaitingRequests());
+
+	        if (! InputFileHandler.moreSemesters()) {
+		    	nextButton1.setText("No more semesters");
+		    	nextButton1.setDisable(true);
+	        }
 		};
 	}
-
+	
 	@FXML protected void onAboutMenuSelected(ActionEvent event) {
 		ApplicationView.getInstance().displayAppInfoAlertDialog();
 	}
