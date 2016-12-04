@@ -31,7 +31,7 @@ public class ProcessedRequestsController implements ScreenController{
 		ApplicationView.getInstance().onProcessedRequestsResultsLoaded = () -> {
 			progressGroup.getChildren().remove(progressGif);
 
-			final String screenMsg = String.format(UiMessages.PROCESSED_REQUESTS_HEADING);
+			final String screenMsg = String.format(UiMessages.PROCESSED_REQUESTS_HEADING, InputFileHandler.getCurrentSemester());
 	        welcomeText.setText(screenMsg);
 	        
 	        statsTextResults.setText(

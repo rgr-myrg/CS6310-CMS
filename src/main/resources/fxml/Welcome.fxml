@@ -57,14 +57,22 @@
                <VBox.margin>
                   <Insets top="15.0" />
                </VBox.margin></Label>
-            <Text fx:id="welcomeText" styleClass="welcomeText" lineSpacing="5.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="537.0">
+            <Text fx:id="welcomeText" lineSpacing="5.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="welcomeText" textAlignment="CENTER" wrappingWidth="537.0">
                <VBox.margin>
-                  <Insets left="30.0" right="30.0" top="15.0" />
+                  <Insets bottom="40.0" left="30.0" right="30.0" top="15.0" />
                </VBox.margin>
                <font>
                   <Font size="15.0" />
                </font>
             </Text>
+            <Text fx:id="welcomeInfoText" lineSpacing="5.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="welcomeText" textAlignment="CENTER" wrappingWidth="750.0">
+               <VBox.margin>
+                  <Insets left="30.0" right="30.0" top="15.0" bottom = "10"/>
+               </VBox.margin>
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Text>            
             <Group fx:id="progressGroup">
                <children>
                   <ImageView fx:id="progressGif" fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
@@ -79,7 +87,7 @@
             </Group>
             <Group fx:id="resumeGroup" visible="false">
                <children>
-                  <Text fx:id="textMessageBox" lineSpacing="5.0" strokeType="OUTSIDE" strokeWidth="0.0" text="What would you like to do:" wrappingWidth="465.0">
+                  <Text fx:id="textMessageBox" styleClass="welcomeText" lineSpacing="5.0" strokeType="OUTSIDE" strokeWidth="0.0" text="What would you like to do:" wrappingWidth="465.0">
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -100,13 +108,17 @@
                               <ToggleGroup fx:id="radioToggleGroup" />
                            </toggleGroup>
                         </RadioButton>
-                        <Label text="Resume" GridPane.columnIndex="1">
+                        <Label text="Resume" styleClass="radio-label" GridPane.columnIndex="1">
                            <GridPane.margin>
-                              <Insets />
+                              <Insets left="10.0"/>
                            </GridPane.margin>
                         </Label>
                         <RadioButton id="startOption" layoutX="10.0" layoutY="16.0" mnemonicParsing="false" selected="true" toggleGroup="$radioToggleGroup" GridPane.rowIndex="1" />
-                        <Label layoutX="310.0" layoutY="17.0" text="Start" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label layoutX="310.0" layoutY="17.0" styleClass="radio-label" text="Start" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets left="10.0"/>
+                           </GridPane.margin>                          
+                        </Label>
                      </children>
                      <padding>
                         <Insets top="15.0" />

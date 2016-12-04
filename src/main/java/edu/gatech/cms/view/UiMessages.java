@@ -24,18 +24,22 @@ public final class UiMessages {
 
 	public static final String ABOUT_WINDOW_TITLE = "CMS :: About";
 
+	public static final String WELCOME_HEADING = "Welcome to the Course Management System!";
+
 	public static final String START_SEMESTER = "Please click 'Next' to begin Roster selections for the upcoming Semester.";
+
+	public static final String START_ONLY = "There are no more semesters for processing. Please click 'Next' to start over.";
 
 	public static final String RESUME_SEMESTER = "You last completed Roster selections for Semester %d. " 
 			+ "Please click 'Resume' to continue Roster selections for the upcoming Semester or 'Start' to start over.";
 
 	public static final String APRIORI_HEADING = "Apriori Analysis for Semester %d";
 
-	public static final String INSTRUCTOR_HEADING = "Instructor Assignment";
+	public static final String INSTRUCTOR_HEADING = "Instructor Assignment for Semester %d";
 
 	public static final String INSTRUCTOR_SELECTION_ERROR = "Each instructor may only be selected once per cycle, and no more than 5 selections may be added per cycle. Please try again.";
 
-	public static final String PROCESSED_REQUESTS_HEADING = "Processed Requests";
+	public static final String PROCESSED_REQUESTS_HEADING = "Processed Requests for Semester %d";
 
 	public static final String CONFIRM_EXIT_TITLE = "Confirm Exit";
 
