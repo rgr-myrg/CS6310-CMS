@@ -51,7 +51,7 @@ public class InstructorController implements ScreenController{
 
 			availableListView.setItems(FXCollections.observableArrayList(InputFileHandler.getAssignmentsStrings(InputFileHandler.getCurrentSemester())));
 
-			final String screenMsg = String.format(UiMessages.INSTRUCTOR_HEADING);
+			final String screenMsg = String.format(UiMessages.INSTRUCTOR_HEADING, InputFileHandler.getCurrentSemester());
 	        welcomeText.setText(screenMsg);
 
 			availableListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {

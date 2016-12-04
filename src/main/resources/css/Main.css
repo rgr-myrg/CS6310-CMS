@@ -108,3 +108,6 @@
 	-fx-focus-color: transparent;
 	-fx-background-insets: 0 ;
 }
+.radio-label {
+    -fx-text-fill: #FFFFFF;
+}

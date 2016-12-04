@@ -23,6 +23,7 @@ public class WelcomeController implements ScreenController {
 	@FXML private ImageView progressGif;
 
 	@FXML private Text welcomeText;
+	@FXML private Text welcomeInfoText;
 	@FXML private Text textMessageBox;
 
 	public WelcomeController() {
@@ -30,14 +31,20 @@ public class WelcomeController implements ScreenController {
 			progressGroup.getChildren().remove(progressGif);
 
 			final int semesterCount = InputFileHandler.getCurrentSemester();
-			String welcomeMsg = UiMessages.START_SEMESTER;
+			String welcomeInfoMsg = UiMessages.START_SEMESTER;
 
-			if (semesterCount >= 1) {
-				welcomeMsg = String.format(UiMessages.RESUME_SEMESTER, semesterCount);
+			if(semesterCount == 0 && InputFileHandler.finishedAllSemesters()){
+				welcomeInfoMsg = String.format(UiMessages.START_ONLY);
+				resumeGroup.setVisible(false);
+			}
+			else if(semesterCount >= 1) {
+				welcomeInfoMsg = String.format(UiMessages.RESUME_SEMESTER, semesterCount);
 				resumeGroup.setVisible(true);
 			}
 
-			welcomeText.setText(welcomeMsg);
+
+			welcomeInfoText.setText(welcomeInfoMsg);
+			welcomeText.setText(UiMessages.WELCOME_HEADING);
 		};
 	}
 
