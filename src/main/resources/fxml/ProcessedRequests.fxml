@@ -20,11 +20,11 @@
       <HBox BorderPane.alignment="BOTTOM_CENTER">
          <children>
             <Region prefWidth="400.0" HBox.hgrow="ALWAYS" />
-            <Button id="nextButton" minWidth="-Infinity" mnemonicParsing="false" onAction="#onNextSemesterButtonClick" styleClass="next-button" text="Next Semester">
+            <Button fx:id="nextButton1" minWidth="-Infinity" mnemonicParsing="false" onAction="#onNextSemesterButtonClick" styleClass="next-button" text="Next Semester">
                <HBox.margin>
                   <Insets bottom="15.0" right="10.0" />
                </HBox.margin></Button>
-            <Button id="nextButton" minWidth="60.0" mnemonicParsing="false" onAction="#onExitButtonClick" styleClass="next-button" text="Exit">
+            <Button fx:id="nextButton2" minWidth="60.0" mnemonicParsing="false" onAction="#onExitButtonClick" styleClass="next-button" text="Exit">
                <HBox.margin>
                   <Insets bottom="15.0" left="10.0" right="30.0" />
                </HBox.margin>

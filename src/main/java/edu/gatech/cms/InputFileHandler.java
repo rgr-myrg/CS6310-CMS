@@ -1,5 +1,8 @@
 package edu.gatech.cms;
 
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -53,8 +56,8 @@ public class InputFileHandler {
 	private static Map<Integer,List<Assignment>> capacities = new TreeMap<>();	// key = semester (chosen assignments)
 	private static WekaDataSource wekaDataSource = new WekaDataSource();
 	
-	
 	private static int currentSemester = 0;
+	private static boolean finishedAllSemesters = false;
 	
 	//Note: semester stats must be reset each cycle, total stats will not be reset
 	private static Map<String, Integer> semesterStatistics = new TreeMap<>();
@@ -72,6 +75,11 @@ public class InputFileHandler {
 	public static void load() {
 		// Select current semester from db. 
 		currentSemester = RequestsData.getMaxSemester();
+		
+		if (! moreSemesters()) {
+			currentSemester = 0;
+			finishedAllSemesters = true;
+		}
 
 		resetSemesterStats();
 		resetTotalStats();
@@ -511,5 +519,13 @@ public class InputFileHandler {
 		sb.append("\n");
 		
 		return sb.toString();
+	}
+	
+	public static boolean moreSemesters() {
+		return Files.exists(Paths.get("assignments_" + (currentSemester + 1) + ".csv"), LinkOption.NOFOLLOW_LINKS);
+	}
+	
+	public static boolean finishedAllSemesters() {
+		return finishedAllSemesters;
 	}
 }
