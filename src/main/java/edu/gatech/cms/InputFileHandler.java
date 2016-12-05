@@ -436,7 +436,6 @@ public class InputFileHandler {
 	public static void incrementTotalStats(String keyString) {
 		Integer newInt = totalStatistics.get(keyString) +  1;
 		totalStatistics.put(keyString, newInt);
-		//TotalStatisticsData.incrementTotalStats(keyString, newInt);
 	}
 	
 	/**
