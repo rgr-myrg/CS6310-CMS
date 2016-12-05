@@ -60,7 +60,6 @@ public class InputFileHandler {
 	
 	private static int currentSemester = 0;
 	private static boolean finishedAllSemesters = false;
-	//private static boolean hasSemesterReset = false;
 	
 	//Note: semester stats must be reset each cycle, total stats will not be reset
 	private static Map<String, Integer> semesterStatistics = new TreeMap<>();
