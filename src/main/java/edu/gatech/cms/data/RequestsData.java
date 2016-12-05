@@ -94,7 +94,7 @@ public class RequestsData extends CsvDataLoader {
 	public static final void loadFromDB() {
 		try {
 			
-			PreparedStatement preparedStatement = DbHelper.getConnection().prepareStatement(RequestsTable.SELECT_ALL_REQUESTS);
+			PreparedStatement preparedStatement = DbHelper.getConnection().prepareStatement(RequestsTable.SELECT_OPEN_REQUESTS);
 			ResultSet rs = preparedStatement.executeQuery();
 			while (rs.next()) {
 				Student student = InputFileHandler.getStudents().get(rs.getInt(2));
