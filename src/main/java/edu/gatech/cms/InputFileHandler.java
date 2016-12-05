@@ -60,6 +60,7 @@ public class InputFileHandler {
 	
 	private static int currentSemester = 0;
 	private static boolean finishedAllSemesters = false;
+	//private static boolean hasSemesterReset = false;
 	
 	//Note: semester stats must be reset each cycle, total stats will not be reset
 	private static Map<String, Integer> semesterStatistics = new TreeMap<>();
@@ -73,9 +74,13 @@ public class InputFileHandler {
 	/**
 	 * This method is invoked by the ui when the app starts.
 	 */
-	public static void load() {
-		// Select current semester from db. 
-		currentSemester = RequestsData.getMaxSemester();
+	public static void load(final boolean hasSemesterReset) {
+		if (!hasSemesterReset) {
+			// Select current semester from db. 
+			currentSemester = RequestsData.getMaxSemester();
+		} else {
+			currentSemester = 0;
+		}
 		
 		if (! moreSemesters()) {
 			currentSemester = 0;
@@ -87,7 +92,7 @@ public class InputFileHandler {
 		//resetTotalStats();
 
 		if (Log.isDebug()) {
-			Logger.debug(TAG, "Load currentSemester: " + currentSemester);
+			Logger.debug(TAG, "Load currentSemester: " + currentSemester + " hasSemesterReset: " + hasSemesterReset);
 		}
 
 		// INITIAL MODE
@@ -132,8 +137,9 @@ public class InputFileHandler {
 	 */
 	public static void initialSemester() {
 		// Reset current semester for 'initial' mode
-		if (ApplicationView.getInstance().getUiMode() == UiMode.INITIAL)
-			currentSemester = 0;
+		if (ApplicationView.getInstance().getUiMode() == UiMode.INITIAL) {
+			load(true);
+		}
 
 		currentSemester++;
 		if (Log.isDebug()) Logger.debug(TAG, "initialSemester: " + currentSemester);
