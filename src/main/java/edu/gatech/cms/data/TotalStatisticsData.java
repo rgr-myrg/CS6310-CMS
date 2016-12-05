@@ -19,7 +19,7 @@ public class TotalStatisticsData {
 			while (resultSet.next()) {
 				String statName = resultSet.getString(TotalStatisticsTable.STATISTIC_NAME_COLUMN);
 				int statTotal = resultSet.getInt(TotalStatisticsTable.STATISTIC_TOTAL_COLUMN);
-				Logger.debug("STATS", statName + ":" + statTotal);
+
 				totalStatistics.put(statName, statTotal);
 			}
 
