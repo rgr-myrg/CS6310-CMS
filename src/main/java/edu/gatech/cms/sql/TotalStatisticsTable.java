@@ -43,26 +43,8 @@ public class TotalStatisticsTable {
 			STATISTIC_TOTAL_COLUMN
 	);
 
-	public static final String INSERT_EXAMINED = String.format(
-			"INSERT INTO %s (%s) VALUES (0)", TABLE_NAME, EXAMINED
-	);
-
-	public static final String INSERT_GRANTED = String.format(
-			"INSERT INTO %s (%s) VALUES (0)", TABLE_NAME, GRANTED
-	);
-
-	public static final String INSERT_FAILED = String.format(
-			"INSERT INTO %s (%s) VALUES (0)", TABLE_NAME, FAILED
-	);
-
-	public static final String INSERT_WAITLISTED = String.format(
-			"INSERT INTO %s (%s) VALUES (0)", TABLE_NAME, WAITLISTED
-	);
-
 	public static final String UDATE_STATISTIC_TOTAL = String.format(
-			"UPDATE %s SET %s = ? WHERE %s = ?",
-			TABLE_NAME,
-			STATISTIC_TOTAL_COLUMN,
-			STATISTIC_NAME_COLUMN
+			"INSERT OR REPLACE INTO %s (%s, %s) VALUES ('?', ?)",
+			TABLE_NAME, STATISTIC_NAME_COLUMN, STATISTIC_TOTAL_COLUMN
 	);
 }

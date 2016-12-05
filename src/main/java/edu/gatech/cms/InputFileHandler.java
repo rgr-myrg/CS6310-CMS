@@ -20,9 +20,11 @@ import edu.gatech.cms.data.PrerequisitesData;
 import edu.gatech.cms.data.RecordsData;
 import edu.gatech.cms.data.RequestsData;
 import edu.gatech.cms.data.StudentsData;
+import edu.gatech.cms.data.TotalStatisticsData;
 import edu.gatech.cms.data.WekaDataSource;
 import edu.gatech.cms.logger.Log;
 import edu.gatech.cms.logger.Logger;
+import edu.gatech.cms.sql.TotalStatisticsTable;
 import edu.gatech.cms.university.Department;
 import edu.gatech.cms.university.Instructor;
 import edu.gatech.cms.university.Student;
@@ -37,10 +39,10 @@ import edu.gatech.cms.view.ApplicationView;
 public class InputFileHandler {
 	public static final String TAG = InputFileHandler.class.getSimpleName();
 
-	private static final String EXAMINED = "Examined";
-	private static final String GRANTED = "Granted";
-	private static final String FAILED = "Failed";
-	private static final String WAITLISTED = "Wait Listed";
+	private static final String EXAMINED = TotalStatisticsTable.EXAMINED;
+	private static final String GRANTED = TotalStatisticsTable.GRANTED;
+	private static final String FAILED = TotalStatisticsTable.FAILED;
+	private static final String WAITLISTED = TotalStatisticsTable.WAITLISTED;
 
 	private static University university;
 	private static Department department;
@@ -63,7 +65,6 @@ public class InputFileHandler {
 	private static Map<String, Integer> semesterStatistics = new TreeMap<>();
 	private static Map<String, Integer> totalStatistics = new TreeMap<>();
 
-
 	public static enum UiMode {
 		INITIAL, 
 		RESUME
@@ -82,7 +83,8 @@ public class InputFileHandler {
 		}
 
 		resetSemesterStats();
-		resetTotalStats();
+		// Not needed since this object comes from the database.
+		//resetTotalStats();
 
 		if (Log.isDebug()) {
 			Logger.debug(TAG, "Load currentSemester: " + currentSemester);
@@ -103,7 +105,7 @@ public class InputFileHandler {
 		else {
 			// load from DB
 			StudentsData.loadFromDB();
-			CoursesData.loadFromDB();
+			CoursesData.loadFromDB();	
 			PrerequisitesData.loadFromDB();
 			InstructorsData.loadFromDB();
 			RecordsData.loadFromDB();
@@ -113,6 +115,13 @@ public class InputFileHandler {
 			for(Map.Entry<String,Integer> statCategory : semesterStatistics.entrySet()) {
 				  statCategory.setValue(0);
 			}
+		}
+
+		// Retrieves current total statistics object
+		totalStatistics = TotalStatisticsData.getTotalStatistics();
+
+		if (Log.isDebug()) {
+			Logger.debug(TAG, "totalStatistics waitlisted total: " + totalStatistics.get(WAITLISTED));
 		}
 	}
 	
@@ -442,12 +451,12 @@ public class InputFileHandler {
 	/**
 	 * Reset the total counters
 	 */
-	private static void resetTotalStats(){
-		totalStatistics.put(EXAMINED, 0);
-		totalStatistics.put(GRANTED, 0);
-		totalStatistics.put(FAILED, 0);
-		totalStatistics.put(WAITLISTED, 0);
-	}
+//	private static void resetTotalStats(){
+//		totalStatistics.put(EXAMINED, 0);
+//		totalStatistics.put(GRANTED, 0);
+//		totalStatistics.put(FAILED, 0);
+//		totalStatistics.put(WAITLISTED, 0);
+//	}
 	
 	/** 
 	 * Build a string with the semester stats
@@ -466,7 +475,10 @@ public class InputFileHandler {
 		sb.append(GRANTED + ": " + totalStatistics.get(GRANTED) + " ");
 		sb.append(FAILED + ": " + totalStatistics.get(FAILED) + " ");
 		sb.append(WAITLISTED + ": " + totalStatistics.get(WAITLISTED)).append("\n\n");
-		
+
+		// Persist total stats in db.
+		TotalStatisticsData.saveTotalStats(totalStatistics);
+
 		return sb.toString();
 	}
 
