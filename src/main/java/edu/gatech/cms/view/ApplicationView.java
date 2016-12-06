@@ -5,14 +5,8 @@ import java.io.IOException;
 import edu.gatech.cms.InputFileHandler;
 import edu.gatech.cms.InputFileHandler.UiMode;
 import edu.gatech.cms.controller.ScreenController;
-import edu.gatech.cms.data.CoursesData;
-import edu.gatech.cms.data.InstructorsData;
-import edu.gatech.cms.data.PrerequisitesData;
-import edu.gatech.cms.data.RecordsData;
-import edu.gatech.cms.data.StudentsData;
 import edu.gatech.cms.logger.Log;
 import edu.gatech.cms.logger.Logger;
-import edu.gatech.cms.util.DbHelper;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -53,7 +47,7 @@ public class ApplicationView {
 		this.isAppLaunch = true;
 
 		loadScreen(WELCOME_SCREEN, () -> {
-			InputFileHandler.load();
+			InputFileHandler.load(false);
 
 			Platform.runLater(() -> {
 				stage.setTitle(UiMessages.WELCOME_WINDOW_TITLE);
@@ -120,22 +114,27 @@ public class ApplicationView {
 		this.uiMode = uiMode;
 
 		loadScreen(APRIORI_SCREEN, () -> {
-			
+			// Bug: https://github.com/rgr-myrg/CS6310-CMS/issues/26
+			// This code prevents the InputFileHandler from running the load() sequence.
+			// Instead, initialSemester() will determine if initial mode is set and 
+			// invoke load() appropriately to ensure the full start up sequence runs.
+
+			// Commenting out...
 			// if possible it was already loaded from DB, 
 			// in which case an "initial" choice should reset the data
-			if (uiMode == UiMode.INITIAL) {
-				DbHelper.dropTables();
-				DbHelper.createTables();
-
-				//load from CSV
-				StudentsData.loadFromCSV();
-				CoursesData.loadFromCSV();
-				PrerequisitesData.loadFromCSV();
-				InstructorsData.loadFromCSV();
-				RecordsData.loadFromCSV();
-				
-				InputFileHandler.setCurrentSemester(0);
-			}
+//			if (uiMode == UiMode.INITIAL) {
+//				DbHelper.dropTables();
+//				DbHelper.createTables();
+//
+//				//load from CSV
+//				StudentsData.loadFromCSV();
+//				CoursesData.loadFromCSV();
+//				PrerequisitesData.loadFromCSV();
+//				InstructorsData.loadFromCSV();
+//				RecordsData.loadFromCSV();
+//				
+//				InputFileHandler.setCurrentSemester(0);
+//			}
 			
 			InputFileHandler.initialSemester();
 			

@@ -55,12 +55,12 @@ public class RequestsTable {
 			);
 
 	public static final String SELECT_ALL_REQUESTS = String.format(
-			"SELECT * FROM %s",
+			"SELECT DISTINCT(*) FROM %s",
 			TABLE_NAME
 			);
 
 	public static final String SELECT_OPEN_REQUESTS = String.format(
-			"SELECT * FROM %s WHERE %s = %d",
+			"SELECT DISTINCT(*) FROM %s WHERE %s = %d",
 			TABLE_NAME, REQUEST_STATUS_COLUMN, OPEN_REQUEST_DEFAULT_VALUE
 	);
 
@@ -70,7 +70,7 @@ public class RequestsTable {
 	);
 
 	public static final String SELECT_WAITING_REQUESTS = String.format(
-			"SELECT * FROM %s WHERE %s = %d ORDER BY _id",
+			"SELECT DISTINCT(*) FROM %s WHERE %s = %d ORDER BY _id",
 			TABLE_NAME, STATUS_REASON_COLUMN, RequestStatus.RejectedFullCapacity.ordinal()
 	);
 

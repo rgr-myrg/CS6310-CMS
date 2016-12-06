@@ -57,7 +57,7 @@
     -fx-font-family: "Arial";
     -fx-text-fill: linear-gradient(white, #d0d0d0);
     -fx-font-size: 12px;	
-    -fx-padding: 5 10 5 10;
+    -fx-padding: 5 8 5 8;
 }
 .list-button Text{
 	-fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.9) , 1, 0.0 , 0 , 1 );
