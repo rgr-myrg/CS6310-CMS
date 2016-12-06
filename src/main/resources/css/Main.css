@@ -1,0 +1,113 @@
+@font-face {
+     src: url("../fonts/NewsCycle-Regular.ttf");
+}
+@font-face {
+     src: url("../fonts/NewsCycle-Bold.ttf");
+}
+.root{
+    /*-fx-background-image:url("../images/lightgraybg.png");*/
+    /*-fx-background-image:url("../images/gray-haze-background.jpg");*/
+    /*-fx-background-image:url("../images/silk-gray-background.jpeg");*/
+    -fx-background-image:url("../images/43-Chalkboard-Backgrounds.jpeg");
+    -fx-background-size: cover;    
+}
+.next-button {
+    -fx-background-color: 
+        #4080bf,
+        linear-gradient(#3973ac 0%, #6699cc 20%, #3973ac 100%),
+        linear-gradient(#3973ac, #2d5986),
+        radial-gradient(center 50% 0%, radius 100%, rgba(140, 179, 217,0.9), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 0,1,2,0;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white, #d0d0d0);
+    -fx-font-size: 12px;
+    -fx-padding: 15 28 15 28;
+}
+.next-button:pressed {
+    -fx-background-color: 
+        linear-gradient(#3973ac, #2d5986),       
+        linear-gradient(#3973ac 0%, #6699cc 20%, #3973ac 100%),
+        #4080bf,
+        radial-gradient(center 50% 0%, radius 100%, rgba(140, 179, 217,0.9), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 0,1,2,0;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white, #d0d0d0);
+    -fx-font-size: 12px;
+	-fx-padding: 15 28 15 28;
+}
+.next-button Text {
+    -fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.9) , 1, 0.0 , 0 , 1 );
+}
+.list-button{
+    -fx-background-color: 
+        #4080bf,
+        linear-gradient(#3973ac 0%, #6699cc 20%, #3973ac 100%),
+        linear-gradient(#3973ac, #2d5986),
+        radial-gradient(center 50% 0%, radius 100%, rgba(140, 179, 217,0.9), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 0,1,2,0;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white, #d0d0d0);
+    -fx-font-size: 12px;	
+    -fx-padding: 5 8 5 8;
+}
+.list-button Text{
+	-fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.9) , 1, 0.0 , 0 , 1 );
+}
+.list-button:pressed{
+    -fx-background-color: 
+        linear-gradient(#3973ac, #2d5986),       
+        linear-gradient(#3973ac 0%, #6699cc 20%, #3973ac 100%),
+        #4080bf,
+        radial-gradient(center 50% 0%, radius 100%, rgba(140, 179, 217,0.9), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 0,1,2,0;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white, #d0d0d0);
+    -fx-font-size: 12px;
+	-fx-padding: 5 10 5 10;
+}
+#screenHeader{
+	-fx-font-size: 25px;
+	-fx-font-family: "News Cycle";
+	-fx-font-weight: bold;
+	-fx-text-fill: #FFFFFF;
+	-fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.9) , 1, 0.0 , 0 , 1.5 );	
+}
+.welcomeText{
+	-fx-font-size: 22px;
+	-fx-font-family: "News Cycle";
+	-fx-fill: #FFFFFF;
+	-fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.9) , 1, 0.0 , 0 , 1.5 );	
+}
+.warningText{
+	-fx-font-size: 14px;
+	-fx-text-fill: #FFFFFF;
+	-fx-background-color: #FF5050;
+	-fx-background-radius: 3,4,3,5;
+	-fx-padding: 0 2 0 2;
+}
+.list-cell:filled:selected:focused, .list-cell:filled:selected {
+    -fx-background-color: linear-gradient(#20262b 0%, #191d22 25%, #38424b 75%, #1f2429 100%);
+    -fx-fill: #FFFFFF;
+}
+.list-cell:filled:hover{
+	-fx-fill: #FFFFFF;	
+}
+.list-view:focused{
+	-fx-focus-color: transparent;
+	-fx-background-insets: 0 ;
+}
+.radio-label {
+    -fx-text-fill: #FFFFFF;
+}
